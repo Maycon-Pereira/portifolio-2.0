@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useWindowManager } from '../../context/WindowContext';
+import { useI18n } from '../../hooks/useI18nHook';
+import githubIcon from '../../img/svg/github.svg';
+import linkedinIcon from '../../img/svg/linkedin.svg';
 
 interface File {
     name: string;
@@ -9,6 +12,7 @@ interface File {
 
 export const AboutContent = ({ windowId }: { windowId?: string }) => {
     const { setWindowTitle } = useWindowManager();
+    const { t } = useI18n();
     const [activeFile, setActiveFile] = useState<string>('Profile.java');
 
     useEffect(() => {
@@ -25,15 +29,24 @@ export const AboutContent = ({ windowId }: { windowId?: string }) => {
             content: (
                 <div className="font-mono text-sm leading-6">
                     <span className="text-[#cc7832]">package</span> <span className="text-[#a9b7c6]">com.maycon.portfolio;</span><br /><br />
-                    <span className="text-[#cc7832]">public class</span> <span className="text-[#a9b7c6] font-bold">Profile</span> <span className="text-[#a9b7c6]">{'{'}</span><br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#cc7832]">private final</span> <span className="text-[#a9b7c6]">String name = </span><span className="text-[#6a8759]">"Maycon"</span><span className="text-[#cc7832] ;">;</span><br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#cc7832]">private final</span> <span className="text-[#a9b7c6]">String role = </span><span className="text-[#6a8759]">"Software Engineer"</span><span className="text-[#cc7832] ;">;</span><br /><br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#629755] font-italic">/**</span><br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#629755] font-italic"> * Specializing in Backend Development, with a focus on Java,</span><br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#629755] font-italic"> * Spring Boot, and scalable architectures.</span><br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#629755] font-italic"> */</span><br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#cc7832]">public</span> <span className="text-[#a9b7c6]">void</span> <span className="text-[#ffc66d]">printSummary</span><span className="text-[#a9b7c6]">() {'{'}</span><br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#a9b7c6]">System.out.println(</span><span className="text-[#6a8759]">"I build clean, efficient systems."</span><span className="text-[#a9b7c6]">);</span><br />
+                    <span className="text-[#cc7832]">public class</span> <span className="text-[#a9b7c6] font-bold">MayconPereira</span> <span className="text-[#a9b7c6]">{'{'}</span><br /><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#cc7832]">private final</span> <span className="text-[#a9b7c6]">String role = </span><span className="text-[#6a8759]">"{t('about.role')}"</span><span className="text-[#a9b7c6]">;</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#cc7832]">private final</span> <span className="text-[#a9b7c6]">String stack = </span><span className="text-[#6a8759]">"{t('about.stack')}"</span><span className="text-[#a9b7c6]">;</span><br /><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#629755] italic">/**</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#629755] italic"> * {t('about.doc1')}</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#629755] italic"> * {t('about.doc2')}</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#629755] italic"> *</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#629755] italic"> * {t('about.doc3')}</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#629755] italic"> * {t('about.doc4')}</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#629755] italic"> * {t('about.doc5')}</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#629755] italic"> *</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#629755] italic"> * {t('about.doc6')}</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#629755] italic"> * {t('about.doc7')}</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#629755] italic"> * {t('about.doc8')}</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#629755] italic"> * {t('about.doc9')}</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#629755] italic"> */</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#cc7832]">public</span> <span className="text-[#a9b7c6]">String</span> <span className="text-[#ffc66d]">about</span><span className="text-[#a9b7c6]">() {'{'}</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#cc7832]">return</span> <span className="text-[#6a8759]">"{t('about.about_return')}"</span><span className="text-[#a9b7c6]">;</span><br />
                     &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#a9b7c6]">{'}'}</span><br />
                     <span className="text-[#a9b7c6]">{'}'}</span>
                 </div>
@@ -45,14 +58,38 @@ export const AboutContent = ({ windowId }: { windowId?: string }) => {
             content: (
                 <div className="font-mono text-sm leading-6">
                     <span className="text-[#cc7832]">package</span> <span className="text-[#a9b7c6]">com.maycon.portfolio;</span><br /><br />
-                    <span className="text-[#cc7832]">import</span> <span className="text-[#a9b7c6]">java.util.List;</span><br /><br />
-                    <span className="text-[#cc7832]">public class</span> <span className="text-[#a9b7c6] font-bold">Experience</span> <span className="text-[#cc7832]">extends</span> <span className="text-[#a9b7c6]">CareerPath {'{'}</span><br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#cc7832]">public</span> <span className="text-[#a9b7c6]">List&lt;String&gt;</span> <span className="text-[#ffc66d]">getCurrentFocus</span><span className="text-[#a9b7c6]">() {'{'}</span><br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#cc7832]">return</span> <span className="text-[#a9b7c6]">List.of(</span><br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#6a8759]">"Java Ecosystem (Spring, Hibernate, Quarkus)"</span><span className="text-[#cc7832]">,</span><br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#6a8759]">"Cloud Infrastructure (AWS, Docker, K8s)"</span><span className="text-[#cc7832]">,</span><br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#6a8759]">"Automation & CI/CD"</span><br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#a9b7c6]">);</span><br />
+                    <span className="text-[#629755] italic">/**</span><br />
+                    <span className="text-[#629755] italic"> * @author Maycon Pereira</span><br />
+                    <span className="text-[#629755] italic"> * @role {t('about.exp_author_role')}</span><br />
+                    <span className="text-[#629755] italic"> */</span><br />
+                    <span className="text-[#cc7832]">public class</span> <span className="text-[#a9b7c6] font-bold">CareerHistory</span> <span className="text-[#a9b7c6]">{'{'}</span><br /><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#808080]">// --- {t('about.exp_current_header')} ---</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#808080]">// {t('about.exp_current_company')}</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#cc7832]">public</span> <span className="text-[#a9b7c6]">void</span> <span className="text-[#ffc66d]">multiledgersExperience</span><span className="text-[#a9b7c6]">() {'{'}</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#cc7832]">String</span><span className="text-[#a9b7c6]">[] stack = {'{'}</span><span className="text-[#6a8759]">"Java"</span><span className="text-[#a9b7c6]">, </span><span className="text-[#6a8759]">"Spring Boot"</span><span className="text-[#a9b7c6]">, </span><span className="text-[#6a8759]">"Cypress"</span><span className="text-[#a9b7c6]">, </span><span className="text-[#6a8759]">"Azure DevOps"</span><span className="text-[#a9b7c6]">, </span><span className="text-[#6a8759]">"Git"</span><span className="text-[#a9b7c6]">{'}'}</span><span className="text-[#a9b7c6]">;</span><br /><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#808080]">// {t('about.exp_current1')}</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#808080]">// {t('about.exp_current2')}</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#808080]">// {t('about.exp_current3')}</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#a9b7c6]">{'}'}</span><br /><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#808080]">// --- {t('about.exp_prev1_header')} ---</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#808080]">// {t('about.exp_prev1_company')}</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#cc7832]">public</span> <span className="text-[#a9b7c6]">void</span> <span className="text-[#ffc66d]">freelancerProject</span><span className="text-[#a9b7c6]">() {'{'}</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#808080]">// {t('about.exp_prev1_1')}</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#808080]">// {t('about.exp_prev1_2')}</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#808080]">// {t('about.exp_prev1_3')}</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#a9b7c6]">{'}'}</span><br /><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#808080]">// --- {t('about.exp_prev2_header')} ---</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#808080]">// {t('about.exp_prev2_company')}</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#cc7832]">public</span> <span className="text-[#a9b7c6]">void</span> <span className="text-[#ffc66d]">fiebBlueWorksProject</span><span className="text-[#a9b7c6]">() {'{'}</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#808080]">// {t('about.exp_prev2_1')}</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#808080]">// {t('about.exp_prev2_2')}</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#808080]">// {t('about.exp_prev2_3')}</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#808080]">// {t('about.exp_prev2_4')}</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#a9b7c6]">{'}'}</span><br /><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#808080]">// --- {t('about.exp_edu_header')} ---</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#cc7832]">public</span> <span className="text-[#a9b7c6]">void</span> <span className="text-[#ffc66d]">education</span><span className="text-[#a9b7c6]">() {'{'}</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#808080]">// {t('about.exp_edu1')}</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#808080]">// {t('about.exp_edu2')}</span><br />
                     &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#a9b7c6]">{'}'}</span><br />
                     <span className="text-[#a9b7c6]">{'}'}</span>
                 </div>
@@ -160,7 +197,12 @@ export const AboutContent = ({ windowId }: { windowId?: string }) => {
                     {/* Status Bar */}
                     <div className="h-6 bg-[#3c3f41] border-t border-[#323232] flex items-center px-3 justify-between text-xs text-[#a9b7c6] opacity-80">
                         <div className="flex gap-4">
-                            <span>Could not connect to Gradle daemon</span>
+                            <a href="https://github.com/Maycon-Pereira" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-white cursor-pointer transition-colors">
+                                <img src={githubIcon} alt="GitHub" className="w-3.5 h-3.5 object-contain opacity-70" /> GitHub
+                            </a>
+                            <a href="https://www.linkedin.com/in/maycon-ps/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-white cursor-pointer transition-colors">
+                                <img src={linkedinIcon} alt="LinkedIn" className="w-3.5 h-3.5 object-contain opacity-70" /> LinkedIn
+                            </a>
                         </div>
                         <div className="flex gap-4">
                             <span>UTF-8</span>

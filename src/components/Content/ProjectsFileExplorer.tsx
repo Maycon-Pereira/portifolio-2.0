@@ -1,11 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { fetchGitHubRepos } from '../../utils/github';
+import { AboutContent } from './AboutContent';
+import { SkillsContent } from './SkillsContent';
+import { Terminal } from '../Terminal/Terminal';
+import { SublimeEditor } from './SublimeEditor';
 
 // --- Types ---
 interface FileNode {
     id: string;
     name: string;
     type: 'folder' | 'file';
+    isExternal?: boolean;
+    valuableLink?: string;
     fileType?: 'java' | 'jar' | 'txt' | 'img';
     size?: string;
     date?: string;
@@ -16,6 +24,9 @@ interface FileNode {
         tech: string[];
         fullDate: string;
     };
+    desktopAction?: string;
+    isEditable?: boolean;
+    icon?: string; // Custom SVG icon path
 }
 
 // --- Mock Data ---
@@ -25,76 +36,116 @@ const fileSystem: FileNode[] = [
         name: 'Home',
         type: 'folder',
         children: [
+
             {
-                id: 'backend-projects',
-                name: 'backend-projects',
+                id: 'desktop',
+                name: 'Desktop',
                 type: 'folder',
-                size: '4 items',
-                date: 'Oct 24, 2025',
                 children: [
                     {
-                        id: 'portfolio-terminal',
-                        name: 'PortfolioTerminal.java',
+                        id: 'app-about',
+                        name: 'About Me',
                         type: 'file',
-                        fileType: 'java',
-                        size: '12 KB',
-                        date: 'Feb 16, 2026',
-                        projectData: {
-                            description: "A developer portfolio mimicking a Linux terminal environment with interactive commands and file system navigation.",
-                            tech: ["React", "TypeScript", "Tailwind"],
-                            link: "#",
-                            fullDate: "Feb 16, 2026 14:30"
-                        }
+                        fileType: 'img',
+                        desktopAction: 'about'
                     },
                     {
-                        id: 'ecommerce-api',
-                        name: 'EcommerceAPI.jar',
+                        id: 'app-skills',
+                        name: 'Skills',
                         type: 'file',
-                        fileType: 'jar',
-                        size: '45 MB',
-                        date: 'Jan 10, 2026',
-                        projectData: {
-                            description: "Scalable backend service for online store management, featuring product catalog, cart, and secure checkout.",
-                            tech: ["Java", "Spring Boot", "PostgreSQL"],
-                            link: "#",
-                            fullDate: "Jan 10, 2026 09:15"
-                        }
+                        fileType: 'img',
+                        desktopAction: 'skills'
                     },
                     {
-                        id: 'automation-suite',
-                        name: 'AutomationSuite.py',
-                        type: 'file',
-                        fileType: 'txt', // Python script represented as txt/code
-                        size: '8 KB',
-                        date: 'Dec 05, 2025',
-                        projectData: {
-                            description: "Collection of Python scripts and cron jobs to automate daily developer workflows and server maintenance.",
-                            tech: ["Python", "Bash", "Docker"],
-                            link: "#",
-                            fullDate: "Dec 05, 2025 18:45"
-                        }
-                    },
-                    {
-                        id: 'readme',
-                        name: 'README.md',
+                        id: 'app-terminal',
+                        name: 'Terminal',
                         type: 'file',
                         fileType: 'txt',
-                        size: '2 KB',
-                        date: 'Oct 24, 2025'
-                    }
+                        desktopAction: 'terminal'
+                    },
                 ]
             },
             {
                 id: 'documents',
                 name: 'Documents',
                 type: 'folder',
-                children: [] // Empty
+                children: [
+                    {
+                        id: 'easter-egg',
+                        name: 'Easter Egg',
+                        type: 'folder',
+                        children: []
+                    },
+                    {
+                        id: 'text',
+                        name: 'Text.txt',
+                        type: 'file',
+                        fileType: 'txt',
+                        size: '??? KB',
+                        isEditable: true
+                    }
+                ]
             },
             {
                 id: 'downloads',
                 name: 'Downloads',
                 type: 'folder',
-                children: []
+                children: [
+                    {
+                        id: 'dl-intellij',
+                        name: 'IntelliJ IDEA 2026.1.deb',
+                        type: 'file',
+                        fileType: 'jar',
+                        size: '892.4 MB',
+                        date: '2025-12-10',
+                        icon: 'intellij'
+                    },
+                    {
+                        id: 'dl-grafana',
+                        name: 'Grafana-v11.4.tar.gz',
+                        type: 'file',
+                        fileType: 'jar',
+                        size: '245.7 MB',
+                        date: '2025-11-22',
+                        icon: 'grafana'
+                    },
+                    {
+                        id: 'dl-github',
+                        name: 'GitHub Desktop.AppImage',
+                        type: 'file',
+                        fileType: 'jar',
+                        size: '118.3 MB',
+                        date: '2026-01-05',
+                        icon: 'github'
+                    },
+                    {
+                        id: 'dl-linkedin',
+                        name: 'LinkedIn-Recruiter.deb',
+                        type: 'file',
+                        fileType: 'jar',
+                        size: '67.2 MB',
+                        date: '2026-01-18',
+                        icon: 'linkedin'
+                    },
+                    {
+                        id: 'dl-sublime',
+                        name: 'Sublime Text 4-Build4180.deb',
+                        type: 'file',
+                        fileType: 'jar',
+                        size: '21.8 MB',
+                        date: '2026-02-01',
+                        icon: 'sublime'
+                    },
+                    {
+                        id: 'dl-unknown',
+                        name: '???.exe',
+                        type: 'file',
+                        fileType: 'jar',
+                        size: '??? KB',
+                        date: '???',
+                        icon: 'unknown'
+                    }
+                ]
             }
         ]
     }
@@ -113,18 +164,86 @@ const findNodeById = (nodes: FileNode[], id: string): FileNode | null => {
 };
 
 import { useWindowManager } from '../../context/WindowContext';
+import intellijIcon from '../../img/svg/intellij.svg';
+import grafanaIcon from '../../img/svg/Grafana.svg';
 
 import thunarFolderIcon from '../../img/thunarfolder.png';
+import githubIcon from '../../img/svg/github.svg';
+import linkedinIcon from '../../img/svg/linkedin.svg';
+import sublimeIcon from '../../img/svg/sublime.svg';
 
 export const ProjectsFileExplorer = ({ windowId }: { windowId?: string }) => {
-    const { setWindowTitle } = useWindowManager();
-    const [currentPath, setCurrentPath] = useState<string[]>(['root']);
+    const { setWindowTitle, openWindow, windows, toggleWindow } = useWindowManager();
+    const [fileNodes, setFileNodes] = useState<FileNode[]>(fileSystem);
+    const [currentPath, setCurrentPath] = useState<string[]>(['root', 'github-projects']);
     const [selectedId, setSelectedId] = useState<string | null>(null);
     const [modalFile, setModalFile] = useState<FileNode | null>(null);
+    const [tooltip, setTooltip] = useState<{ x: number; y: number; content: string } | null>(null);
+
+    // Fetch GitHub Repos
+    useEffect(() => {
+        const loadGithub = async () => {
+            const repos = await fetchGitHubRepos('Maycon-Pereira');
+
+            const allowedRepos = [
+                'UserDept',
+                'VollMed-Api',
+                'Hotel',
+                'BlueWorks-Back-End',
+                'Rest-Product-Api',
+                'ms-pedido-processamento',
+                'E-Commerce-API',
+                'CidadaoNow',
+                'UserTask',
+                'Organo'
+            ];
+
+            const filteredRepos = repos.filter(repo => allowedRepos.includes(repo.name));
+
+            const githubNodes: FileNode[] = filteredRepos.map(repo => ({
+                id: `github-${repo.id}`,
+                name: repo.name,
+                type: 'folder',
+                isExternal: true, // Marker for external link behavior
+                valuableLink: repo.html_url,
+                size: `${repo.size} KB`,
+                date: new Date(repo.updated_at).toLocaleDateString(),
+                children: [], // Empty folder, but clicking acts as link
+                projectData: {
+                    description: repo.description || "No description provided.",
+                    link: repo.html_url,
+                    tech: [repo.language || "Create"],
+                    fullDate: new Date(repo.updated_at).toLocaleString()
+                }
+            }));
+
+            const githubFolder: FileNode = {
+                id: 'github-projects',
+                name: 'GitHub',
+                type: 'folder',
+                children: githubNodes,
+                date: new Date().toLocaleDateString()
+            };
+
+            setFileNodes(prev => {
+                const newNodes = [...prev];
+                const root = newNodes.find(n => n.id === 'root');
+                if (root && root.children) {
+                    // Check if already exists to avoid duplicates (though strict mode might cause double add, verify id)
+                    if (!root.children.find(c => c.id === 'github-projects')) {
+                        root.children.push(githubFolder);
+                    }
+                }
+                return newNodes;
+            });
+        };
+
+        loadGithub();
+    }, []);
 
     // Get current directory node
     const currentFolderId = currentPath[currentPath.length - 1];
-    const currentFolderNode = findNodeById(fileSystem, currentFolderId);
+    const currentFolderNode = findNodeById(fileNodes, currentFolderId);
 
     // Breadcrumbs logic
     const navigateUp = () => {
@@ -145,6 +264,45 @@ export const ProjectsFileExplorer = ({ windowId }: { windowId?: string }) => {
     };
 
     const handleFileDoubleClick = (file: FileNode) => {
+        // Desktop app shortcut
+        if (file.desktopAction) {
+            const appMap: Record<string, { label: string; component: React.ReactNode; icon?: string }> = {
+                'about': { label: 'About Me', component: <AboutContent windowId="about" />, icon: intellijIcon },
+                'skills': { label: 'Skills', component: <SkillsContent />, icon: grafanaIcon },
+                'terminal': { label: 'Terminal', component: <Terminal /> },
+            };
+            const app = appMap[file.desktopAction];
+            if (app) {
+                const existing = windows.find(w => w.id === file.desktopAction);
+                if (existing) {
+                    toggleWindow(file.desktopAction, existing.workspaceId);
+                } else {
+                    openWindow(file.desktopAction, app.label, app.component, 0, app.icon);
+                }
+            }
+            return;
+        }
+        // Editable file — open as Sublime Text window
+        if (file.isEditable) {
+            const editorWindowId = `editor-${file.id}`;
+            const existing = windows.find(w => w.id === editorWindowId);
+            if (existing) {
+                toggleWindow(editorWindowId, existing.workspaceId);
+            } else {
+                openWindow(
+                    editorWindowId,
+                    file.name,
+                    <SublimeEditor fileId={file.id} fileName={file.name} />,
+                    0,
+                    sublimeIcon
+                );
+            }
+            return;
+        }
+        if (file.isExternal && file.valuableLink) {
+            window.open(file.valuableLink, '_blank');
+            return;
+        }
         if (file.type === 'folder') {
             navigateTo(file.id);
         } else {
@@ -167,12 +325,12 @@ export const ProjectsFileExplorer = ({ windowId }: { windowId?: string }) => {
                     className="p-1 rounded hover:bg-[#ffffff20] disabled:opacity-30 disabled:hover:bg-transparent transition-colors text-xs"
                     title="Up"
                 >
-                    ⬆️
+                    📂
                 </button>
                 <div className="flex-1 flex overflow-x-auto no-scrollbar items-center gap-1 text-xs font-mono">
                     <span className="text-[#ffffff60] whitespace-nowrap">/</span>
                     {currentPath.map((id, index) => {
-                        const node = findNodeById(fileSystem, id);
+                        const node = findNodeById(fileNodes, id);
                         const isLast = index === currentPath.length - 1;
                         return (
                             <React.Fragment key={id}>
@@ -198,6 +356,22 @@ export const ProjectsFileExplorer = ({ windowId }: { windowId?: string }) => {
 
     // Icons
     const getIcon = (node: FileNode) => {
+        // Custom icon from Downloads
+        if (node.icon) {
+            const iconMap: Record<string, string> = {
+                intellij: intellijIcon,
+                grafana: grafanaIcon,
+                github: githubIcon,
+                linkedin: linkedinIcon,
+                sublime: sublimeIcon,
+            };
+            if (node.icon === 'unknown') return <span className="text-3xl">❓</span>;
+            const src = iconMap[node.icon];
+            if (src) return <img src={src} alt={node.name} className="w-10 h-10 object-contain" />;
+        }
+        if (node.desktopAction === 'about') return <img src={intellijIcon} alt="About" className="w-10 h-10 object-contain" />;
+        if (node.desktopAction === 'skills') return <img src={grafanaIcon} alt="Skills" className="w-10 h-10 object-contain" />;
+        if (node.desktopAction === 'terminal') return '💻';
         if (node.type === 'folder') {
             return <img src={thunarFolderIcon} alt="folder" className="w-12 h-12 object-contain" />;
         }
@@ -215,57 +389,122 @@ export const ProjectsFileExplorer = ({ windowId }: { windowId?: string }) => {
                 {/* Sidebar */}
                 <div className="w-48 bg-[#252538] border-r border-[#ffffff10] flex flex-col py-4 gap-1">
                     <SidebarItem icon="🏠" label="Home" active={currentFolderId === 'root'} onClick={() => setCurrentPath(['root'])} />
-                    <SidebarItem icon="🖥️" label="Desktop" />
-                    <SidebarItem icon="📂" label="Documents" />
-                    <SidebarItem icon="⬇️" label="Downloads" />
+                    <SidebarItem icon="🖥️" label="Desktop" active={currentPath.includes('desktop')} onClick={() => setCurrentPath(['root', 'desktop'])} />
+                    <SidebarItem icon="📂" label="Documents" active={currentPath.includes('documents')} onClick={() => setCurrentPath(['root', 'documents'])} />
+                    <SidebarItem icon="⬇️" label="Downloads" active={currentPath.includes('downloads')} onClick={() => setCurrentPath(['root', 'downloads'])} />
                     <div className="h-4" />
                     <div className="px-4 text-xs font-bold text-[#ffffff40] uppercase mb-1">Projects</div>
+
                     <SidebarItem
-                        icon="🚀"
-                        label="Backend"
-                        active={currentPath.includes('backend-projects')}
+                        icon={<img src={githubIcon} alt="GitHub" className="w-5 h-5 object-contain invert opacity-80" />}
+                        label="GitHub"
+                        active={currentPath.includes('github-projects')}
                         onClick={() => {
-                            // Find path to backend-projects
-                            setCurrentPath(['root', 'backend-projects']);
+                            setCurrentPath(['root', 'github-projects']);
+                        }}
+                    />
+                    <SidebarItem
+                        icon={<img src={linkedinIcon} alt="LinkedIn" className="w-5 h-5 object-contain invert opacity-80" />}
+                        label="LinkedIn"
+                        onClick={() => {
+                            window.open('https://www.linkedin.com/in/maycon-ps/', '_blank');
                         }}
                     />
                 </div>
 
                 {/* Main View */}
                 <div className="flex-1 p-4 overflow-y-auto" onClick={() => setSelectedId(null)}>
-                    <div className="grid grid-cols-[repeat(auto-fill,minmax(100px,1fr))] gap-4">
-                        {currentFolderNode?.children?.map(child => (
-                            <div
-                                key={child.id}
-                                onClick={(e) => { e.stopPropagation(); handleFileClick(child); }}
-                                onDoubleClick={(e) => { e.stopPropagation(); handleFileDoubleClick(child); }}
-                                className={`
-                                    flex flex-col items-center gap-2 p-2 rounded border transition-all cursor-pointer group
-                                    ${selectedId === child.id
-                                        ? 'bg-[#9664ff40] border-[#9664ff80]'
-                                        : 'bg-transparent border-transparent hover:bg-[#ffffff05]'}
-                                `}
-                            >
-                                <div className="text-4xl filter drop-shadow-lg group-hover:scale-110 transition-transform duration-200">
-                                    {getIcon(child)}
-                                </div>
-                                <div className="flex flex-col items-center text-center w-full">
-                                    <span className="text-sm font-medium leading-tight line-clamp-2 w-full break-words">
+                    {currentFolderId === 'downloads' ? (
+                        /* List View for Downloads */
+                        <div className="flex flex-col gap-0.5">
+                            {/* Header */}
+                            <div className="flex items-center gap-3 px-3 py-1.5 text-[10px] uppercase tracking-wider text-[#ffffff40] font-bold border-b border-[#ffffff10] mb-1">
+                                <span className="w-8"></span>
+                                <span className="flex-1">Name</span>
+                                <span className="w-24 text-right">Size</span>
+                                <span className="w-24 text-right">Date</span>
+                            </div>
+                            {currentFolderNode?.children?.map(child => (
+                                <div
+                                    key={child.id}
+                                    onClick={(e) => { e.stopPropagation(); handleFileClick(child); }}
+                                    onDoubleClick={(e) => { e.stopPropagation(); handleFileDoubleClick(child); }}
+                                    className={`
+                                        flex items-center gap-3 px-3 py-2 rounded-md transition-all cursor-pointer group
+                                        ${selectedId === child.id
+                                            ? 'bg-[#9664ff30] border border-[#9664ff60]'
+                                            : 'bg-transparent border border-transparent hover:bg-[#ffffff08]'}
+                                    `}
+                                >
+                                    <div className="w-8 h-8 flex items-center justify-center shrink-0">
+                                        <div className="w-7 h-7 flex items-center justify-center">
+                                            {child.icon === 'unknown'
+                                                ? <span className="text-xl">❓</span>
+                                                : child.icon
+                                                    ? <img src={{ intellij: intellijIcon, grafana: grafanaIcon, github: githubIcon, linkedin: linkedinIcon, sublime: sublimeIcon }[child.icon] || ''} alt={child.name} className="w-7 h-7 object-contain" />
+                                                    : <span className="text-xl">📄</span>
+                                            }
+                                        </div>
+                                    </div>
+                                    <span className="flex-1 text-sm font-medium truncate group-hover:text-white transition-colors">
                                         {child.name}
                                     </span>
-                                    <span className="text-[10px] text-[#ffffff60] mt-1">
-                                        {child.size}
+                                    <span className="w-24 text-right text-xs text-[#ffffff50]">
+                                        {child.size || '—'}
+                                    </span>
+                                    <span className="w-24 text-right text-xs text-[#ffffff50]">
+                                        {child.date || '—'}
                                     </span>
                                 </div>
-                            </div>
-                        ))}
-                        {(!currentFolderNode?.children || currentFolderNode.children.length === 0) && (
-                            <div className="col-span-full flex flex-col items-center justify-center text-[#ffffff30] h-64">
-                                <span className="text-4xl mb-2">📂</span>
-                                <span>Folder is Empty</span>
-                            </div>
-                        )}
-                    </div>
+                            ))}
+                        </div>
+                    ) : (
+                        /* Grid View for other folders */
+                        <div className="grid grid-cols-[repeat(auto-fill,minmax(100px,1fr))] gap-4">
+                            {currentFolderNode?.children?.map(child => (
+                                <div
+                                    key={child.id}
+                                    onClick={(e) => { e.stopPropagation(); handleFileClick(child); }}
+                                    onDoubleClick={(e) => { e.stopPropagation(); handleFileDoubleClick(child); }}
+                                    onMouseEnter={(e) => {
+                                        if (child.projectData?.description) {
+                                            setTooltip({ x: e.clientX, y: e.clientY, content: child.projectData.description });
+                                        }
+                                    }}
+                                    onMouseMove={(e) => {
+                                        if (tooltip) {
+                                            setTooltip(prev => prev ? { ...prev, x: e.clientX, y: e.clientY } : null);
+                                        }
+                                    }}
+                                    onMouseLeave={() => setTooltip(null)}
+                                    className={`
+                                        flex flex-col items-center gap-2 p-2 rounded border transition-all cursor-pointer group
+                                        ${selectedId === child.id
+                                            ? 'bg-[#9664ff40] border-[#9664ff80]'
+                                            : 'bg-transparent border-transparent hover:bg-[#ffffff05]'}
+                                    `}
+                                >
+                                    <div className="text-4xl filter drop-shadow-lg group-hover:scale-110 transition-transform duration-200">
+                                        {getIcon(child)}
+                                    </div>
+                                    <div className="flex flex-col items-center text-center w-full">
+                                        <span className="text-sm font-medium leading-tight line-clamp-2 w-full break-words">
+                                            {child.name}
+                                        </span>
+                                        <span className="text-[10px] text-[#ffffff60] mt-1">
+                                            {child.size}
+                                        </span>
+                                    </div>
+                                </div>
+                            ))}
+                            {(!currentFolderNode?.children || currentFolderNode.children.length === 0) && (
+                                <div className="col-span-full flex flex-col items-center justify-center text-[#ffffff30] h-64">
+                                    <span className="text-4xl mb-2">📂</span>
+                                    <span>Folder is Empty</span>
+                                </div>
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -273,6 +512,13 @@ export const ProjectsFileExplorer = ({ windowId }: { windowId?: string }) => {
             <div className="h-6 bg-[#2d2d44] border-t border-[#ffffff10] flex items-center px-4 text-xs text-[#ffffff60] gap-4">
                 <span>{currentFolderNode?.children?.length || 0} items</span>
                 <span>Free space: 42 GB</span>
+                <div className="flex-1" />
+                <a href="https://github.com/Maycon-Pereira" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-white cursor-pointer transition-colors">
+                    <img src={githubIcon} alt="GitHub" className="w-3.5 h-3.5 object-contain opacity-70" /> GitHub
+                </a>
+                <a href="https://www.linkedin.com/in/maycon-ps/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-white cursor-pointer transition-colors">
+                    <img src={linkedinIcon} alt="LinkedIn" className="w-3.5 h-3.5 object-contain opacity-70" /> LinkedIn
+                </a>
             </div>
 
             {/* File Detail Modal */}
@@ -342,11 +588,25 @@ export const ProjectsFileExplorer = ({ windowId }: { windowId?: string }) => {
                     </motion.div>
                 )}
             </AnimatePresence>
+
+            {/* Hover Tooltip - use Portal to escape window transform context */}
+            {tooltip && ReactDOM.createPortal(
+                <div
+                    className="fixed z-[9999] max-w-xs bg-black/90 text-white text-xs p-2 rounded border border-white/20 shadow-xl pointer-events-none backdrop-blur-sm"
+                    style={{
+                        top: tooltip.y + 16,
+                        left: tooltip.x + 16,
+                    }}
+                >
+                    {tooltip.content}
+                </div>,
+                document.body
+            )}
         </div>
     );
 };
 
-const SidebarItem = ({ icon, label, active, onClick }: { icon: string, label: string, active?: boolean, onClick?: () => void }) => (
+const SidebarItem = ({ icon, label, active, onClick }: { icon: React.ReactNode, label: string, active?: boolean, onClick?: () => void }) => (
     <div
         onClick={onClick}
         className={`
@@ -354,7 +614,7 @@ const SidebarItem = ({ icon, label, active, onClick }: { icon: string, label: st
             ${active ? 'bg-[#9664ff40] text-white border-r-2 border-[#9664ff]' : 'text-[#ffffff80] hover:bg-[#ffffff05] hover:text-white border-r-2 border-transparent'}
         `}
     >
-        <span className="text-lg opacity-80">{icon}</span>
+        <span className="text-lg opacity-80 flex items-center justify-center">{icon}</span>
         <span className="text-sm font-medium">{label}</span>
     </div>
 );

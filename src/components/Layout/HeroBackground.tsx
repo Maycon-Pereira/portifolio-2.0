@@ -1,18 +1,35 @@
-import { useState, useEffect } from 'react';
-
-const lines = [
-    { text: 'MAYCON', delay: 100 },
-    { text: 'Software Engineer', delay: 60 },
-    { text: 'Backend / Java Specialist', delay: 40 },
-];
+import { useState, useEffect, useRef } from 'react';
+import { useI18n } from '../../hooks/useI18nHook';
 
 export const HeroBackground = () => {
+    const { t } = useI18n();
     const [lineIndex, setLineIndex] = useState(0);
     const [charIndex, setCharIndex] = useState(0);
     const [displayedLines, setDisplayedLines] = useState<string[]>([]);
+    const [typingDone, setTypingDone] = useState(false);
+    const prevLangRef = useRef<string | null>(null);
+
+    const lines = [
+        { text: t('hero.name'), delay: 100 },
+        { text: t('hero.subtitle'), delay: 60 },
+        { text: t('hero.specialty'), delay: 40 },
+    ];
+
+    // When language changes after typing is done, update displayed lines instantly
+    const currentTexts = `${t('hero.name')}|${t('hero.subtitle')}|${t('hero.specialty')}`;
+    useEffect(() => {
+        if (prevLangRef.current !== null && prevLangRef.current !== currentTexts && typingDone) {
+            setDisplayedLines([t('hero.name'), t('hero.subtitle'), t('hero.specialty')]);
+        }
+        prevLangRef.current = currentTexts;
+    }, [currentTexts, typingDone]);
 
     useEffect(() => {
-        if (lineIndex >= lines.length) return;
+        if (typingDone) return;
+        if (lineIndex >= lines.length) {
+            setTypingDone(true);
+            return;
+        }
 
         const currentLine = lines[lineIndex];
         if (charIndex < currentLine.text.length) {
@@ -34,9 +51,9 @@ export const HeroBackground = () => {
             }, 400);
             return () => clearTimeout(timer);
         }
-    }, [lineIndex, charIndex]);
+    }, [lineIndex, charIndex, typingDone]);
 
-    const isTypingDone = lineIndex >= lines.length;
+    const isTypingDone = typingDone;
     const cursorLineIndex = isTypingDone ? lines.length - 1 : lineIndex;
 
     return (

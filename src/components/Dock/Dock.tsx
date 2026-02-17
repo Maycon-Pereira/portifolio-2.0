@@ -1,5 +1,8 @@
 import intellijIcon from '../../img/svg/intellij.svg';
+import grafanaIcon from '../../img/svg/Grafana.svg';
+import sublimeIcon from '../../img/svg/sublime.svg';
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { useI18n } from '../../hooks/useI18nHook';
 import { useWindowManager } from '../../context/WindowContext';
 import { AboutContent } from '../Content/AboutContent';
@@ -27,10 +30,24 @@ export const Dock = ({ currentWorkspace, onNavigate }: DockProps) => {
             windowId: 'about',
             component: <AboutContent windowId="about" />
         },
-        { id: 2, label: t('nav.skills'), icon: '🛠️', color: '#febc2e', windowId: 'skills', component: <SkillsContent /> },
+        { id: 2, label: t('nav.skills'), icon: <img src={grafanaIcon} alt="Skills" className="w-8 h-8 object-contain drop-shadow-[0_0_5px_rgba(255,255,255,0.3)]" />, color: '#febc2e', windowId: 'skills', component: <SkillsContent /> },
         { id: 3, label: t('nav.projects'), icon: '📂', color: '#28c840', windowId: 'projects', component: <ProjectsContent windowId="projects" /> },
         { id: 99, label: 'Terminal', icon: '💻', color: '#9664ff', windowId: 'terminal', component: <Terminal /> },
     ];
+
+    // Dynamic apps: open editor windows that aren't in the fixed list
+    const fixedWindowIds = new Set(apps.map(a => a.windowId).filter(Boolean));
+    const dynamicApps = windows
+        .filter(w => w.isOpen && !fixedWindowIds.has(w.id) && w.id.startsWith('editor-'))
+        .map(w => ({
+            id: 1000 + parseInt(w.id.replace(/\D/g, '') || '0'),
+            label: w.title as string,
+            icon: <img src={sublimeIcon} alt="Sublime" className="w-8 h-8 object-contain drop-shadow-[0_0_5px_rgba(255,255,255,0.3)]" />,
+            color: '#e6db74',
+            windowId: w.id,
+            component: w.component,
+            isDynamic: true
+        }));
 
     const handleAppClick = (app: any, e: React.MouseEvent<HTMLDivElement>) => {
         // ... (rest of handler remains same, just need to avoid type errors with 'any' or proper type)
@@ -70,7 +87,7 @@ export const Dock = ({ currentWorkspace, onNavigate }: DockProps) => {
                 // I should pass intellijIcon directly if the app is 'about'.
                 // Simplest way: Check the app ID or handle specific logic.
 
-                const iconToPass = app.id === 1 ? intellijIcon : (typeof app.icon === 'string' ? app.icon : undefined);
+                const iconToPass = app.id === 1 ? intellijIcon : app.id === 2 ? grafanaIcon : (typeof app.icon === 'string' ? app.icon : undefined);
 
                 openWindow(app.windowId, app.label, app.component, currentWorkspace, iconToPass, options);
             }
@@ -119,6 +136,113 @@ export const Dock = ({ currentWorkspace, onNavigate }: DockProps) => {
                     </div>
                 );
             })}
+
+            {/* Social Links Separator */}
+            <div className="w-6 h-[1px] bg-[#ffffff15] my-1" />
+
+            {/* GitHub */}
+            <div
+                className="relative group flex items-center justify-center gap-1 cursor-pointer transition-all duration-300 ease-out"
+                style={{
+                    transform: hoveredIndex === 1000 ? 'scale(1.1) translateX(5px)' : 'scale(1)',
+                }}
+                onMouseEnter={() => setHoveredIndex(1000)}
+                onMouseLeave={() => setHoveredIndex(null)}
+                onClick={() => window.open('https://github.com/Maycon-Pereira', '_blank')}
+            >
+                <div
+                    className={`absolute left-full top-1/2 -translate-y-1/2 ml-3 px-2 py-0.5 bg-[#0f0c1e] text-[#d8dee9] text-[10px] rounded opacity-0 transition-opacity duration-200 pointer-events-none whitespace-nowrap border border-[#9664ff33] z-[90] ${hoveredIndex === 1000 ? 'opacity-100 delay-100' : ''}`}
+                >
+                    GitHub
+                </div>
+                <div className="w-10 h-10 flex items-center justify-center rounded-xl bg-[#ffffff10] border border-[#ffffff10] transition-colors duration-300 hover:bg-[#ffffff25]">
+                    <i className="bi bi-github text-white text-2xl drop-shadow-[0_0_5px_rgba(255,255,255,0.3)]"></i>
+                </div>
+            </div>
+
+            {/* LinkedIn */}
+            <div
+                className="relative group flex items-center justify-center gap-1 cursor-pointer transition-all duration-300 ease-out"
+                style={{
+                    transform: hoveredIndex === 1001 ? 'scale(1.1) translateX(5px)' : 'scale(1)',
+                }}
+                onMouseEnter={() => setHoveredIndex(1001)}
+                onMouseLeave={() => setHoveredIndex(null)}
+                onClick={() => window.open('https://www.linkedin.com/in/maycon-ps/', '_blank')}
+            >
+                <div
+                    className={`absolute left-full top-1/2 -translate-y-1/2 ml-3 px-2 py-0.5 bg-[#0f0c1e] text-[#d8dee9] text-[10px] rounded opacity-0 transition-opacity duration-200 pointer-events-none whitespace-nowrap border border-[#9664ff33] z-[90] ${hoveredIndex === 1001 ? 'opacity-100 delay-100' : ''}`}
+                >
+                    LinkedIn
+                </div>
+                <div className="w-10 h-10 flex items-center justify-center rounded-xl bg-[#ffffff10] border border-[#ffffff10] transition-colors duration-300 hover:bg-[#ffffff25]">
+                    <span className="w-6 h-6 flex items-center justify-center bg-white rounded-md">
+                        <i className="bi bi-linkedin text-[#0A66C2] text-lg"></i>
+                    </span>
+                </div>
+            </div>
+
+            {/* Dynamic apps separator + icons */}
+            {dynamicApps.length > 0 && (
+                <>
+                    <motion.div
+                        initial={{ scaleX: 0 }}
+                        animate={{ scaleX: 1 }}
+                        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                        className="w-6 h-[1px] bg-[#ffffff15] my-1"
+                    />
+                    {dynamicApps.map((app, idx) => {
+                        const dIndex = apps.length + idx;
+                        const isHovered = hoveredIndex === dIndex;
+                        const isOpen = windows.some(w => w.id === app.windowId && w.isOpen && !w.isMinimized);
+
+                        return (
+                            <motion.div
+                                key={app.windowId}
+                                initial={{ scale: 0, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                exit={{ scale: 0, opacity: 0 }}
+                                transition={{
+                                    type: 'spring',
+                                    stiffness: 400,
+                                    damping: 15,
+                                    mass: 0.8,
+                                }}
+                                className="relative group flex items-center justify-center gap-1 cursor-pointer transition-all duration-300 ease-out"
+                                style={{
+                                    transform: isHovered ? 'scale(1.1) translateX(5px)' : 'scale(1)',
+                                }}
+                                onMouseEnter={() => setHoveredIndex(dIndex)}
+                                onMouseLeave={() => setHoveredIndex(null)}
+                                onClick={() => {
+                                    if (app.windowId) {
+                                        toggleWindow(app.windowId, currentWorkspace);
+                                    }
+                                }}
+                            >
+                                {/* Tooltip */}
+                                <div
+                                    className={`absolute left-full top-1/2 -translate-y-1/2 ml-3 px-2 py-0.5 bg-[#0f0c1e] text-[#d8dee9] text-[10px] rounded opacity-0 transition-opacity duration-200 pointer-events-none whitespace-nowrap border border-[#9664ff33] z-[90] ${isHovered ? 'opacity-100 delay-100' : ''}`}
+                                >
+                                    {app.label}
+                                </div>
+
+                                {/* Icon */}
+                                <div
+                                    className={`w-10 h-10 flex items-center justify-center rounded-xl bg-[#ffffff10] border border-[#ffffff10] transition-colors duration-300 ${isOpen ? 'bg-[#ffffff20] border-[#e6db7466]' : 'hover:bg-[#ffffff25]'}`}
+                                >
+                                    <span className="text-xl flex items-center justify-center filter drop-shadow-[0_0_5px_rgba(255,255,255,0.3)]">
+                                        {app.icon}
+                                    </span>
+                                </div>
+
+                                {/* Active Indicator */}
+                                <div className={`absolute -left-2 w-1 h-1 rounded-full bg-[#e6db74] transition-all duration-300 ${isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-0'}`} />
+                            </motion.div>
+                        );
+                    })}
+                </>
+            )}
         </div>
     );
 };

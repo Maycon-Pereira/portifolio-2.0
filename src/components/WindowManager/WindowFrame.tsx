@@ -169,7 +169,18 @@ export const WindowFrame = ({
                 height: currentHeight,
                 opacity: 1,
                 scale: 1,
-                borderRadius: isMaximized ? 0 : '0.5rem' // rounded-lg is 0.5rem
+                borderRadius: isMaximized ? 0 : '0.5rem'
+            }}
+            exit={{
+                opacity: 0,
+                scale: 0,
+                transition: {
+                    type: 'spring',
+                    stiffness: 400,
+                    damping: 15,
+                    mass: 0.8,
+                    duration: 0.3,
+                }
             }}
             transition={{
                 type: "spring",
