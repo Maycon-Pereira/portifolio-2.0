@@ -358,16 +358,18 @@ export const ProjectsFileExplorer = ({ windowId }: { windowId?: string }) => {
     const getIcon = (node: FileNode) => {
         // Custom icon from Downloads
         if (node.icon) {
-            const iconMap: Record<string, string> = {
+            const iconMap: Record<string, string | React.ReactNode> = {
                 intellij: intellijIcon,
                 grafana: grafanaIcon,
-                github: githubIcon,
-                linkedin: linkedinIcon,
+                github: <i className="bi bi-github text-white"></i>,
+                linkedin: <span className="w-5 h-5 flex items-center justify-center bg-white rounded-sm"><i className="bi bi-linkedin text-[#0A66C2] text-xs"></i></span>,
                 sublime: sublimeIcon,
             };
             if (node.icon === 'unknown') return <span className="text-3xl">❓</span>;
             const src = iconMap[node.icon];
-            if (src) return <img src={src} alt={node.name} className="w-10 h-10 object-contain" />;
+            if (!src) return <span className="text-3xl">📄</span>;
+            if (typeof src === 'string') return <img src={src} alt={node.name} className="w-10 h-10 object-contain" />;
+            return <span className="text-4xl flex items-center justify-center">{src}</span>;
         }
         if (node.desktopAction === 'about') return <img src={intellijIcon} alt="About" className="w-10 h-10 object-contain" />;
         if (node.desktopAction === 'skills') return <img src={grafanaIcon} alt="Skills" className="w-10 h-10 object-contain" />;
@@ -440,9 +442,13 @@ export const ProjectsFileExplorer = ({ windowId }: { windowId?: string }) => {
                                         <div className="w-7 h-7 flex items-center justify-center">
                                             {child.icon === 'unknown'
                                                 ? <span className="text-xl">❓</span>
-                                                : child.icon
-                                                    ? <img src={{ intellij: intellijIcon, grafana: grafanaIcon, github: githubIcon, linkedin: linkedinIcon, sublime: sublimeIcon }[child.icon] || ''} alt={child.name} className="w-7 h-7 object-contain" />
-                                                    : <span className="text-xl">📄</span>
+                                                : child.icon === 'github'
+                                                    ? <i className="bi bi-github text-white text-xl"></i>
+                                                    : child.icon === 'linkedin'
+                                                        ? <span className="w-4 h-4 flex items-center justify-center bg-white rounded-sm"><i className="bi bi-linkedin text-[#0A66C2] text-xl"></i></span>
+                                                        : child.icon
+                                                            ? <img src={{ intellij: intellijIcon, grafana: grafanaIcon, github: githubIcon, linkedin: linkedinIcon, sublime: sublimeIcon }[child.icon] || ''} alt={child.name} className="w-7 h-7 object-contain" />
+                                                            : <span className="text-xl">📄</span>
                                             }
                                         </div>
                                     </div>
