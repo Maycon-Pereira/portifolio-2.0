@@ -27,7 +27,7 @@ export const Terminal = () => {
 
     const windowCommands: Record<string, { id: string, component: React.ReactNode, title: string, icon: string }> = {
         'about': { id: 'about', title: 'About Me', icon: '👤', component: <AboutContent /> },
-        'skills': { id: 'skills', title: 'Technical Skills', icon: '🛠️', component: <SkillsContent /> },
+        'skills': { id: 'skills', title: 'Grafana', icon: '🛠️', component: <SkillsContent /> },
         'projects': { id: 'projects', title: 'Projects', icon: '🚀', component: <ProjectsContent /> }
     };
 

@@ -88,8 +88,9 @@ export const Dock = ({ currentWorkspace, onNavigate }: DockProps) => {
                 // Simplest way: Check the app ID or handle specific logic.
 
                 const iconToPass = app.id === 1 ? intellijIcon : app.id === 2 ? grafanaIcon : (typeof app.icon === 'string' ? app.icon : undefined);
+                const titleToPass = app.windowId === 'skills' ? 'Grafana' : app.label;
 
-                openWindow(app.windowId, app.label, app.component, currentWorkspace, iconToPass, options);
+                openWindow(app.windowId, titleToPass, app.component, currentWorkspace, iconToPass, options);
             }
         }
     };
@@ -176,7 +177,7 @@ export const Dock = ({ currentWorkspace, onNavigate }: DockProps) => {
                     LinkedIn
                 </div>
                 <div className="w-10 h-10 flex items-center justify-center rounded-xl bg-[#ffffff10] border border-[#ffffff10] transition-colors duration-300 hover:bg-[#ffffff25]">
-                    <span className="w-6 h-6 flex items-center justify-center bg-white rounded-md">
+                    <span className="w-4 h-4 flex items-center justify-center bg-white rounded-md">
                         <i className="bi bi-linkedin text-[#0A66C2] text-lg"></i>
                     </span>
                 </div>

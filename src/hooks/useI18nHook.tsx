@@ -4,7 +4,7 @@ type Translations = Record<string, any>;
 
 const translations: Translations = {
     en: {
-        nav: { home: "/home", about: "/about", skills: "/skills", projects: "/projects", contact: "/contact" },
+        nav: { home: "Home", about: "About", skills: "Skills", projects: "Projects", contact: "Contact" },
         menu: { viros: "Viros 2.0", settings: "Settings", poweroff: "Power Off / Log Out", back: "Back" },
         status: { online: "Status (Online)" },
         hero: {
@@ -105,7 +105,7 @@ const translations: Translations = {
         }
     },
     pt: {
-        nav: { home: "/início", about: "/sobre", skills: "/habilidades", projects: "/projetos", contact: "/contato" },
+        nav: { home: "Início", about: "Sobre", skills: "Habilidades", projects: "Projetos", contact: "Contato" },
         menu: { viros: "Viros 2.0", settings: "Configurações", poweroff: "Desligar / Sair", back: "Voltar" },
         status: { online: "Status (Online)" },
         hero: {
@@ -206,7 +206,7 @@ const translations: Translations = {
         }
     },
     es: {
-        nav: { home: "/inicio", about: "/sobre", skills: "/habilidades", projects: "/proyectos", contact: "/contato" },
+        nav: { home: "Inicio", about: "Sobre", skills: "Habilidades", projects: "Proyectos", contact: "Contato" },
         menu: { viros: "Viros 2.0", settings: "Ajustes", poweroff: "Apagar / Salir", back: "Volver" },
         status: { online: "Status (Online)" },
         hero: {

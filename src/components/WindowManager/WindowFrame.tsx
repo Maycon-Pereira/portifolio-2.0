@@ -262,7 +262,7 @@ export const WindowFrame = ({
             </div>
 
             {/* Content Area */}
-            <div className="flex-1 overflow-auto bg-[#0f0c1e80] p-4 custom-scrollbar">
+            <div className="flex-1 overflow-auto bg-[#0f0c1e80] custom-scrollbar">
                 {children}
             </div>
 

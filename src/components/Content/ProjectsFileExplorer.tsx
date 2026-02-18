@@ -268,7 +268,7 @@ export const ProjectsFileExplorer = ({ windowId }: { windowId?: string }) => {
         if (file.desktopAction) {
             const appMap: Record<string, { label: string; component: React.ReactNode; icon?: string }> = {
                 'about': { label: 'About Me', component: <AboutContent windowId="about" />, icon: intellijIcon },
-                'skills': { label: 'Skills', component: <SkillsContent />, icon: grafanaIcon },
+                'skills': { label: 'Grafana', component: <SkillsContent />, icon: grafanaIcon },
                 'terminal': { label: 'Terminal', component: <Terminal /> },
             };
             const app = appMap[file.desktopAction];
