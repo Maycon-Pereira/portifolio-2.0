@@ -12,6 +12,7 @@ import { WindowProvider } from './context/WindowContext'
 
 function App() {
     useI18n();
+
     const [currentWorkspace, setCurrentWorkspace] = useState(0);
 
     const handleNavigate = (index: number) => {
@@ -21,12 +22,15 @@ function App() {
     return (
         <WindowProvider>
             <AppInitializer />
+
             <div className="font-sans text-white h-screen overflow-hidden relative selection:bg-[#9664ff4d] bg-black">
-                {/* Background Layer */}
+                
+                {/* Background */}
                 <div className="fixed inset-0 z-0 pointer-events-none">
-                    <div className="absolute inset-0"
+                    <div
+                        className="absolute inset-0"
                         style={{
-                            backgroundImage: `linear-gradient(rgba(30, 20, 60, 0.15), rgba(30, 20, 60, 0.15)), url(${bgImage})`,
+                            backgroundImage: `linear-gradient(rgba(30,20,60,0.15), rgba(30,20,60,0.15)), url(${bgImage})`,
                             backgroundSize: "cover, 80%",
                             backgroundPosition: "center",
                             backgroundRepeat: "no-repeat"
@@ -36,16 +40,32 @@ function App() {
                     <HeroBackground />
                 </div>
 
-                {/* Content Layer */}
+                {/* Conteúdo */}
                 <div className="relative z-10 h-full">
-                    <TopBar onNavigate={handleNavigate} currentWorkspace={currentWorkspace} />
-                    <div id="brightness-overlay" className="fixed top-0 left-0 w-screen h-screen bg-black pointer-events-none z-[9999] opacity-0 transition-opacity duration-100 ease-linear" />
-                    <Desktop currentWorkspace={currentWorkspace} onWorkspaceChange={setCurrentWorkspace} />
-                    <Dock currentWorkspace={currentWorkspace} onNavigate={setCurrentWorkspace} />
+                    
+                    <TopBar 
+                        onNavigate={handleNavigate} 
+                        currentWorkspace={currentWorkspace} 
+                    />
+
+                    <div
+                        id="brightness-overlay"
+                        className="fixed top-0 left-0 w-screen h-screen bg-black pointer-events-none z-[9999] opacity-0 transition-opacity duration-100 ease-linear"
+                    />
+
+                    <Desktop
+                        currentWorkspace={currentWorkspace}
+                        onWorkspaceChange={setCurrentWorkspace}
+                    />
+
+                    <Dock
+                        currentWorkspace={currentWorkspace}
+                        onNavigate={setCurrentWorkspace}
+                    />
                 </div>
             </div>
         </WindowProvider>
     )
 }
 
-export default App
+export default App;

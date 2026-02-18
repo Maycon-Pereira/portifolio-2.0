@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { useGitHubActivity, CommitData } from '../../hooks/useGitHubActivity';
 
 // --- Colors (Grafana Palette) ---

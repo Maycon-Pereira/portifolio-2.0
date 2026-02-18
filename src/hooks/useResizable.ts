@@ -68,8 +68,8 @@ export const useResizable = ({
 
             let newWidth = currentWidth;
             let newHeight = currentHeight;
-            let newXChange = 0;
-            let newYChange = 0;
+            // let newXChange = 0;
+            // let newYChange = 0;
 
             const dir = resizeDirection.current;
 
@@ -81,7 +81,7 @@ export const useResizable = ({
                 // If width changed, we moved left
                 if (potentialWidth !== currentWidth) {
                     newWidth = potentialWidth;
-                    newXChange = dx; // Delta to adjust x position
+                    // newXChange = dx; // Delta to adjust x position
                 }
             }
 
@@ -92,7 +92,7 @@ export const useResizable = ({
                 const potentialHeight = Math.max(minHeight, currentHeight - dy);
                 if (potentialHeight !== currentHeight) {
                     newHeight = potentialHeight;
-                    newYChange = dy;
+                    //newYChange = dy;
                 }
             }
 

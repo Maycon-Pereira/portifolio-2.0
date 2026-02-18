@@ -28,7 +28,6 @@ export const WindowFrame = ({
     children,
     isMinimized,
     isMaximized,
-    overrideStyle,
     zIndex,
     onClose,
     onMinimize,
@@ -81,7 +80,7 @@ export const WindowFrame = ({
     const resizeStartPos = useRef({ x: 0, y: 0 });
     const resizeStartSize = useRef({ width: 0, height: 0 });
 
-    const onResizeHandler = ({ width, height, x, y }: { width: number; height: number; x?: number; y?: number }) => {
+    const onResizeHandler = ({ height, x, y }: { height: number; x?: number; y?: number }) => {
         // x and y from useResizable are total deltas from the start of resize
         // So we calculate new position relative to the START position.
 
