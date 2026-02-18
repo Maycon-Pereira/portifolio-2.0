@@ -1,4 +1,5 @@
 import { useGitHubActivity, CommitData } from '../../hooks/useGitHubActivity';
+import { useI18n } from '../../hooks/useI18nHook';
 
 // --- Colors (Grafana Palette) ---
 const COLORS = {
@@ -16,40 +17,40 @@ const COLORS = {
 };
 
 export const SkillsContent = () => {
+    const { t } = useI18n();
     // Real GitHub Data (Will fallback to simulated 5-year history)
     const { dailyActivity, totalCommits, loading } = useGitHubActivity('Maycon-Pereira');
 
     return (
-        <div className="w-full h-full bg-[#111217] p-2 overflow-hidden flex flex-col font-sans select-none text-[#ccccda]">
+        <div className="w-full h-full bg-[#111217] p-2 overflow-hidden flex flex-col font-sans text-[#ccccda]">
             {/* --- Dashboard Header --- */}
             <div className="flex justify-between items-center px-2 mb-3 h-8">
                 <div className="flex items-center gap-4">
-                    <h1 className="text-xl font-medium text-white">Production Overview</h1>
+                    <h1 className="text-xl font-medium text-white">{t('skills.title')}</h1>
                     <div className="flex gap-2">
-                        <Badge text="Senior Backend" color={COLORS.orange} />
-                        <Badge text="System Architect" color={COLORS.blue} />
+                        <Badge text={t('skills.badge_backend')} color={COLORS.orange} />
+                        <Badge text={t('skills.badge_architect')} color={COLORS.blue} />
                     </div>
                 </div>
 
                 {/* Time Picker Visual */}
                 <div className="flex items-center gap-1 bg-[#22252b] rounded-sm px-2 py-1 text-sm border border-[#333]">
-                    <span className="text-white">Lifetime Range</span>
+                    <span className="text-white">{t('skills.time_range')}</span>
                     <svg className="w-3 h-3 ml-1 fill-gray-400" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z" /></svg>
                 </div>
             </div>
 
             {/* --- Grid Layout --- */}
-            <div className="flex-1 grid grid-cols-4 grid-rows-[auto_1fr_1fr] gap-2 overflow-y-auto pb-4 px-1 custom-scrollbar">
+            <div className="flex-1 grid grid-cols-4 grid-rows-[auto_auto_auto] content-start gap-2 overflow-y-auto pb-4 px-1 custom-scrollbar">
 
-                {/* Row 1: Stat Panels */}
-                <StatPanel title="Experience" value="5+ Years" subtext="Senior Level" color={COLORS.blue} />
-                <StatPanel title="Core Stack" value="Java 17+" subtext="LTS Version" color={COLORS.orange} />
-                <StatPanel title="Framework" value="Spring 3.2+" subtext="Boot / Cloud" color={COLORS.green} />
-                <StatPanel title="Platform status" value="99.9%" subtext="Uptime" color={COLORS.green} trend={true} />
+                {/* Row 1: 4 Main Stat Panels (Interactive) */}
+                <StatPanel title={t('skills.dashboard.experience')} value={t('skills.value.years')} subtext={t('skills.dashboard.experience_sub')} color={COLORS.blue} />
+                <StatPanel title={t('skills.dashboard.core_stack')} value="Java 8+" subtext={t('skills.dashboard.core_stack_sub')} color={COLORS.orange} />
+                <StatPanel title={t('skills.dashboard.framework')} value="Spring 3.2+" subtext={t('skills.dashboard.framework_sub')} color={COLORS.green} />
+                <StatPanel title={t('skills.dashboard.platform')} value="99.9%" subtext={t('skills.dashboard.platform_sub')} color={COLORS.green} trend />
 
                 {/* Row 2: Skill Bars (Span 2) */}
-                {/* Row 2: Skill Bars (Span 2) */}
-                <Panel title="Backend Ecosystem" className="col-span-2 row-span-2 h-full flex flex-col min-h-0">
+                <Panel title={t('skills.backend_panel')} className="col-span-2 row-span-2 h-full flex flex-col min-h-0">
                     <div className="flex-1 flex flex-col gap-3 px-4 pt-4 overflow-y-auto custom-scrollbar">
                         {/* CORE: FOUNDATION */}
                         <div className="flex flex-col gap-1">
@@ -64,21 +65,21 @@ export const SkillsContent = () => {
 
 
                             {/* BETA: LEARNING / NEWER */}
-                            <SkillBar name="Kafka / Event Driven" status="BETA" className="mt-1" color={COLORS.blue} />
-                            <SkillBar name="Cloud Infrastructure" status="BETA" className="mt-1" color={COLORS.blue} />
+                            <SkillBar name={t('skills.stack.kafka_event')} status="BETA" className="mt-1" color={COLORS.blue} />
+                            <SkillBar name={t('skills.stack.cloud_infra')} status="BETA" className="mt-1" color={COLORS.blue} />
                         </div>
                     </div>
                 </Panel>
 
                 {/* Row 2: Frontend & Tools (Span 2) */}
-                <Panel title="Frontend & Tools" className="col-span-2 row-span-1">
-                    <div className="grid grid-cols-2 gap-4 h-full px-4 p-2 items-center">
+                <Panel title={t('skills.frontend_panel')} className="col-span-2 row-span-1 h-37">
+                    <div className="grid grid-cols-2 gap-4 h-full px-4 pt-4 pb-2 items-start overflow-y-auto custom-scrollbar">
                         <div className="flex flex-col gap-3">
                             <SkillBar name="React / Next.js" status="STABLE" color={COLORS.green} />
                             <SkillBar name="TypeScript" status="STABLE" color={COLORS.green} />
                         </div>
                         <div className="flex flex-col gap-2">
-                            <h4 className="text-xs text-[#8e8e8e] uppercase">Toolkit</h4>
+                            <h4 className="text-xs text-[#8e8e8e] uppercase">{t('skills.toolkit')}</h4>
                             <div className="flex flex-wrap gap-2">
                                 <Tag name="Git" />
                                 <Tag name="Linux" />
@@ -92,19 +93,19 @@ export const SkillsContent = () => {
                 </Panel>
 
                 {/* Row 3: Activity Graph (Span 2) */}
-                <Panel title="Lifetime Commit Activity - [ Working On It ]" className="col-span-2 row-span-1 h-auto">
+                <Panel title={t('skills.activity_panel')} className="col-span-2 row-span-1 h-43">
                     <a
                         href="https://github.com/Maycon-Pereira"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="w-full h-full block relative cursor-pointer group/graph"
                     >
-                        <div className="w-full h-full p-2 relative flex flex-col">
-                            <div className="flex-1 w-full relative">
+                        <div className="w-full h-32 p-2 relative flex flex-col uppercase">
+                            <div className="flex-1 w-full h-32 relative">
                                 <ActivityChart color={COLORS.yellow} data={dailyActivity} loading={loading} />
                             </div>
                             <div className="absolute top-2 right-4 text-xs font-mono text-[#8e8e8e] group-hover/graph:text-white transition-colors">
-                                {loading ? 'Scanning...' : `${totalCommits.toLocaleString()} commits`}
+                                {loading ? t('skills.scanning') : `${totalCommits.toLocaleString()} ${t('skills.commits')}`}
                                 <span className="ml-2 inline-flex items-center opacity-50 group-hover/graph:opacity-100 transition-opacity">
                                     <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                         <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
@@ -140,10 +141,13 @@ export const SkillsContent = () => {
 
 // --- Sub-components ---
 
-const Panel = ({ title, children, className = '' }: { title: string, children: React.ReactNode, className?: string }) => (
-    <div className={`bg-[#181b1f] border border-[#22252b] rounded-sm flex flex-col ${className}`}>
+const Panel = ({ title, children, className = '', onClick }: { title: string, children: React.ReactNode, className?: string, onClick?: () => void }) => (
+    <div
+        className={`bg-[#181b1f] border border-[#22252b] rounded-sm flex flex-col overflow-hidden transition-all duration-200 ${onClick ? 'cursor-pointer hover:border-[#444] active:scale-[0.98]' : ''} ${className}`}
+        onClick={onClick}
+    >
         {/* Panel Header */}
-        <div className="h-8 flex items-center px-3 border-b border-[#22252b] cursor-pointer hover:bg-[#22252b] transition-colors group">
+        <div className="h-8 flex items-center px-3 border-b border-[#22252b] group">
             <span className="text-xs font-semibold text-[#8e8e8e] uppercase tracking-wide flex items-center gap-2 w-full">
                 {title}
                 <svg className="w-3 h-3 ml-auto opacity-0 group-hover:opacity-50 text-[#8e8e8e]" viewBox="0 0 24 24"><path fill="currentColor" d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" /></svg>
@@ -156,38 +160,51 @@ const Panel = ({ title, children, className = '' }: { title: string, children: R
     </div>
 );
 
-const StatPanel = ({ title, value, subtext, color, trend }: { title: string, value: string, subtext: string, color: string, trend?: boolean }) => (
-    <Panel title={title} className="h-32">
-        <div className="flex flex-col justify-center h-full px-4">
-            <div className="text-3xl font-medium tracking-tight" style={{ color: color }}>
-                {value}
-            </div>
-            <div className="mt-1 flex items-center gap-2 text-sm text-[#8e8e8e]">
-                {subtext}
-                {trend && <span className="text-[#73bf69] flex items-center text-xs ml-1"><svg className="w-3 h-3 mr-0.5" viewBox="0 0 24 24"><path fill="currentColor" d="M7 14l5-5 5 5z" /></svg> +2.4%</span>}
-            </div>
-        </div>
-    </Panel>
-);
+const StatPanel = ({ title, value, subtext, color, trend, command }: { title: string, value: string, subtext: string, color: string, trend?: boolean, command?: string }) => {
+    const handleCommand = () => {
+        if (command) {
+            window.dispatchEvent(new CustomEvent('terminal-command', { detail: { command } }));
+        }
+    };
 
-const SkillBar = ({ name, status, color, className = '' }: { name: string, status: string, color: string, className?: string }) => (
-    <div className={`w-full ${className}`}>
-        <div className="flex justify-between mb-1 text-xs">
-            <span className="text-[#ccccda] font-medium">{name}</span>
-            <span className="font-bold opacity-80" style={{ color: color }}>[{status}]</span>
-        </div>
-        <div className="w-full h-1.5 bg-[#252830] rounded-sm overflow-hidden relative group">
-            {/* Status Indicator Bar */}
-            <div className="h-full rounded-sm relative" style={{
-                width: status === 'CORE' ? '100%' : status === 'STABLE' ? '75%' : '50%',
-                backgroundColor: color,
-                opacity: 0.8
-            }}>
-                <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity" />
+    return (
+        <Panel title={title} className="h-32" onClick={command ? handleCommand : undefined}>
+            <div className="flex flex-col justify-center h-full px-4">
+                <div className="text-2xl font-medium tracking-tight" style={{ color: color }}>
+                    {value}
+                </div>
+                <div className="mt-1 flex items-center gap-2 text-[0.7rem] text-[#8e8e8e] leading-tight">
+                    {subtext}
+                    {trend && <span className="text-[#73bf69] flex items-center text-[10px] ml-1"><svg className="w-3 h-3 mr-0.5" viewBox="0 0 24 24"><path fill="currentColor" d="M7 14l5-5 5 5z" /></svg> +2.4%</span>}
+                </div>
+            </div>
+        </Panel>
+    );
+};
+
+const SkillBar = ({ name, status, color, className = '' }: { name: string, status: 'CORE' | 'STABLE' | 'BETA', color: string, className?: string }) => {
+    const { t } = useI18n();
+    const statusLabel = t(`skills.status_${status.toLowerCase()}`);
+
+    return (
+        <div className={`w-full ${className}`}>
+            <div className="flex justify-between mb-1 text-xs">
+                <span className="text-[#ccccda] font-medium">{name}</span>
+                <span className="font-bold opacity-80" style={{ color: color }}>[{statusLabel}]</span>
+            </div>
+            <div className="w-full h-1.5 bg-[#252830] rounded-sm overflow-hidden relative group">
+                {/* Status Indicator Bar */}
+                <div className="h-full rounded-sm relative" style={{
+                    width: status === 'CORE' ? '100%' : status === 'STABLE' ? '75%' : '50%',
+                    backgroundColor: color,
+                    opacity: 0.8
+                }}>
+                    <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity" />
+                </div>
             </div>
         </div>
-    </div>
-);
+    );
+};
 
 const Badge = ({ text, color }: { text: string, color: string }) => (
     <span className="px-2 py-0.5 rounded text-[10px] font-bold border" style={{ color: color, borderColor: `${color}40`, backgroundColor: `${color}10` }}>
@@ -214,7 +231,7 @@ const ActivityChart = ({ color, data, loading }: { color: string, data: CommitDa
     const maxVal = Math.max(...data.map(d => d.count), 5); // Minimum max of 5 to avoid flat charts on low activity
     const points = data.map((d, i) => {
         const x = (i / (data.length - 1)) * 400;
-        const y = 100 - (d.count / maxVal) * 80; // Leave 20px padding at bottom, 100px total height
+        const y = 100 - (d.count / maxVal) * 60; // Leave 40px padding at top/bottom, 100px total height
         return `${x},${y}`;
     }).join(' ');
 

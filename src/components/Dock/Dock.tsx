@@ -154,7 +154,7 @@ export const Dock = ({ currentWorkspace, onNavigate }: DockProps) => {
                 <div
                     className={`absolute left-full top-1/2 -translate-y-1/2 ml-3 px-2 py-0.5 bg-[#0f0c1e] text-[#d8dee9] text-[10px] rounded opacity-0 transition-opacity duration-200 pointer-events-none whitespace-nowrap border border-[#9664ff33] z-[90] ${hoveredIndex === 1000 ? 'opacity-100 delay-100' : ''}`}
                 >
-                    GitHub
+                    {t('dock.github')}
                 </div>
                 <div className="w-10 h-10 flex items-center justify-center rounded-xl bg-[#ffffff10] border border-[#ffffff10] transition-colors duration-300 hover:bg-[#ffffff25]">
                     <i className="bi bi-github text-white text-2xl drop-shadow-[0_0_5px_rgba(255,255,255,0.3)]"></i>
@@ -174,7 +174,7 @@ export const Dock = ({ currentWorkspace, onNavigate }: DockProps) => {
                 <div
                     className={`absolute left-full top-1/2 -translate-y-1/2 ml-3 px-2 py-0.5 bg-[#0f0c1e] text-[#d8dee9] text-[10px] rounded opacity-0 transition-opacity duration-200 pointer-events-none whitespace-nowrap border border-[#9664ff33] z-[90] ${hoveredIndex === 1001 ? 'opacity-100 delay-100' : ''}`}
                 >
-                    LinkedIn
+                    {t('dock.linkedin')}
                 </div>
                 <div className="w-10 h-10 flex items-center justify-center rounded-xl bg-[#ffffff10] border border-[#ffffff10] transition-colors duration-300 hover:bg-[#ffffff25]">
                     <span className="w-4 h-4 flex items-center justify-center bg-white rounded-md">
@@ -186,12 +186,6 @@ export const Dock = ({ currentWorkspace, onNavigate }: DockProps) => {
             {/* Dynamic apps separator + icons */}
             {dynamicApps.length > 0 && (
                 <>
-                    <motion.div
-                        initial={{ scaleX: 0 }}
-                        animate={{ scaleX: 1 }}
-                        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                        className="w-6 h-[1px] bg-[#ffffff15] my-1"
-                    />
                     {dynamicApps.map((app, idx) => {
                         const dIndex = apps.length + idx;
                         const isHovered = hoveredIndex === dIndex;

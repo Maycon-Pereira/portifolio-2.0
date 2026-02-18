@@ -27,6 +27,7 @@ interface WindowContextType {
     toggleWindow: (id: string, workspaceId: number) => void;
     closeAllWindows: () => void;
     setWindowTitle: (id: string, title: ReactNode) => void;
+    updateWindow: (id: string, updates: Partial<WindowState>) => void;
 }
 
 const WindowContext = createContext<WindowContextType | undefined>(undefined);
@@ -177,8 +178,12 @@ export const WindowProvider = ({ children }: { children: ReactNode }) => {
         setWindows(prev => prev.map(w => w.id === id ? { ...w, title } : w));
     }, []);
 
+    const updateWindow = useCallback((id: string, updates: Partial<WindowState>) => {
+        setWindows(prev => prev.map(w => w.id === id ? { ...w, ...updates } : w));
+    }, []);
+
     return (
-        <WindowContext.Provider value={{ windows, openWindow, closeWindow, minimizeWindow, maximizeWindow, focusWindow, toggleWindow, closeAllWindows, setWindowTitle }}>
+        <WindowContext.Provider value={{ windows, openWindow, closeWindow, minimizeWindow, maximizeWindow, focusWindow, toggleWindow, closeAllWindows, setWindowTitle, updateWindow }}>
             {children}
         </WindowContext.Provider>
     );

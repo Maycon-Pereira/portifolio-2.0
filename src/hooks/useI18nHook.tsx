@@ -4,7 +4,7 @@ type Translations = Record<string, any>;
 
 const translations: Translations = {
     en: {
-        nav: { home: "Home", about: "About", skills: "Skills", projects: "Projects", contact: "Contact" },
+        nav: { home: "Home", about: "About", skills: "Skills", projects: "Projects" },
         menu: { viros: "Viros 2.0", settings: "Settings", poweroff: "Power Off / Log Out", back: "Back" },
         status: { online: "Status (Online)" },
         hero: {
@@ -20,6 +20,22 @@ const translations: Translations = {
             theme_value: "Space Dark",
             welcome: 'Welcome to Maycon Terminal v1.0',
             help_hint: 'Type "help" to see available commands.',
+            cd_error: 'cd: no such file or directory: ',
+            readme_content: '# 🚀 Portfolio System v2.0 - User Manual\n\nNavigate intuitively by clicking on the icons or, if you prefer a technical experience, use the integrated terminal.\n\n## 🌟 Quick Start\n1.  **Explore via UI**: Click on the Dock icons (left side).\n2.  **Explore via Terminal**: Type commands to navigate and interact.\n\n## 📟 Terminal Commands\nThe terminal is fully functional! Try these:\n- `help` : List all available commands.\n- `ls` : List directories and files.\n- `cd <dir>` : Change directory (e.g., `cd projects`).\n- `cat <file>` : Read a file (e.g., `cat readme.md`).\n- `whoami` : Check current user.\n- `date` : Show system date/time.\n- `neofetch` : Display system specs.\n- `clear` : Clear the screen.\n\n## 📂 Applications\n- **About Me (Atom Editor)**: My bio, experience, and education code.\n- **Skills (Grafana)**: Real-time dashboard of my technical stack.\n- **Projects (File Explorer)**: Browse my work. Use `cat <project>` in terminal for details!\n\n## 💡 Pro Tips\n- Try dragging windows around!\n- Maximize/Minimize windows using the traffic lights.\n- Type `sudo rm -rf /` for a surprise (at your own risk!).\n\n*Built with React, TypeScript, and Love.*',
+            text_txt_content: '',
+            readme_opening: 'Opening readme.md...',
+            text_opening: 'Opening Text.txt...',
+            window_title: {
+                about: 'Sobre Mim',
+                skills: 'Grafana',
+                projects: 'Projetos'
+            },
+            feedback: {
+                opening: 'Opening',
+                closing: 'Closing',
+                toggling: 'Toggling',
+                list: 'Open windows:'
+            },
             not_found: 'command not found:',
             help_type: 'Type "help" for commands.',
             help_title: '📋 Available commands:',
@@ -33,10 +49,10 @@ const translations: Translations = {
             help_whoami: '  whoami      - Current user',
             help_date: '  date        - Current date & time',
             help_ls: '  ls          - List directory',
-            about_title: '👨‍💻 Maycon — Full Stack Developer',
-            about_1: '   Passionate about clean code, automation,',
-            about_2: '   and building amazing user experiences.',
-            about_3: '   Currently exploring the edge of web tech.',
+            about_title: 'Maycon Pereira: Backend Engineer specialized in Java & Spring Boot.',
+            about_1: 'Focus on scalable and secure APIs with clean architecture.',
+            about_2: 'Previous experience in QA, bringing a rigorous eye for quality and reliability of code from the foundation.',
+            about_3: '"I build what sustains the system."',
             skills_title: '🛠 Tech Stack:',
             projects_title: '🚀 Projects:',
             projects_1: '  • Portfolio — This website!',
@@ -44,6 +60,56 @@ const translations: Translations = {
             projects_3: '  • Landing Page Engine  — Automated LP generator',
             projects_4: '  • Cypress Test Suite   — E2E automation',
             contact_title: '📬 Contact:',
+            projects_linux_header: '🚀 Mission Archive / Projects:',
+            projects_cat_hint: "Type 'cat <project_name>' to see detailed tech stack and GitHub link.",
+
+            project_usertask_line: 'drwxr-xr-x   22KB  UserTask               (Task Manager | CRUD)',
+            project_cidadaonow_line: 'drwxr-xr-x   10KB  CidadaoNow             (Social Project | Backend Focus)',
+            project_ecommerce_line: 'drwxr-xr-x  147KB  E-Commerce-API         (Complete Platform | REST & SQL)',
+            project_rest_product_line: 'drwxr-xr-x   15KB  Rest-Product-Api       (Basic REST API | Spring Data JPA)',
+            project_ms_pedido_line: 'drwxr-xr-x   18KB  ms-pedido-process      (Microservice | Messaging/Architecture)',
+            project_blueworks_line: 'drwxr-xr-x  202KB  BlueWorks-Back-End     (FullStack Recruitment | Spring Boot)',
+            project_hotel_line: 'drwxr-xr-x   29KB  Hotel                  (Reservation System | Hibernate)',
+            project_vollmed_line: 'drwxr-xr-x  140KB  VollMed-Api            (Medical Management | Spring Security & JWT)',
+            project_organo_line: 'drwxr-xr-x  561KB  Organo                 (Team Management | Frontend & Integration)',
+            project_userdept_line: 'drwxr-xr-x  561KB  UserDept               (User Department | System Integration)',
+
+            skills_terminal_header: '🛠  Technical Stack:',
+            skills_terminal_backend: 'Backend  → Java 8+, Spring Boot, Spring Security, JPA/Hibernate, REST APIs',
+            skills_terminal_database: 'Database → PostgreSQL, SQL Server, MySQL, MongoDB',
+            skills_terminal_testing: 'Testing  → JUnit, Mockito, Cypress, Postman, JMeter',
+            skills_terminal_devops: 'DevOps   → Docker, CI/CD (GitHub Actions, Jenkins, Azure DevOps), AWS',
+            skills_terminal_tools: 'Tools    → Git, Linux (Bash), Jira, Scrum/Kanban',
+            neofetch_os: 'Ubuntu 24.04 LTS (Portfolio Edition)',
+            neofetch_kernel: 'Spring Boot v3.2.x',
+            neofetch_uptime: '+3 years of coding',
+            neofetch_packages: '+10 Projects (Git)',
+            neofetch_shell: 'portfolio-sh',
+            neofetch_theme: 'Space Dark',
+            neofetch_cpu: 'Java Virtual Machine (JVM)',
+            neofetch_memory: '16GB / 32GB (Learning Capacity)',
+            contact_links_header: "📬 System Contact Links:",
+            contact_establishing: "[ESTABLISHING CONNECTION...]",
+            contact_header_user: "USER",
+            contact_header_type: "TYPE",
+            contact_header_address: "ADDRESS",
+            contact_header_status: "STATUS",
+            contact_status_online: "[ONLINE]",
+            contact_status_active: "[ACTIVE]",
+            contact_ping_line1: "Command: ping -c 3 maycon.dev",
+            contact_ping_line2: "64 bytes from portfolio: icm_seq=1 ttl=64 time=0.042 ms",
+            contact_ping_line3: "Connection stable. Feel free to reach out!",
+            cmd_java_info: "[INFO] Specialized in high-performance Backend with Java & Spring Ecosystem.",
+            cmd_docker_running: "[RUNNING] Orchestrating microservices and ensuring environment parity.",
+            cmd_mvn_info: "[INFO] Building scalable APIs with Spring Boot 3.2+ and Maven Lifecycle.",
+            cmd_psql_connected: "[CONNECTED] Managing complex relational schemas and query optimization.",
+            cmd_cypress_pass: "[PASS] Quality first: Ensuring system reliability with E2E and Unit testing.",
+            cmd_sudo_denied: "🚫 ACCESS DENIED: Nice try, but I need these files! 😱"
+        },
+        social: {
+            email: "pmaycon63@gmail.com",
+            linkedin: "linkedin.com/in/maycon-ps",
+            github: "github.com/Maycon-Pereira",
         },
         about: {
             role: 'Backend Software Engineer',
@@ -78,18 +144,24 @@ const translations: Translations = {
             exp_edu_header: 'ACADEMIC EDUCATION',
             exp_edu1: 'Systems Analysis and Development - São Judas (In Progress)',
             exp_edu2: 'IT Technician - FIEB (Completed)',
+            sidebar: {
+                project: "Project"
+            },
+            statusbar: {
+                top_level: "Top Level"
+            }
         },
         editor: {
             placeholder: '// Start writing here...',
         },
         skills: {
             title: 'Production Overview',
-            badge_backend: 'Senior Backend',
+            badge_backend: 'Backend Engineer',
             badge_architect: 'System Architect',
             time_range: 'Lifetime Range',
             experience: 'Experience',
-            experience_value: '5+ Years',
-            experience_sub: 'Senior Level',
+            experience_value: '3+ Years',
+            experience_sub: 'Mid-level Engineer',
             core_stack: 'Core Stack',
             core_stack_sub: 'LTS Version',
             framework: 'Framework',
@@ -102,10 +174,93 @@ const translations: Translations = {
             activity_panel: 'Lifetime Commit Activity - [ Working On It ]',
             scanning: 'Scanning...',
             commits: 'commits',
+            status_core: 'CORE',
+            status_stable: 'STABLE',
+            status_beta: 'BETA',
+            stack: {
+                cloud_infra: "Cloud Infrastructure",
+                kafka_event: "Kafka / Event Driven"
+            },
+            value: {
+                years: "3+ Years"
+            },
+            dashboard: {
+                experience: 'Experience',
+                experience_sub: 'Software Engineer',
+                core_stack: 'Core Stack',
+                core_stack_sub: 'LTS Version',
+                framework: 'Framework',
+                framework_sub: 'Boot / Cloud',
+                platform: 'Platform Status',
+                platform_sub: 'Uptime'
+            }
+        },
+        projects_tab: {
+            sidebar_home: 'Home',
+            sidebar_desktop: 'Desktop',
+            sidebar_docs: 'Documents',
+            sidebar_downloads: 'Downloads',
+            sidebar_projects: 'Projects',
+            table_name: 'Name',
+            table_size: 'Size',
+            table_date: 'Date',
+            modal_type: 'Type',
+            modal_size: 'Size',
+            modal_modified: 'Modified',
+            modal_location: 'Location',
+            modal_desc: 'Description',
+            modal_stack: 'Technology Stack',
+            modal_vscode: 'Open in VS Code',
+            status_items: 'items',
+            status_space: 'Free space',
+            empty_folder: 'Folder is Empty',
+            desc_fallback: 'No description provided.',
+            type_fallback: 'Java Source File',
+            about_me: 'About Me',
+            skills: 'Technical Skills',
+            terminal: 'Terminal',
+        },
+        repo_descriptions: {
+            'BlueWorks-Back-End': 'Back-end for a capstone project on employability, built in Java with Spring Boot REST API. Includes CRUD operations with physical deletion and login system integration. Works directly with the "bluework" front-end: https://github.com/Maycon-Pereira/bluework',
+            'CidadaoNow': 'CidadãoNow is a Java-based system for event registration, notification, and participation. It allows citizens to track local events in real-time, featuring user registration, attendance confirmation, and event organization by date and time.',
+            'E-Commerce-API': 'REST API for an e-commerce application, featuring CRUD functionality for Client, Seller, and Admin roles. Sellers can create products, Admins can manage categories, and Clients can browse and purchase products.',
+            'Hotel': 'Hotel reservation and management system.',
+            'ms-pedido-processamento': 'E-commerce microservice featuring separate PRODUCER and CONSUMER APIs connected via RabbitMQ queues to manage orders and registered items.',
+            'Organo': 'React application for managing tasks within a company.',
+            'Rest-Product-Api': 'RESTful API for product management focused on CRUD operations. Developed to offer a simple and efficient structure, ideal for learning and applying fundamental API development concepts.',
+            'UserDept': 'Using Java and Spring, I built a CRUD API for \'User\' and \'Department\' with a 1:N relationship, allowing users to be assigned to a department while departments can have multiple users.',
+            'UserTask': 'UserTask is a REST API in Java with Spring Boot for managing users and tasks. The project focuses on market best practices, organized architecture, and real-world features, demonstrating security, validation, error handling, and professional backend structure.',
+            'VollMed-Api': 'Spring Boot application for doctor and patient CRUD operations and appointment scheduling, featuring JWT security and login. Developed during Alura\'s Spring Boot 3 REST API course.',
+        },
+        sublime: {
+            menu: {
+                file: "File",
+                edit: "Edit",
+                selection: "Selection",
+                find: "Find",
+                view: "View",
+                goto: "Goto",
+                tools: "Tools",
+                preferences: "Preferences",
+                help: "Help"
+            },
+            status: {
+                ln: "Ln",
+                col: "Col",
+                spaces: "Spaces",
+                utf8: "UTF-8",
+                plain_text: "Plain Text",
+                saved: "Saved",
+                unsaved: "Unsaved"
+            }
+        },
+        dock: {
+            github: "GitHub",
+            linkedin: "LinkedIn"
         }
     },
     pt: {
-        nav: { home: "Início", about: "Sobre", skills: "Habilidades", projects: "Projetos", contact: "Contato" },
+        nav: { home: "Início", about: "Sobre", skills: "Habilidades", projects: "Projetos" },
         menu: { viros: "Viros 2.0", settings: "Configurações", poweroff: "Desligar / Sair", back: "Voltar" },
         status: { online: "Status (Online)" },
         hero: {
@@ -124,6 +279,9 @@ const translations: Translations = {
             not_found: 'comando não encontrado:',
             help_type: 'Digite "help" para comandos.',
             help_title: '📋 Comandos disponíveis:',
+            readme_content: '# 🚀 Sistema de Portfólio v2.0 - Manual do Usuário\n\nNavegue de forma intuitiva clicando nos ícones ou, se preferir uma experiência técnica, utilize o terminal integrado.\n\n## 🌟 Início Rápido\n1.  **Explore via UI**: Clique nos ícones do Dock (lado esquerdo).\n2.  **Explore via Terminal**: Digite comandos para navegar e interagir.\n\n## 📟 Comandos do Terminal\nO terminal é totalmente funcional! Tente estes:\n- `help` : Lista todos os comandos disponíveis.\n- `ls` : Lista diretórios e arquivos.\n- `cd <dir>` : Muda de diretório (ex: `cd projects`).\n- `cat <arquivo>` : Lê um arquivo (ex: `cat readme.md`).\n- `whoami` : Verifica o usuário atual.\n- `date` : Mostra data/hora do sistema.\n- `neofetch` : Exibe especificações do sistema.\n- `clear` : Limpa a tela.\n\n## 📂 Aplicativos\n- **Sobre Mim (Atom Editor)**: Minha bio, experiência e código de educação.\n- **Habilidades (Grafana)**: Dashboard em tempo real do meu stack técnico.\n- **Projetos (Explorador de Arquivos)**: Navegue pelos meus trabalhos. Use `cat <projeto>` no terminal para detalhes!\n\n## 💡 Dicas Pro\n- Tente arrastar as janelas!\n- Maximize/Minimize janelas usando os botões de controle.\n- Digite `sudo rm -rf /` para uma surpresa (por sua conta e risco!).\n\n*Feito com React, TypeScript e Amor.*',
+            text_txt_content: '',
+            readme_opening: 'Abrindo readme.md no Editor de Texto...',
             help_help: '  help        - Mostrar esta ajuda',
             help_about: '  about       - Quem sou eu?',
             help_skills: '  skills      - Minhas tecnologias',
@@ -134,10 +292,10 @@ const translations: Translations = {
             help_whoami: '  whoami      - Usuário atual',
             help_date: '  date        - Data & hora atual',
             help_ls: '  ls          - Listar diretório',
-            about_title: '👨‍💻 Maycon — Desenvolvedor Full Stack',
-            about_1: '   Apaixonado por código limpo, automação,',
-            about_2: '   e criação de experiências incríveis.',
-            about_3: '   Explorando o limite da tecnologia web.',
+            about_title: 'Maycon Pereira: Engenheiro Backend especializado em Java & Spring Boot.',
+            about_1: 'Foco em APIs escaláveis e seguras com arquitetura limpa.',
+            about_2: 'Experiência prévia em QA, trazendo um olhar rigoroso para qualidade e confiabilidade de código desde a fundação.',
+            about_3: '"Eu construo o que sustenta o sistema."',
             skills_title: '🛠 Tecnologias:',
             projects_title: '🚀 Projetos:',
             projects_1: '  • Portfolio — Este site!',
@@ -145,6 +303,57 @@ const translations: Translations = {
             projects_3: '  • Landing Page Engine  — Gerador de LP',
             projects_4: '  • Suite de Testes Cypress — Automação E2E',
             contact_title: '📬 Contato:',
+            projects_linux_header: '🚀 Mission Archive / Projects:',
+            projects_cat_hint: "Digite 'cat <nome_do_projeto>' para ver o stack detalhado e link do GitHub.",
+            project_blueworks_line: 'drwxr-xr-x  202KB  BlueWorks-Back-End     (Recrutamento FullStack | Spring Boot)',
+            project_ecommerce_line: 'drwxr-xr-x  147KB  E-Commerce-API         (Plataforma Completa | REST & SQL)',
+            project_vollmed_line: 'drwxr-xr-x  140KB  VollMed-Api            (Gestão Médica | Spring Security & JWT)',
+            project_hotel_line: 'drwxr-xr-x   29KB  Hotel                  (Sistema de Reservas | Hibernate)',
+            project_usertask_line: 'drwxr-xr-x   22KB  UserTask               (Gerenciador de Tarefas | CRUD)',
+            project_ms_pedido_line: 'drwxr-xr-x   18KB  ms-pedido-process      (Microserviço | Mensageria/Arquitetura)',
+            project_rest_product_line: 'drwxr-xr-x   15KB  Rest-Product-Api       (API REST Básica | Spring Data JPA)',
+            project_cidadaonow_line: 'drwxr-xr-x   10KB  CidadaoNow             (Projeto Social | Backend Focus)',
+            project_organo_line: 'drwxr-xr-x  561KB  Organo                 (Gestão de Times | Frontend & Integration)',
+            project_userdept_line: 'drwxr-xr-x  561KB  UserDept               (Usuario & Departamento | Integração de Sistemas)',
+            skills_terminal_header: '🛠  Technical Stack:',
+            skills_terminal_backend: 'Backend  → Java 8+, Spring Boot, Spring Security, JPA/Hibernate, REST APIs',
+            skills_terminal_database: 'Database → PostgreSQL, SQL Server, MySQL, MongoDB',
+            skills_terminal_testing: 'Testing  → JUnit, Mockito, Cypress, Postman, JMeter',
+            skills_terminal_devops: 'DevOps   → Docker, CI/CD (GitHub Actions, Jenkins, Azure DevOps), AWS',
+            skills_terminal_frontend: 'Frontend → TypeScript, JavaScript, HTML, CSS, TailwindCSS, React (básico para integração)',
+            skills_terminal_tools: 'Ferramentas → Git, Linux (Bash), Jira, Scrum/Kanban',
+            neofetch_os: 'Ubuntu 24.04 LTS (Edição Portfolio)',
+            neofetch_kernel: 'Spring Boot v3.2.x',
+            neofetch_uptime: '+3 anos de código',
+            neofetch_packages: '+10 Projetos (Git)',
+            neofetch_shell: 'portfolio-sh',
+            neofetch_theme: 'Espaço Escuro',
+            neofetch_cpu: 'Java Virtual Machine (JVM)',
+            neofetch_memory: '16GB / 32GB (Capacidade de Aprendizado)',
+            contact_links_header: "📬 Links de Contato do Sistema:",
+            contact_establishing: "[ESTABELECENDO CONEXÃO...]",
+            contact_header_user: "USUÁRIO",
+            contact_header_type: "TIPO",
+            contact_header_address: "ENDEREÇO",
+            contact_header_status: "STATUS",
+            contact_status_online: "[ONLINE]",
+            contact_status_active: "[ATIVO]",
+            contact_ping_line1: "Comando: ping -c 3 maycon.dev",
+            contact_ping_line2: "64 bytes de portfolio: icm_seq=1 ttl=64 time=0.042 ms",
+            contact_ping_line3: "Conexão estável. Sinta-se à vontade para entrar em contato!",
+            cmd_java_info: "[INFO] Especializado em Backend de alta performance com Java & Ecossistema Spring.",
+            cmd_docker_running: "[RODANDO] Orquestrando microsserviços e garantindo paridade de ambientes.",
+            cmd_mvn_info: "[INFO] Construindo APIs escaláveis com Spring Boot 3.2+ e Ciclo de Vida Maven.",
+            cmd_psql_connected: "[CONECTADO] Gerenciando esquemas relacionais complexos e otimização de queries.",
+            cmd_cypress_pass: "[PASSOU] Qualidade em primeiro lugar: Garantindo confiabilidade com testes E2E e Unitários.",
+            cmd_sudo_denied: "🚫 ACESSO NEGADO: Boa tentativa, mas eu preciso desses arquivos! 😱"
+        },
+        contact_app: {
+            title: "Mensageiro do Sistema",
+            role: "Engenheiro de Software",
+            button_email: "Enviar E-mail",
+            button_linkedin: "Conectar",
+            button_github: "Ver Código",
         },
         about: {
             role: 'Engenheiro de Software Backend',
@@ -179,18 +388,24 @@ const translations: Translations = {
             exp_edu_header: 'FORMAÇÃO ACADÊMICA',
             exp_edu1: 'Análise e Desenvolvimento de Sistemas - São Judas (Cursando)',
             exp_edu2: 'Técnico em Informática - FIEB (Concluído)',
+            sidebar: {
+                project: "Projeto"
+            },
+            statusbar: {
+                top_level: "Nível Superior"
+            }
         },
         editor: {
             placeholder: '// Comece a escrever aqui...',
         },
         skills: {
             title: 'Visão Geral de Produção',
-            badge_backend: 'Backend Sênior',
+            badge_backend: 'Engenheiro Backend',
             badge_architect: 'Arquiteto de Sistemas',
             time_range: 'Período Vitalício',
             experience: 'Experiência',
-            experience_value: '5+ Anos',
-            experience_sub: 'Nível Sênior',
+            experience_value: '3+ Anos',
+            experience_sub: 'Engenheiro Pleno',
             core_stack: 'Stack Principal',
             core_stack_sub: 'Versão LTS',
             framework: 'Framework',
@@ -203,10 +418,93 @@ const translations: Translations = {
             activity_panel: 'Atividade de Commits - [ Em Progresso ]',
             scanning: 'Escaneando...',
             commits: 'commits',
+            status_core: 'CORE',
+            status_stable: 'ESTÁVEL',
+            status_beta: 'BETA',
+            stack: {
+                cloud_infra: "Infraestrutura Cloud",
+                kafka_event: "Kafka / Event Driven"
+            },
+            value: {
+                years: "3+ Anos"
+            },
+            dashboard: {
+                experience: 'Experiência',
+                experience_sub: 'Software Engineer',
+                core_stack: 'Core Stack',
+                core_stack_sub: 'Versão LTS',
+                framework: 'Framework',
+                framework_sub: 'Boot / Cloud',
+                platform: 'Status da Plataforma',
+                platform_sub: 'Uptime'
+            }
+        },
+        projects_tab: {
+            sidebar_home: 'Início',
+            sidebar_desktop: 'Área de Trabalho',
+            sidebar_docs: 'Documentos',
+            sidebar_downloads: 'Downloads',
+            sidebar_projects: 'Projetos',
+            table_name: 'Nome',
+            table_size: 'Tamanho',
+            table_date: 'Data',
+            modal_type: 'Tipo',
+            modal_size: 'Tamanho',
+            modal_modified: 'Modificado',
+            modal_location: 'Localização',
+            modal_desc: 'Descrição',
+            modal_stack: 'Stack Tecnológica',
+            modal_vscode: 'Abrir no VS Code',
+            status_items: 'itens',
+            status_space: 'Espaço livre',
+            empty_folder: 'Pasta Vazia',
+            desc_fallback: 'Nenhuma descrição fornecida.',
+            type_fallback: 'Arquivo Fonte Java',
+            about_me: 'Sobre Mim',
+            skills: 'Habilidades',
+            terminal: 'Terminal',
+        },
+        repo_descriptions: {
+            'BlueWorks-Back-End': 'Back-End do TCC de um projeto de empregabilidade, tudo feito em Java, com Spring Boot API Rest, temos o CRUD, o delete é fisico, e já integrado com um sistemas de login, (funciona diretamente com o meu Front End, no repositorio "bluework") Front-End: https://github.com/Maycon-Pereira/bluework',
+            'CidadaoNow': 'O CidadãoNow é um sistema em Java voltado para o cadastro, notificação e participação em eventos locais. Ele permite que os cidadãos acompanhem, em tempo real, os eventos que estão acontecendo em sua cidade, com funcionalidades para cadastro de usuário, confirmação de presença, e organização dos eventos por data e hora.',
+            'E-Commerce-API': 'API Rest da aplicação de uma E-commerce, contendo as funcionalidades de CRUD de usuarios sendo Client, Seller e Admin, onde um Seller pode criar produtos para a venda, o Admin pode criar novas categorias, e o Client é o usuario, onde pode ver esses produtos e compra-los',
+            'Hotel': 'Gerenciamento de Reserva para um Hotel',
+            'ms-pedido-processamento': 'Microserviço de uma ecommerce onde temos o PRODUCER e o CONSUMER, duas api\'s separadas conectadas pelas filas (queue) do RABBITMQ, para gerenciar pedidos e itens cadastrados.',
+            'Organo': 'Aplicação React gerenciadora de tarefas dentro da empresa',
+            'Rest-Product-Api': 'API RESTful para gerenciamento de produtos, focada em operações CRUD. Desenvolvida para oferecer uma estrutura simples e eficiente, ideal para aprendizado e aplicação de conceitos fundamentais no desenvolvimento de APIs.',
+            'UserDept': 'Utilizando Java com o Spring, construi a API de um CRUD entre "User" e "Department", onde fazemos o CRUD e podemos ligar o usuário em um departamento, na ligação de 1,n , onde um departamento pode ter muitos usuários, mas um usuário pode estar em apenas um departamento',
+            'UserTask': 'UserTask é uma API REST em Java com Spring Boot para gerenciamento de usuários e tarefas. O projeto foca em boas práticas de mercado, arquitetura organizada e recursos comuns em aplicações reais, indo além de um CRUD simples para demonstrar segurança, validação, tratamento de erros e estrutura profissional de backend.',
+            'VollMed-Api': 'Aplicação Spring Boot sobre um CRUD e agendamentos de consultas de médicos e pacientes, em conjunto de segurança JWT e login, formulado no curso Spring Boot 3 Rest Api da Alura',
+        },
+        sublime: {
+            menu: {
+                file: "Arquivo",
+                edit: "Editar",
+                selection: "Seleção",
+                find: "Localizar",
+                view: "Exibir",
+                goto: "Ir",
+                tools: "Ferramentas",
+                preferences: "Preferências",
+                help: "Ajuda"
+            },
+            status: {
+                ln: "Ln",
+                col: "Col",
+                spaces: "Espaços",
+                utf8: "UTF-8",
+                plain_text: "Texto Plano",
+                saved: "Salvo",
+                unsaved: "Não salvo"
+            }
+        },
+        dock: {
+            github: "GitHub",
+            linkedin: "LinkedIn"
         }
     },
     es: {
-        nav: { home: "Inicio", about: "Sobre", skills: "Habilidades", projects: "Proyectos", contact: "Contato" },
+        nav: { home: "Inicio", about: "Sobre", skills: "Habilidades", projects: "Proyectos" },
         menu: { viros: "Viros 2.0", settings: "Ajustes", poweroff: "Apagar / Salir", back: "Volver" },
         status: { online: "Status (Online)" },
         hero: {
@@ -225,6 +523,9 @@ const translations: Translations = {
             not_found: 'comando no encontrado:',
             help_type: 'Escribe "help" para comandos.',
             help_title: '📋 Comandos disponibles:',
+            readme_content: '# 🚀 Sistema de Portafolio v2.0 - Manual de Usuario\n\nNavegue de forma intuitiva clicando en los iconos o, si prefiere una experiencia técnica, utilice la terminal integrada.\n\n## 🌟 Inicio Rápido\n1.  **Explore via UI**: Haga clic en los iconos del Dock (lado izquierdo).\n2.  **Explore via Terminal**: Escriba comandos para navegar e interactuar.\n\n## 📟 Comandos de Terminal\n¡La terminal es completamente funcional! Pruebe estos:\n- `help` : Enumera todos los comandos disponibles.\n- `ls` : Enumera directorios y archivos.\n- `cd <dir>` : Cambia de directorio (ej: `cd projects`).\n- `cat <archivo>` : Lee un archivo (ej: `cat readme.md`).\n- `whoami` : Verifica el usuario actual.\n- `date` : Muestra fecha/hora del sistema.\n- `neofetch` : Muestra especificaciones de sistema.\n- `clear` : Limpia la pantalla.\n\n## 📂 Aplicaciones\n- **Sobre Mí (Atom Editor)**: Mi biografía, experiencia y código de educación.\n- **Habilidades (Grafana)**: Panel en tiempo real de mi stack técnico.\n- **Proyectos (Explorador de Archivos)**: Navegue por mis trabajos. ¡Use `cat <proyecto>` en la terminal para detalles!\n\n## 💡 Consejos Pro\n- ¡Intente arrastrar las ventanas!\n- Maximice/Minimice ventanas usando los botones de control.\n- Escriba `sudo rm -rf /` para una sorpresa (¡bajo su propio riesgo!).\n\n*Hecho con React, TypeScript y Amor.*',
+            text_txt_content: '',
+            readme_opening: 'Abriendo readme.md en el Editor de Texto...',
             help_help: '  help        - Mostrar esta ayuda',
             help_about: '  about       - ¿Quién soy?',
             help_skills: '  skills      - Mis tecnologías',
@@ -235,10 +536,10 @@ const translations: Translations = {
             help_whoami: '  whoami      - Usuario actual',
             help_date: '  date        - Fecha y hora actual',
             help_ls: '  ls          - Listar directorio',
-            about_title: '👨‍💻 Maycon — Desarrollador Full Stack',
-            about_1: '   Apasionado por código limpio, automatización,',
-            about_2: '   y creación de experiencias increíbles.',
-            about_3: '   Explorando el límite de la tecnología web.',
+            about_title: 'Maycon Pereira: Ingeniero Backend especializado en Java & Spring Boot.',
+            about_1: 'Enfoque en APIs escalables y seguras con arquitectura limpia.',
+            about_2: 'Experiencia previa en QA, aportando una mirada rigurosa para la calidad y confiabilidad del código desde la base.',
+            about_3: '"Yo construyo lo que sostiene el sistema."',
             skills_title: '🛠 Tecnologías:',
             projects_title: '🚀 Proyectos:',
             projects_1: '  • Portfolio — ¡Este sitio!',
@@ -246,6 +547,57 @@ const translations: Translations = {
             projects_3: '  • Landing Page Engine  — Generador de LP',
             projects_4: '  • Suite de Tests Cypress — Automatización E2E',
             contact_title: '📬 Contacto:',
+            projects_linux_header: '🚀 Mission Archive / Projects:',
+            projects_cat_hint: "Escribe 'cat <nombre_del_proyecto>' para ver el stack detallado y enlace de GitHub.",
+            project_blueworks_line: 'drwxr-xr-x  202KB  BlueWorks-Back-End     (Reclutamiento FullStack | Spring Boot)',
+            project_ecommerce_line: 'drwxr-xr-x  147KB  E-Commerce-API         (Plataforma Completa | REST & SQL)',
+            project_vollmed_line: 'drwxr-xr-x  140KB  VollMed-Api            (Gestión Médica | Spring Security & JWT)',
+            project_hotel_line: 'drwxr-xr-x   29KB  Hotel                  (Sistema de Reservas | Hibernate)',
+            project_usertask_line: 'drwxr-xr-x   22KB  UserTask               (Gestor de Tareas | CRUD)',
+            project_ms_pedido_line: 'drwxr-xr-x   18KB  ms-pedido-process      (Microservicio | Mensajería/Arquitectura)',
+            project_rest_product_line: 'drwxr-xr-x   15KB  Rest-Product-Api       (API REST Básica | Spring Data JPA)',
+            project_cidadaonow_line: 'drwxr-xr-x   10KB  CidadaoNow             (Proyecto Social | Foco en Backend)',
+            project_organo_line: 'drwxr-xr-x  561KB  Organo                 (Gestión de Equipos | Frontend & Integración)',
+            project_userdept_line: 'drwxr-xr-x  561KB  UserDept               (Usuario y Departamento | Integración de Sistemas)',
+            skills_terminal_header: '🛠  Technical Stack:',
+            skills_terminal_backend: 'Backend  → Java 8+, Spring Boot, Spring Security, JPA/Hibernate, REST APIs',
+            skills_terminal_database: 'Database → PostgreSQL, SQL Server, MySQL, MongoDB',
+            skills_terminal_testing: 'Testing  → JUnit, Mockito, Cypress, Postman, JMeter',
+            skills_terminal_devops: 'DevOps   → Docker, CI/CD (GitHub Actions, Jenkins, Azure DevOps), AWS',
+            skills_terminal_frontend: 'Frontend → TypeScript, JavaScript, HTML, CSS, TailwindCSS, React (básico para integración)',
+            skills_terminal_tools: 'Herramientas → Git, Linux (Bash), Jira, Scrum/Kanban',
+            neofetch_os: 'Ubuntu 24.04 LTS (Portfolio Edition)',
+            neofetch_kernel: 'Spring Boot v3.2.x',
+            neofetch_uptime: '+3 años de código',
+            neofetch_packages: '+10 Proyectos (Git)',
+            neofetch_shell: 'portfolio-sh',
+            neofetch_theme: 'Espacio Oscuro',
+            neofetch_cpu: 'Java Virtual Machine (JVM)',
+            neofetch_memory: '16GB / 32GB (Capacidad de Aprendizaje)',
+            contact_links_header: "📬 Enlaces de Contacto del Sistema:",
+            contact_establishing: "[ESTABLECIENDO CONEXIÓN...]",
+            contact_header_user: "USUARIO",
+            contact_header_type: "TIPO",
+            contact_header_address: "DIRECCIÓN",
+            contact_header_status: "ESTADO",
+            contact_status_online: "[EN LÍNEA]",
+            contact_status_active: "[ACTIVO]",
+            contact_ping_line1: "Comando: ping -c 3 maycon.dev",
+            contact_ping_line2: "64 bytes de portfolio: icm_seq=1 ttl=64 time=0.042 ms",
+            contact_ping_line3: "Conexión estable. ¡No dudes en contactarme!",
+            cmd_java_info: "[INFO] Especializado en Backend de alto rendimiento con Java y Ecosistema Spring.",
+            cmd_docker_running: "[EJECUTANDO] Orquestando microservicios y asegurando paridad de entornos.",
+            cmd_mvn_info: "[INFO] Construyendo APIs escalables con Spring Boot 3.2+ y Ciclo de Vida Maven.",
+            cmd_psql_connected: "[CONECTADO] Gestionando esquemas relacionales complejos y optimización de consultas.",
+            cmd_cypress_pass: "[APROBADO] Calidad primero: Asegurando fiabilidad del sistema con pruebas E2E y Unitarias.",
+            cmd_sudo_denied: "🚫 ACCESO DENEGADO: Buen intento, ¡pero necesito estos archivos! 😱"
+        },
+        contact_app: {
+            title: "Mensajero del Sistema",
+            role: "Ingeniero de Software",
+            button_email: "Enviar Correo",
+            button_linkedin: "Conectar",
+            button_github: "Ver Código",
         },
         about: {
             role: 'Ingeniero de Software Backend',
@@ -280,30 +632,119 @@ const translations: Translations = {
             exp_edu_header: 'FORMACIÓN ACADÉMICA',
             exp_edu1: 'Análisis y Desarrollo de Sistemas - São Judas (En Curso)',
             exp_edu2: 'Técnico en Informática - FIEB (Completado)',
+            sidebar: {
+                project: "Proyecto"
+            },
+            statusbar: {
+                top_level: "Nivel Superior"
+            }
         },
         editor: {
             placeholder: '// Empieza a escribir aquí...',
         },
         skills: {
-            title: 'Visión General de Producción',
-            badge_backend: 'Backend Senior',
+            title: 'Resumen de Producción',
+            badge_backend: 'Ingeniero Backend',
             badge_architect: 'Arquitecto de Sistemas',
-            time_range: 'Rango Vitalicio',
+            time_range: 'Rango Histórico',
             experience: 'Experiencia',
-            experience_value: '5+ Años',
-            experience_sub: 'Nivel Senior',
-            core_stack: 'Stack Principal',
+            experience_value: '3+ Años',
+            experience_sub: 'Ingeniero Pleno',
+            core_stack: 'Tecnología Core',
             core_stack_sub: 'Versión LTS',
-            framework: 'Framework',
+            framework: 'Framework Principal',
             framework_sub: 'Boot / Cloud',
-            platform: 'Estado de la Plataforma',
-            platform_sub: 'Disponibilidad',
+            platform: 'Estado de Plataforma',
+            platform_sub: 'Tiempo Activo',
             backend_panel: 'Ecosistema Backend',
-            frontend_panel: 'Frontend & Herramientas',
-            toolkit: 'Herramientas',
-            activity_panel: 'Actividad de Commits - [ En Progreso ]',
+            frontend_panel: 'Frontend y Herramientas',
+            toolkit: 'Caja de Herramientas',
+            activity_panel: 'Historial de Commits [ Trabajando en ello ]',
             scanning: 'Escaneando...',
             commits: 'commits',
+            status_core: 'CORE',
+            status_stable: 'ESTABLE',
+            status_beta: 'BETA',
+            stack: {
+                cloud_infra: "Infraestructura Cloud",
+                kafka_event: "Kafka / Event Driven"
+            },
+            value: {
+                years: "3+ Años"
+            },
+            dashboard: {
+                experience: 'Experiencia',
+                experience_sub: 'Software Engineer',
+                core_stack: 'Core Stack',
+                core_stack_sub: 'Versión LTS',
+                framework: 'Framework',
+                framework_sub: 'Boot / Cloud',
+                platform: 'Estado de Plataforma',
+                platform_sub: 'Uptime'
+            }
+        },
+        projects_tab: {
+            sidebar_home: 'Inicio',
+            sidebar_desktop: 'Escritorio',
+            sidebar_docs: 'Documentos',
+            sidebar_downloads: 'Descargas',
+            sidebar_projects: 'Proyectos',
+            table_name: 'Nombre',
+            table_size: 'Tamaño',
+            table_date: 'Fecha',
+            modal_type: 'Tipo',
+            modal_size: 'Tamaño',
+            modal_modified: 'Modificado',
+            modal_location: 'Ubicación',
+            modal_desc: 'Descripción',
+            modal_stack: 'Stack Tecnológico',
+            modal_vscode: 'Abrir en VS Code',
+            status_items: 'elementos',
+            status_space: 'Espacio libre',
+            empty_folder: 'La carpeta está vacía',
+            desc_fallback: 'No se proporciona descripción.',
+            type_fallback: 'Archivo Fuente Java',
+            about_me: 'Sobre Mí',
+            skills: 'Habilidades',
+            terminal: 'Terminal',
+        },
+        repo_descriptions: {
+            'BlueWorks-Back-End': 'Back-end del TCC de un proyecto de empleabilidad, construido en Java con Spring Boot REST API. Incluye CRUD con eliminación física e integración de sistemas de inicio de sesión. Funciona con el front-end "bluework": https://github.com/Maycon-Pereira/bluework',
+            'CidadaoNow': 'CidadãoNow es un sistema Java enfocado en el registro, notificación y participación en eventos locales. Permite a los ciudadanos seguir eventos de su ciudad en tiempo real, con registro de usuarios, confirmación de asistencia y organización por fecha y hora.',
+            'E-Commerce-API': 'API REST para una aplicación de comercio electrónico, con funciones CRUD para roles de Cliente, Vendedor y Administrador. Los vendedores crean productos, los administradores gestionan categorías y los clientes compran.',
+            'Hotel': 'Sistema de gestión de reservas de hotel.',
+            'ms-pedido-processamento': 'Microservicio de comercio electrónico con APIs PRODUCER y CONSUMER separadas, conectadas mediante colas de RabbitMQ para gestionar pedidos y artículos registrados.',
+            'Organo': 'Aplicación React para la gestión de tareas dentro de una empresa.',
+            'Rest-Product-Api': 'API RESTful para la gestión de productos enfocada en operaciones CRUD. Diseñada para ofrecer una estructura simple e eficiente, ideal para aprender conceptos fundamentales de desarrollo de APIs.',
+            'UserDept': 'Construida con Java y Spring, esta API gestiona una relación CRUD entre Usuarios y Departamentos (1:N), permitiendo asignar usuarios a un solo departamento mientras los departamentos tienen múltiples usuarios.',
+            'UserTask': 'UserTask es una API REST en Java con Spring Boot para la gestión de usuarios y tareas. El proyecto se enfoca en las mejores prácticas del mercado, arquitectura organizada e seguridad, validación y manejo de errores profesional.',
+            'VollMed-Api': 'Aplicación Spring Boot para CRUD y programación de citas médicas, con seguridad JWT e inicio de sesión. Desarrollada durante el curso de API REST Spring Boot 3 de Alura.',
+        },
+        sublime: {
+            menu: {
+                file: "Archivo",
+                edit: "Editar",
+                selection: "Selección",
+                find: "Buscar",
+                view: "Ver",
+                goto: "Ir",
+                tools: "Herramientas",
+                preferences: "Preferencias",
+                help: "Ayuda"
+            },
+            status: {
+                ln: "Ln",
+                col: "Col",
+                spaces: "Espacios",
+                utf8: "UTF-8",
+                plain_text: "Texto Plano",
+                saved: "Guardado",
+                unsaved: "No guardado"
+            }
+        },
+        dock: {
+            github: "GitHub",
+            linkedin: "LinkedIn"
         }
     }
 };
@@ -313,6 +754,7 @@ interface I18nContextType {
     setCurrentLang: (lang: string) => void;
     t: (key: string) => string;
     terminalT: (key: string) => string;
+    getRepoKeys: () => string[];
 }
 
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
@@ -329,22 +771,32 @@ export const I18nProvider = ({ children }: { children: ReactNode }) => {
 
     const t = (key: string): string => {
         const keys = key.split('.');
-        let value = translations[currentLang];
-        for (const k of keys) {
-            value = value?.[k];
-        }
-        return (typeof value === 'string' ? value : key);
+        const getValue = (lang: string) => {
+            let value = translations[lang];
+            for (const k of keys) {
+                value = value?.[k];
+            }
+            return value;
+        };
+
+        const result = getValue(currentLang) || getValue('en');
+        return (typeof result === 'string' ? result : key);
     };
 
     const terminalT = (key: string): string => {
-        return translations[currentLang]?.terminal?.[key] || translations['en']?.terminal?.[key] || key;
+        return t(`terminal.${key}`);
+    };
+
+    const getRepoKeys = (): string[] => {
+        return Object.keys(translations.en.repo_descriptions || {});
     };
 
     const contextValue = {
         currentLang,
         setCurrentLang,
         t,
-        terminalT
+        terminalT,
+        getRepoKeys
     };
 
     return (

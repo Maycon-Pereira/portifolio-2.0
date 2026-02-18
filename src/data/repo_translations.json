@@ -1,0 +1,38 @@
+{
+  "en": {
+    "BlueWorks-Back-End": "Back-End for a capstone project on employability, built in Java with Spring Boot REST API. Includes CRUD operations with physical deletion and login system integration. Works directly with the \"bluework\" front-end: https://github.com/Maycon-Pereira/bluework",
+    "CidadaoNow": "CidadãoNow is a Java-based system for event registration, notification, and participation. It allows citizens to track local events in real-time, featuring user registration, attendance confirmation, and event organization by date and time.",
+    "E-Commerce-API": "REST API for an e-commerce application, featuring CRUD functionality for Client, Seller, and Admin roles. Sellers can create products, Admins can manage categories, and Clients can browse and purchase products.",
+    "Hotel": "Hotel reservation and management system.",
+    "ms-pedido-processamento": "E-commerce microservice featuring separate PRODUCER and CONSUMER APIs connected via RabbitMQ queues to manage orders and registered items.",
+    "Organo": "React application for managing tasks within a company.",
+    "Rest-Product-Api": "RESTful API for product management focused on CRUD operations. Developed to offer a simple and efficient structure, ideal for learning and applying fundamental API development concepts.",
+    "UserDept": "Using Java and Spring, I built a CRUD API for 'User' and 'Department' with a 1:N relationship, allowing users to be assigned to a department while departments can have multiple users.",
+    "UserTask": "UserTask is a REST API in Java with Spring Boot for managing users and tasks. The project focuses on market best practices, organized architecture, and real-world features, demonstrating security, validation, error handling, and professional backend structure.",
+    "VollMed-Api": "Spring Boot application for doctor and patient CRUD operations and appointment scheduling, featuring JWT security and login. Developed during Alura's Spring Boot 3 REST API course."
+  },
+  "pt": {
+    "BlueWorks-Back-End": "Back-End do TCC de um projeto de empregabilidade, tudo feito em Java, com Spring Boot API Rest, temos o CRUD, o delete é fisico, e já integrado com um sistemas de login, (funciona diretamente com o meu Front End, no repositorio \"bluework\") Front-End: https://github.com/Maycon-Pereira/bluework",
+    "CidadaoNow": "O CidadãoNow é um sistema em Java voltado para o cadastro, notificação e participação em eventos locais. Ele permite que os cidadãos acompanhem, em tempo real, os eventos que estão acontecendo em sua cidade, com funcionalidades para cadastro de usuário, confirmação de presença, e organização dos eventos por data e hora.",
+    "E-Commerce-API": "API Rest da aplicação de uma E-commerce, contendo as funcionalidades de CRUD de usuarios sendo Client, Seller e Admin, onde um Seller pode criar produtos para a venda, o Admin pode criar novas categorias, e o Client é o usuario, onde pode ver esses produtos e compra-los",
+    "Hotel": "Gerenciamento de Reserva para um Hotel",
+    "ms-pedido-processamento": "Microserviço de uma ecommerce onde temos o PRODUCER e o CONSUMER, duas api's separadas conectadas pelas filas (queue) do RABBITMQ, para gerenciar pedidos e itens cadastrados.",
+    "Organo": "Aplicação React gerenciadora de tarefas dentro da empresa",
+    "Rest-Product-Api": "API RESTful para gerenciamento de produtos, focada em operações CRUD. Desenvolvida para oferecer uma estrutura simples e eficiente, ideal para aprendizado e aplicação de conceitos fundamentais no desenvolvimento de APIs.",
+    "UserDept": "Utilizando Java com o Spring, construi a API de um CRUD entre \"User\" e \"Department\", onde fazemos o CRUD e podemos ligar o usuário em um departamento, na ligação de 1,n , onde um departamento pode ter muitos usuários, mas um usuário pode estar em apenas um departamento",
+    "UserTask": "UserTask é uma API REST em Java com Spring Boot para gerenciamento de usuários e tarefas. O projeto foca em boas práticas de mercado, arquitetura organizada e recursos comuns em aplicações reais, indo além de um CRUD simples para demonstrar segurança, validação, tratamento de erros e estrutura profissional de backend.",
+    "VollMed-Api": "Aplicação Spring Boot sobre um CRUD e agendamentos de consultas de médicos e pacientes, em conjunto de segurança JWT e login, formulado no curso Spring Boot 3 Rest Api da Alura"
+  },
+  "es": {
+    "BlueWorks-Back-End": "Back-End del TCC de un proyecto de empleabilidad, construido en Java con Spring Boot REST API. Incluye CRUD con eliminación física e integración de sistemas de inicio de sesión. Funciona con el front-end \"bluework\": https://github.com/Maycon-Pereira/bluework",
+    "CidadaoNow": "CidadãoNow es un sistema Java enfocado en el registro, notificación y participación en eventos locales. Permite a los ciudadanos seguir eventos de su ciudad en tiempo real, con registro de usuarios, confirmación de asistencia y organización por fecha y hora.",
+    "E-Commerce-API": "API REST para una aplicación de comercio electrónico, con funciones CRUD para roles de Cliente, Vendedor y Administrador. Los vendedores crean productos, los administradores gestionan categorías y los clientes compran.",
+    "Hotel": "Sistema de gestión de reservas de hotel.",
+    "ms-pedido-processamento": "Microservicio de comercio electrónico con APIs PRODUCER y CONSUMER separadas, conectadas mediante colas de RabbitMQ para gestionar pedidos y artículos registrados.",
+    "Organo": "Aplicación React para la gestión de tareas dentro de una empresa.",
+    "Rest-Product-Api": "API RESTful para la gestión de productos enfocada en operaciones CRUD. Diseñada para ofrecer una estructura simple y eficiente, ideal para aprender conceptos fundamentales de desarrollo de APIs.",
+    "UserDept": "Construida con Java y Spring, esta API gestiona una relación CRUD entre Usuarios y Departamentos (1:N), permitiendo asignar usuarios a un solo departamento mientras los departamentos tienen múltiples usuarios.",
+    "UserTask": "UserTask es una API REST en Java con Spring Boot para la gestión de usuarios y tareas. El proyecto se enfoca en las mejores prácticas del mercado, arquitectura organizada y seguridad, validación y manejo de errores profesional.",
+    "VollMed-Api": "Aplicación Spring Boot para CRUD y programación de citas médicas, con seguridad JWT e inicio de sesión. Desarrollada durante el curso de API REST Spring Boot 3 de Alura."
+  }
+}

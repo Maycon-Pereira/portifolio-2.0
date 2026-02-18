@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useI18n } from '../../hooks/useI18nHook';
 import ReactDOM from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { fetchGitHubRepos } from '../../utils/github';
@@ -75,6 +76,15 @@ const fileSystem: FileNode[] = [
                         name: 'Easter Egg',
                         type: 'folder',
                         children: []
+                    },
+                    {
+                        id: 'readme',
+                        name: 'readme.md',
+                        type: 'file',
+                        fileType: 'txt',
+                        size: '2 KB',
+                        isEditable: true,
+                        icon: 'readme'
                     },
                     {
                         id: 'text',
@@ -173,18 +183,19 @@ import linkedinIcon from '../../img/svg/linkedin.svg';
 import sublimeIcon from '../../img/svg/sublime.svg';
 
 export const ProjectsFileExplorer = ({ windowId }: { windowId?: string }) => {
+    const { t } = useI18n();
     const { setWindowTitle, openWindow, windows, toggleWindow } = useWindowManager();
     const [fileNodes, setFileNodes] = useState<FileNode[]>(fileSystem);
     const [currentPath, setCurrentPath] = useState<string[]>(['root', 'github-projects']);
     const [selectedId, setSelectedId] = useState<string | null>(null);
     const [modalFile, setModalFile] = useState<FileNode | null>(null);
     const [tooltip, setTooltip] = useState<{ x: number; y: number; content: string } | null>(null);
+    const [rawRepos, setRawRepos] = useState<any[]>([]);
 
-    // Fetch GitHub Repos
+    // Fetch GitHub Repos once
     useEffect(() => {
         const loadGithub = async () => {
             const repos = await fetchGitHubRepos('Maycon-Pereira');
-
             const allowedRepos = [
                 'UserDept',
                 'VollMed-Api',
@@ -197,49 +208,54 @@ export const ProjectsFileExplorer = ({ windowId }: { windowId?: string }) => {
                 'UserTask',
                 'Organo'
             ];
-
-            const filteredRepos = repos.filter(repo => allowedRepos.includes(repo.name));
-
-            const githubNodes: FileNode[] = filteredRepos.map(repo => ({
-                id: `github-${repo.id}`,
-                name: repo.name,
-                type: 'folder',
-                isExternal: true, // Marker for external link behavior
-                valuableLink: repo.html_url,
-                size: `${repo.size} KB`,
-                date: new Date(repo.updated_at).toLocaleDateString(),
-                children: [], // Empty folder, but clicking acts as link
-                projectData: {
-                    description: repo.description || "No description provided.",
-                    link: repo.html_url,
-                    tech: [repo.language || "Create"],
-                    fullDate: new Date(repo.updated_at).toLocaleString()
-                }
-            }));
-
-            const githubFolder: FileNode = {
-                id: 'github-projects',
-                name: 'GitHub',
-                type: 'folder',
-                children: githubNodes,
-                date: new Date().toLocaleDateString()
-            };
-
-            setFileNodes(prev => {
-                const newNodes = [...prev];
-                const root = newNodes.find(n => n.id === 'root');
-                if (root && root.children) {
-                    // Check if already exists to avoid duplicates (though strict mode might cause double add, verify id)
-                    if (!root.children.find(c => c.id === 'github-projects')) {
-                        root.children.push(githubFolder);
-                    }
-                }
-                return newNodes;
-            });
+            setRawRepos(repos.filter(repo => allowedRepos.includes(repo.name)));
         };
-
         loadGithub();
     }, []);
+
+    // Update GitHub nodes whenever language (t) or rawRepos change
+    useEffect(() => {
+        if (rawRepos.length === 0) return;
+
+        const githubNodes: FileNode[] = rawRepos.map(repo => ({
+            id: `github-${repo.id}`,
+            name: repo.name,
+            type: 'folder',
+            isExternal: true,
+            valuableLink: repo.html_url,
+            size: `${repo.size} KB`,
+            date: new Date(repo.updated_at).toLocaleDateString(),
+            children: [],
+            projectData: {
+                description: t(`repo_descriptions.${repo.name}`) || repo.description || t('projects_tab.desc_fallback'),
+                link: repo.html_url,
+                tech: [repo.language || "Create"],
+                fullDate: new Date(repo.updated_at).toLocaleString()
+            }
+        }));
+
+        const githubFolder: FileNode = {
+            id: 'github-projects',
+            name: 'GitHub',
+            type: 'folder',
+            children: githubNodes,
+            date: new Date().toLocaleDateString()
+        };
+
+        setFileNodes(prev => {
+            const newNodes = [...prev];
+            const root = newNodes.find(n => n.id === 'root');
+            if (root && root.children) {
+                const existingIndex = root.children.findIndex(c => c.id === 'github-projects');
+                if (existingIndex !== -1) {
+                    root.children[existingIndex] = githubFolder;
+                } else {
+                    root.children.push(githubFolder);
+                }
+            }
+            return newNodes;
+        });
+    }, [rawRepos, t]);
 
     // Get current directory node
     const currentFolderId = currentPath[currentPath.length - 1];
@@ -258,16 +274,24 @@ export const ProjectsFileExplorer = ({ windowId }: { windowId?: string }) => {
 
     const handleFileClick = (file: FileNode) => {
         if (selectedId === file.id) {
-            // Double click logic handled separately
+            // Already selected
         }
         setSelectedId(file.id);
+
+        // Interactivity: If it's a github project, trigger 'cat' in terminal
+        // github nodes start with 'github-' id prefix
+        if (file.id.startsWith('github-')) {
+            window.dispatchEvent(new CustomEvent('terminal-command', {
+                detail: { command: `cat ${file.name}` }
+            }));
+        }
     };
 
     const handleFileDoubleClick = (file: FileNode) => {
         // Desktop app shortcut
         if (file.desktopAction) {
             const appMap: Record<string, { label: string; component: React.ReactNode; icon?: string }> = {
-                'about': { label: 'About Me', component: <AboutContent windowId="about" />, icon: intellijIcon },
+                'about': { label: t('projects_tab.about_me'), component: <AboutContent windowId="about" />, icon: intellijIcon },
                 'skills': { label: 'Grafana', component: <SkillsContent />, icon: grafanaIcon },
                 'terminal': { label: 'Terminal', component: <Terminal /> },
             };
@@ -341,7 +365,12 @@ export const ProjectsFileExplorer = ({ windowId }: { windowId?: string }) => {
                                         ${isLast ? 'text-white font-bold bg-[#ffffff10]' : 'text-[#ffffff80] hover:bg-[#ffffff10] hover:text-white'}
                                     `}
                                 >
-                                    {node?.name}
+                                    {id === 'root' ? t('projects_tab.sidebar_home') :
+                                        id === 'desktop' ? t('projects_tab.sidebar_desktop') :
+                                            id === 'documents' ? t('projects_tab.sidebar_docs') :
+                                                id === 'downloads' ? t('projects_tab.sidebar_downloads') :
+                                                    id === 'github-projects' ? t('projects_tab.sidebar_projects') :
+                                                        node?.name}
                                 </button>
                                 {index < currentPath.length - 1 && <span className="text-[#ffffff40]">/</span>}
                             </React.Fragment>
@@ -390,12 +419,12 @@ export const ProjectsFileExplorer = ({ windowId }: { windowId?: string }) => {
             <div className="flex-1 flex overflow-hidden">
                 {/* Sidebar */}
                 <div className="w-48 bg-[#252538] border-r border-[#ffffff10] flex flex-col py-4 gap-1">
-                    <SidebarItem icon="🏠" label="Home" active={currentFolderId === 'root'} onClick={() => setCurrentPath(['root'])} />
-                    <SidebarItem icon="🖥️" label="Desktop" active={currentPath.includes('desktop')} onClick={() => setCurrentPath(['root', 'desktop'])} />
-                    <SidebarItem icon="📂" label="Documents" active={currentPath.includes('documents')} onClick={() => setCurrentPath(['root', 'documents'])} />
-                    <SidebarItem icon="⬇️" label="Downloads" active={currentPath.includes('downloads')} onClick={() => setCurrentPath(['root', 'downloads'])} />
+                    <SidebarItem icon="🏠" label={t('projects_tab.sidebar_home')} active={currentFolderId === 'root'} onClick={() => setCurrentPath(['root'])} />
+                    <SidebarItem icon="🖥️" label={t('projects_tab.sidebar_desktop')} active={currentPath.includes('desktop')} onClick={() => setCurrentPath(['root', 'desktop'])} />
+                    <SidebarItem icon="📂" label={t('projects_tab.sidebar_docs')} active={currentPath.includes('documents')} onClick={() => setCurrentPath(['root', 'documents'])} />
+                    <SidebarItem icon="⬇️" label={t('projects_tab.sidebar_downloads')} active={currentPath.includes('downloads')} onClick={() => setCurrentPath(['root', 'downloads'])} />
                     <div className="h-4" />
-                    <div className="px-4 text-xs font-bold text-[#ffffff40] uppercase mb-1">Projects</div>
+                    <div className="px-4 text-xs font-bold text-[#ffffff40] uppercase mb-1">{t('projects_tab.sidebar_projects')}</div>
 
                     <SidebarItem
                         icon={<img src={githubIcon} alt="GitHub" className="w-5 h-5 object-contain invert opacity-80" />}
@@ -422,9 +451,9 @@ export const ProjectsFileExplorer = ({ windowId }: { windowId?: string }) => {
                             {/* Header */}
                             <div className="flex items-center gap-3 px-3 py-1.5 text-[10px] uppercase tracking-wider text-[#ffffff40] font-bold border-b border-[#ffffff10] mb-1">
                                 <span className="w-8"></span>
-                                <span className="flex-1">Name</span>
-                                <span className="w-24 text-right">Size</span>
-                                <span className="w-24 text-right">Date</span>
+                                <span className="flex-1">{t('projects_tab.table_name')}</span>
+                                <span className="w-24 text-right">{t('projects_tab.table_size')}</span>
+                                <span className="w-24 text-right">{t('projects_tab.table_date')}</span>
                             </div>
                             {currentFolderNode?.children?.map(child => (
                                 <div
@@ -453,7 +482,13 @@ export const ProjectsFileExplorer = ({ windowId }: { windowId?: string }) => {
                                         </div>
                                     </div>
                                     <span className="flex-1 text-sm font-medium truncate group-hover:text-white transition-colors">
-                                        {child.name}
+                                        {child.id === 'desktop' ? t('projects_tab.sidebar_desktop') :
+                                            child.id === 'documents' ? t('projects_tab.sidebar_docs') :
+                                                child.id === 'downloads' ? t('projects_tab.sidebar_downloads') :
+                                                    child.id === 'app-about' ? t('projects_tab.about_me') :
+                                                        child.id === 'app-skills' ? t('projects_tab.skills') :
+                                                            child.id === 'app-terminal' ? t('projects_tab.terminal') :
+                                                                child.name}
                                     </span>
                                     <span className="w-24 text-right text-xs text-[#ffffff50]">
                                         {child.size || '—'}
@@ -495,7 +530,13 @@ export const ProjectsFileExplorer = ({ windowId }: { windowId?: string }) => {
                                     </div>
                                     <div className="flex flex-col items-center text-center w-full">
                                         <span className="text-sm font-medium leading-tight line-clamp-2 w-full break-words">
-                                            {child.name}
+                                            {child.id === 'desktop' ? t('projects_tab.sidebar_desktop') :
+                                                child.id === 'documents' ? t('projects_tab.sidebar_docs') :
+                                                    child.id === 'downloads' ? t('projects_tab.sidebar_downloads') :
+                                                        child.id === 'app-about' ? t('projects_tab.about_me') :
+                                                            child.id === 'app-skills' ? t('projects_tab.skills') :
+                                                                child.id === 'app-terminal' ? t('projects_tab.terminal') :
+                                                                    child.name}
                                         </span>
                                         <span className="text-[10px] text-[#ffffff60] mt-1">
                                             {child.size}
@@ -506,7 +547,7 @@ export const ProjectsFileExplorer = ({ windowId }: { windowId?: string }) => {
                             {(!currentFolderNode?.children || currentFolderNode.children.length === 0) && (
                                 <div className="col-span-full flex flex-col items-center justify-center text-[#ffffff30] h-64">
                                     <span className="text-4xl mb-2">📂</span>
-                                    <span>Folder is Empty</span>
+                                    <span>{t('projects_tab.empty_folder')}</span>
                                 </div>
                             )}
                         </div>
@@ -516,8 +557,8 @@ export const ProjectsFileExplorer = ({ windowId }: { windowId?: string }) => {
 
             {/* Status Bar */}
             <div className="h-6 bg-[#2d2d44] border-t border-[#ffffff10] flex items-center px-4 text-xs text-[#ffffff60] gap-4">
-                <span>{currentFolderNode?.children?.length || 0} items</span>
-                <span>Free space: 42 GB</span>
+                <span>{currentFolderNode?.children?.length || 0} {t('projects_tab.status_items')}</span>
+                <span>{t('projects_tab.status_space')}: 42 GB</span>
                 <div className="flex-1" />
                 <a href="https://github.com/Maycon-Pereira" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-white cursor-pointer transition-colors">
                     <img src={githubIcon} alt="GitHub" className="w-3.5 h-3.5 object-contain opacity-70" /> GitHub
@@ -557,23 +598,23 @@ export const ProjectsFileExplorer = ({ windowId }: { windowId?: string }) => {
                                     </div>
 
                                     <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm text-[#ffffff80] mb-6">
-                                        <div>Type: <span className="text-[#d0d0ff]">Java Source File</span></div>
-                                        <div>Size: <span className="text-[#d0d0ff]">{modalFile.size}</span></div>
-                                        <div>Modified: <span className="text-[#d0d0ff]">{modalFile.projectData?.fullDate || modalFile.date}</span></div>
-                                        <div>Location: <span className="text-[#d0d0ff]">~/Projects/backend-projects</span></div>
+                                        <div>{t('projects_tab.modal_type')}: <span className="text-[#d0d0ff]">{t('projects_tab.type_fallback')}</span></div>
+                                        <div>{t('projects_tab.modal_size')}: <span className="text-[#d0d0ff]">{modalFile.size}</span></div>
+                                        <div>{t('projects_tab.modal_modified')}: <span className="text-[#d0d0ff]">{modalFile.projectData?.fullDate || modalFile.date}</span></div>
+                                        <div>{t('projects_tab.modal_location')}: <span className="text-[#d0d0ff]">~/Projects/backend-projects</span></div>
                                     </div>
 
                                     {modalFile.projectData && (
                                         <>
                                             <div className="mb-4">
-                                                <h3 className="text-sm font-bold text-[#64ffda] uppercase mb-1">Description</h3>
+                                                <h3 className="text-sm font-bold text-[#64ffda] uppercase mb-1">{t('projects_tab.modal_desc')}</h3>
                                                 <p className="text-[#d0d0ff] leading-relaxed">
                                                     {modalFile.projectData.description}
                                                 </p>
                                             </div>
 
                                             <div className="mb-6">
-                                                <h3 className="text-sm font-bold text-[#febc2e] uppercase mb-2">Technology Stack</h3>
+                                                <h3 className="text-sm font-bold text-[#febc2e] uppercase mb-2">{t('projects_tab.modal_stack')}</h3>
                                                 <div className="flex flex-wrap gap-2">
                                                     {modalFile.projectData.tech.map(t => (
                                                         <span key={t} className="px-2 py-1 bg-[#ffffff10] rounded text-xs border border-[#ffffff05]">
@@ -584,7 +625,7 @@ export const ProjectsFileExplorer = ({ windowId }: { windowId?: string }) => {
                                             </div>
 
                                             <button className="px-6 py-2 bg-[#9664ff] hover:bg-[#854bf0] text-white rounded-lg font-medium transition-colors shadow-lg shadow-[#9664ff40]">
-                                                Open in VS Code
+                                                {t('projects_tab.modal_vscode')}
                                             </button>
                                         </>
                                     )}

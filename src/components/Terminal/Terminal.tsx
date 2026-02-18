@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useCallback } from 'react';
 import { useTerminal } from '../../hooks/useTerminal';
 
 import { useI18n } from '../../hooks/useI18nHook';
@@ -6,51 +6,139 @@ import { useWindowManager } from '../../context/WindowContext';
 import { AboutContent } from '../Content/AboutContent';
 import { SkillsContent } from '../Content/SkillsContent';
 import { ProjectsContent } from '../Content/ProjectsContent';
+import { SublimeEditor } from '../Content/SublimeEditor';
+import sublimeIcon from '../../img/svg/sublime.svg';
 import spacemanFace from '../../img/spacemanJellyfishFace.png';
+import { Typewriter } from './Typewriter';
 
 export const Terminal = () => {
-    const { history, input, setInput, handleCommand, isShaking, navigateHistory } = useTerminal();
+    const { windows, openWindow, closeWindow, toggleWindow, updateWindow } = useWindowManager();
     const { terminalT } = useI18n();
-    const outputEndRef = useRef<HTMLDivElement>(null);
-    const inputRef = useRef<HTMLInputElement>(null);
-    const { windows, openWindow, closeWindow, toggleWindow } = useWindowManager();
 
-    // Auto-scroll to bottom
+    const windowCommands: Record<string, { id: string, component: React.ReactNode, title: string, icon: string }> = {
+        'about': { id: 'about', title: terminalT('window_title.about'), icon: '👤', component: <AboutContent /> },
+        'skills': { id: 'skills', title: terminalT('window_title.skills'), icon: '🛠️', component: <SkillsContent /> },
+        'projects': { id: 'projects', title: terminalT('window_title.projects'), icon: '🚀', component: <ProjectsContent /> }
+    };
+
+    const { history, input, setInput, handleCommand, isShaking, navigateHistory } = useTerminal({
+        onProjectCat: () => {
+            const win = windowCommands['projects'];
+            openWindow(win.id, win.title, win.component, 0, win.icon);
+        },
+        onOpenWindow: (id) => {
+            if (windowCommands[id]) {
+                const win = windowCommands[id];
+                openWindow(win.id, win.title, win.component, 0, win.icon);
+            }
+        },
+        onViewReadme: () => {
+            // Open a custom window for Readme
+            // We'll treat it like a unique file opening
+            // Use 'editor-readme' to match Dock's dynamic filter and FileExplorer
+            openWindow('editor-readme', 'readme.md - Sublime Text', <div className="w-full h-full"><SublimeEditor fileId="readme_v2" fileName="readme.md" initialContent={terminalT('readme_content')} /></div>, 0, sublimeIcon);
+        },
+        onViewText: () => {
+            // Open text.txt window
+            openWindow('editor-text', 'Text.txt - Sublime Text', <div className="w-full h-full"><SublimeEditor fileId="text" fileName="Text.txt" initialContent={terminalT('text_txt_content')} /></div>, 0, sublimeIcon);
+        }
+    });
+
+    const outputEndRef = useRef<HTMLDivElement>(null);
+    const inputRef = useRef<HTMLTextAreaElement>(null);
+    const terminalBodyRef = useRef<HTMLDivElement>(null);
+    const baseWidthRef = useRef<number | null>(null);
+    const isExpandedRef = useRef(false);
+
+    // Auto-scroll to bottom whenever content changes (MutationObserver to catch typing effect)
     useEffect(() => {
-        outputEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [history]);
+        const body = terminalBodyRef.current;
+        if (!body) return;
+
+        const observer = new MutationObserver(() => {
+            body.scrollTop = body.scrollHeight;
+        });
+
+        observer.observe(body, {
+            childList: true,
+            subtree: true,
+            characterData: true
+        });
+
+        return () => observer.disconnect();
+    }, []);
+
+    // Auto-resize textarea
+    useEffect(() => {
+        if (inputRef.current) {
+            inputRef.current.style.height = 'auto';
+            inputRef.current.style.height = inputRef.current.scrollHeight + 'px';
+        }
+    }, [input]);
 
     // Focus input on click
     const handleBodyClick = () => {
         inputRef.current?.focus();
     };
 
-    const windowCommands: Record<string, { id: string, component: React.ReactNode, title: string, icon: string }> = {
-        'about': { id: 'about', title: 'About Me', icon: '👤', component: <AboutContent /> },
-        'skills': { id: 'skills', title: 'Grafana', icon: '🛠️', component: <SkillsContent /> },
-        'projects': { id: 'projects', title: 'Projects', icon: '🚀', component: <ProjectsContent /> }
-    };
+    // Listen for external commands (e.g., from Skills dashboard)
+    useEffect(() => {
+        const handleTerminalCommand = (e: any) => {
+            if (e.detail && e.detail.command) {
+                handleCommand(e.detail.command);
+            }
+        };
 
-    const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        window.addEventListener('terminal-command', handleTerminalCommand);
+        return () => window.removeEventListener('terminal-command', handleTerminalCommand);
+    }, [handleCommand]);
+
+    // Dynamic width expansion when command is sent (Enter)
+    const expandTerminal = useCallback(() => {
+        const terminalWin = windows.find(w => w.id === 'terminal');
+        if (!terminalWin || terminalWin.isMaximized) return;
+
+        const screenWidth = window.innerWidth;
+        const targetWidth = screenWidth * 0.5;
+
+        if (!isExpandedRef.current) {
+            const currentWidth = terminalWin.width || (screenWidth * 0.75);
+            const currentX = terminalWin.x || 0;
+            const rightEdge = currentX + currentWidth;
+
+            baseWidthRef.current = currentWidth;
+            const newX = rightEdge - targetWidth;
+
+            updateWindow('terminal', {
+                width: targetWidth,
+                x: Math.max(0, newX)
+            });
+            isExpandedRef.current = true;
+        }
+    }, [windows, updateWindow]);
+
+    const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key === 'Enter') {
+            e.preventDefault();
+            expandTerminal();
             const cmd = input.trim().toLowerCase();
             const [action, target] = cmd.split(' ');
 
             if (action === 'open' && windowCommands[target]) {
                 const win = windowCommands[target];
                 openWindow(win.id, win.title, win.component, 0, win.icon);
-                handleCommand(input, [`Opening ${win.title}...`]);
+                handleCommand(input, [`${terminalT('feedback.opening')} ${win.title}...`]);
             } else if (action === 'close' && windowCommands[target]) {
                 const win = windowCommands[target];
                 closeWindow(win.id);
-                handleCommand(input, [`Closing ${win.title}...`]);
+                handleCommand(input, [`${terminalT('feedback.closing')} ${win.title}...`]);
             } else if (action === 'toggle' && windowCommands[target]) {
                 const win = windowCommands[target];
                 toggleWindow(win.id, 0);
-                handleCommand(input, [`Toggling ${win.title}...`]);
+                handleCommand(input, [`${terminalT('feedback.toggling')} ${win.title}...`]);
             } else if (action === 'list') {
                 const openApps = windows.filter(w => w.isOpen).map(w => w.id).join(', ');
-                handleCommand(input, [`Open windows: ${openApps || 'None'}`]);
+                handleCommand(input, [`${terminalT('feedback.list')} ${openApps || 'None'}`]);
             } else {
                 handleCommand(input);
             }
@@ -72,6 +160,7 @@ export const Terminal = () => {
             <div className={`w-full h-full flex flex-col ${isShaking ? 'animate-shake' : ''}`}>
                 {/* Terminal Body */}
                 <div
+                    ref={terminalBodyRef}
                     className="p-0 flex-1 overflow-y-auto overflow-x-hidden scroll-smooth scrollbar-thin scrollbar-thumb-transparent hover:scrollbar-thumb-[#9664ff4d] scrollbar-track-transparent relative workspace-scrollable"
                     onClick={handleBodyClick}
                 >
@@ -108,16 +197,24 @@ export const Terminal = () => {
                         </>
                     )}
 
-                    {/* Output */}
                     <div className="px-[16px] pt-[8px] text-[0.68rem] text-[#d8dee9]">
-                        {history.map((line, idx) => (
+                        {history.map((line: any, idx: number) => (
                             <div key={idx} className="my-[2px] leading-[1.5] break-words">
                                 {line.type === 'command' ? (
-                                    <span>
-                                        <span className="text-[#a3be8c] font-bold">{line.user}</span>@<span className="text-[#81a1c1] font-bold">{line.host}</span>:~$ <span className="text-[#e5e9f0]">{line.content}</span>
-                                    </span>
+                                    <div className="break-words relative">
+                                        <div className="opacity-85 absolute left-0 top-0 pointer-events-none whitespace-nowrap">
+                                            <span className="text-[#a3be8c] font-bold">{line.user}</span>@<span className="text-[#81a1c1] font-bold">{line.host}</span>:~$
+                                        </div>
+                                        <div className="text-[#e5e9f0]" style={{ textIndent: '17.5ch' }}>{line.content}</div>
+                                    </div>
                                 ) : (
-                                    <span className="text-[#88c0d0] pl-[4px]">{line.content}</span>
+                                    <div className="text-[#88c0d0] break-words whitespace-pre-wrap">
+                                        {typeof line.content === 'string' ? (
+                                            <Typewriter text={line.content} delay={10} />
+                                        ) : (
+                                            line.content
+                                        )}
+                                    </div>
                                 )}
                             </div>
                         ))}
@@ -125,17 +222,18 @@ export const Terminal = () => {
                     </div>
 
                     {/* Input */}
-                    <div className="flex items-center px-[16px] pb-[12px] pt-[8px] text-[0.68rem]">
-                        <span className="whitespace-nowrap shrink-0 text-[#d8dee9]">
+                    <div className="px-[16px] pb-[12px] pt-[4px] text-[0.68rem] leading-[1.6] relative">
+                        <div className="pointer-events-none opacity-85 absolute left-[16px] top-[4px] z-10 whitespace-nowrap">
                             <span className="text-[#a3be8c] font-bold">visitor</span>@<span className="text-[#81a1c1] font-bold">maycon</span>:~$
-                        </span>
-                        <input
+                        </div>
+                        <textarea
                             ref={inputRef}
-                            type="text"
+                            rows={1}
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             onKeyDown={onKeyDown}
-                            className="bg-transparent border-none outline-none text-[#e5e9f0] font-mono text-[0.68rem] flex-1 p-0 ml-[4px] update-caret"
+                            className="bg-transparent border-none outline-none text-[#e5e9f0] font-mono text-[0.68rem] w-full p-0 resize-none overflow-hidden update-caret leading-[1.6] align-top block"
+                            style={{ textIndent: '17.5ch' }}
                             autoComplete="off"
                             spellCheck={false}
                             autoFocus

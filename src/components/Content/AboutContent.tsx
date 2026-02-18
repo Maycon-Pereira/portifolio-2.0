@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useWindowManager } from '../../context/WindowContext';
 import { useI18n } from '../../hooks/useI18nHook';
-import githubIcon from '../../img/svg/github.svg';
-import linkedinIcon from '../../img/svg/linkedin.svg';
 
 interface File {
     name: string;
@@ -104,7 +102,7 @@ export const AboutContent = ({ windowId }: { windowId?: string }) => {
             <div className="flex-1 flex overflow-hidden">
                 {/* Sidebar */}
                 <div className="w-64 bg-[#3c3f41] flex flex-col border-r border-[#000000]">
-                    <div className="px-3 py-1 text-xs text-[#a9b7c6] font-bold bg-[#313335]">Project</div>
+                    <div className="px-3 py-1 text-xs text-[#a9b7c6] font-bold bg-[#313335]">{t('about.sidebar.project')}</div>
                     <div className="flex-1 overflow-y-auto py-2">
                         <div className="px-2 text-sm">
                             <div className="flex items-center gap-1 text-[#a9b7c6] mb-1">
@@ -198,15 +196,15 @@ export const AboutContent = ({ windowId }: { windowId?: string }) => {
                     <div className="h-6 bg-[#3c3f41] border-t border-[#323232] flex items-center px-3 justify-between text-xs text-[#a9b7c6] opacity-80">
                         <div className="flex gap-4">
                             <a href="https://github.com/Maycon-Pereira" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-white cursor-pointer transition-colors">
-                                <img src={githubIcon} alt="GitHub" className="w-3.5 h-3.5 object-contain opacity-70" /> GitHub
+                                <i className="bi bi-github text-sm opacity-70"></i> GitHub
                             </a>
                             <a href="https://www.linkedin.com/in/maycon-ps/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-white cursor-pointer transition-colors">
-                                <img src={linkedinIcon} alt="LinkedIn" className="w-3.5 h-3.5 object-contain opacity-70" /> LinkedIn
+                                <i className="bi bi-linkedin text-sm opacity-70"></i> LinkedIn
                             </a>
                         </div>
                         <div className="flex gap-4">
                             <span>UTF-8</span>
-                            <span>Top Level</span>
+                            <span>{t('about.statusbar.top_level')}</span>
                             <span>master</span>
                         </div>
                     </div>

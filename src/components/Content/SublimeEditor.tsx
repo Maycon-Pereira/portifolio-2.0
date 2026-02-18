@@ -4,9 +4,10 @@ import { useI18n } from '../../hooks/useI18nHook';
 interface SublimeEditorProps {
     fileId: string;
     fileName: string;
+    initialContent?: string;
 }
 
-export const SublimeEditor = ({ fileId, fileName }: SublimeEditorProps) => {
+export const SublimeEditor = ({ fileId, fileName, initialContent = '' }: SublimeEditorProps) => {
     const { t } = useI18n();
     const [content, setContent] = useState<string>('');
     const [saved, setSaved] = useState(true);
@@ -16,8 +17,12 @@ export const SublimeEditor = ({ fileId, fileName }: SublimeEditorProps) => {
     // Load from localStorage on mount
     useEffect(() => {
         const stored = localStorage.getItem(`editor_${fileId}`);
-        if (stored) setContent(stored);
-    }, [fileId]);
+        if (stored) {
+            setContent(stored);
+        } else if (initialContent) {
+            setContent(initialContent);
+        }
+    }, [fileId, initialContent]);
 
     // Sync scroll between textarea and line numbers
     const handleScroll = () => {
@@ -71,15 +76,15 @@ export const SublimeEditor = ({ fileId, fileName }: SublimeEditorProps) => {
         >
             {/* Editor Menu Bar */}
             <div className="h-7 bg-[#3c3c3c] flex items-center px-3 text-[11px] text-[#cccccc] gap-4 border-b border-[#252525] shrink-0">
-                <span className="hover:text-white cursor-default">File</span>
-                <span className="hover:text-white cursor-default">Edit</span>
-                <span className="hover:text-white cursor-default">Selection</span>
-                <span className="hover:text-white cursor-default">Find</span>
-                <span className="hover:text-white cursor-default">View</span>
-                <span className="hover:text-white cursor-default">Goto</span>
-                <span className="hover:text-white cursor-default">Tools</span>
-                <span className="hover:text-white cursor-default">Preferences</span>
-                <span className="hover:text-white cursor-default">Help</span>
+                <span className="hover:text-white cursor-default">{t('sublime.menu.file')}</span>
+                <span className="hover:text-white cursor-default">{t('sublime.menu.edit')}</span>
+                <span className="hover:text-white cursor-default">{t('sublime.menu.selection')}</span>
+                <span className="hover:text-white cursor-default">{t('sublime.menu.find')}</span>
+                <span className="hover:text-white cursor-default">{t('sublime.menu.view')}</span>
+                <span className="hover:text-white cursor-default">{t('sublime.menu.goto')}</span>
+                <span className="hover:text-white cursor-default">{t('sublime.menu.tools')}</span>
+                <span className="hover:text-white cursor-default">{t('sublime.menu.preferences')}</span>
+                <span className="hover:text-white cursor-default">{t('sublime.menu.help')}</span>
             </div>
 
             {/* Tabs */}
@@ -131,13 +136,13 @@ export const SublimeEditor = ({ fileId, fileName }: SublimeEditorProps) => {
 
             {/* Status Bar */}
             <div className="h-6 bg-[#007acc] flex items-center px-4 gap-4 text-[11px] text-white shrink-0" style={{ userSelect: 'none' }}>
-                <span>Ln {cursorLine}, Col {cursorCol}</span>
-                <span>Spaces: 4</span>
-                <span>UTF-8</span>
-                <span>Plain Text</span>
+                <span>{t('sublime.status.ln')} {cursorLine}, {t('sublime.status.col')} {cursorCol}</span>
+                <span>{t('sublime.status.spaces')}: 4</span>
+                <span>{t('sublime.status.utf8')}</span>
+                <span>{t('sublime.status.plain_text')}</span>
                 <div className="flex-1" />
                 <span className={saved ? 'text-white' : 'text-[#e6db74]'}>
-                    {saved ? '✓ Saved' : '● Unsaved'}
+                    {saved ? `✓ ${t('sublime.status.saved')}` : `● ${t('sublime.status.unsaved')}`}
                 </span>
             </div>
         </div>
