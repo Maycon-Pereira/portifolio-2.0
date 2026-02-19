@@ -1,6 +1,3 @@
-
-import React from 'react';
-
 export const MobileDateWidget = () => {
     // Hardcoded for now to match image, or use real date?
     // Image says: "sáb., 20 de jul. | 22°"

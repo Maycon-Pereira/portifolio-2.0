@@ -1,6 +1,4 @@
-
-import React from 'react';
-import { Search, Mic, Camera } from 'lucide-react';
+import { Mic } from 'lucide-react';
 
 export const MobileSearchBar = () => {
     return (

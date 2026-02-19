@@ -1,5 +1,3 @@
-
-import React from 'react';
 import { useWindowManager } from '../../context/WindowContext';
 import { X } from 'lucide-react';
 import { motion } from 'framer-motion';

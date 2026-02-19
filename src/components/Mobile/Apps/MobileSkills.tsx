@@ -1,5 +1,3 @@
-
-import React from 'react';
 import { useGitHubActivity } from '../../../hooks/useGitHubActivity';
 import { useI18n } from '../../../hooks/useI18nHook';
 

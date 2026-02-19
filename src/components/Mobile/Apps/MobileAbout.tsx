@@ -1,5 +1,4 @@
 
-import React from 'react';
 import { SublimeEditor } from '../../Content/SublimeEditor';
 
 export const MobileAbout = () => {

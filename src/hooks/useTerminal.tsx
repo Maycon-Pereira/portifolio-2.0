@@ -2,12 +2,6 @@ import React, { useEffect, useRef } from 'react';
 import { useI18n } from './useI18nHook';
 import { useSystem } from '../context/SystemContext';
 
-// Delete TerminalLine interface as it's now in SystemContext (or import it if needed, but we don't strictly need to export it here if we don't use it in API return explicitly other than implicitly)
-// Actually, keep it if exported, but maybe just use the one from context?
-// The return type of the hook uses it implicitly.
-// Let's import it to be safe if we need it for typing.
-import { TerminalLine } from '../context/SystemContext';
-
 export const useTerminal = (options?: { onProjectCat?: () => void, onOpenWindow?: (id: string) => void, onViewReadme?: () => void, onViewText?: () => void }) => {
     const { t, terminalT, getRepoKeys } = useI18n();
 
