@@ -1,21 +1,30 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useI18n } from './useI18nHook';
+import { useSystem } from '../context/SystemContext';
 
-interface TerminalLine {
-    type: 'command' | 'output';
-    content: string | React.ReactNode;
-    user?: string;
-    host?: string;
-}
+// Delete TerminalLine interface as it's now in SystemContext (or import it if needed, but we don't strictly need to export it here if we don't use it in API return explicitly other than implicitly)
+// Actually, keep it if exported, but maybe just use the one from context?
+// The return type of the hook uses it implicitly.
+// Let's import it to be safe if we need it for typing.
+import { TerminalLine } from '../context/SystemContext';
 
-// Update hook signature
 export const useTerminal = (options?: { onProjectCat?: () => void, onOpenWindow?: (id: string) => void, onViewReadme?: () => void, onViewText?: () => void }) => {
     const { t, terminalT, getRepoKeys } = useI18n();
-    const [history, setHistory] = useState<TerminalLine[]>([]);
-    const [commandHistory, setCommandHistory] = useState<string[]>([]);
-    const [historyIndex, setHistoryIndex] = useState(-1);
-    const [input, setInput] = useState('');
-    const [isShaking, setIsShaking] = useState(false);
+
+    // Use System Context
+    const {
+        terminalHistory: history,
+        terminalCommandHistory: commandHistory,
+        terminalHistoryIndex: historyIndex,
+        terminalInput: input,
+        setTerminalInput: setInput,
+        addToTerminalHistory,
+        addToCommandHistory,
+        setTerminalHistoryIndex: setHistoryIndex,
+        clearTerminalHistory
+    } = useSystem();
+
+    const [isShaking, setIsShaking] = React.useState(false);
     const initialized = useRef(false);
 
     const onProjectCat = options?.onProjectCat;
@@ -23,15 +32,10 @@ export const useTerminal = (options?: { onProjectCat?: () => void, onOpenWindow?
     const onViewReadme = options?.onViewReadme;
     const onViewText = options?.onViewText;
 
-    const addToHistory = useCallback((lines: (string | React.ReactNode)[], type: 'command' | 'output' = 'output', user?: string, host?: string) => {
-        const newLines: TerminalLine[] = lines.map(line => ({
-            type,
-            content: line,
-            user,
-            host
-        }));
-        setHistory(prev => [...prev, ...newLines]);
-    }, []);
+    // Helper to match old addToHistory signature
+    const addToHistory = (lines: (string | React.ReactNode)[], type: 'command' | 'output' = 'output', user?: string, host?: string) => {
+        addToTerminalHistory(lines, type, user, host);
+    };
 
     const commands: Record<string, () => (string | React.ReactNode)[]> = {
         help: () => [
@@ -108,6 +112,7 @@ export const useTerminal = (options?: { onProjectCat?: () => void, onOpenWindow?
             terminalT('project_rest_product_line'),
             terminalT('project_cidadaonow_line'),
             terminalT('project_organo_line'),
+            terminalT('project_userdept_line'),
             '',
             terminalT('projects_cat_hint'),
         ],
@@ -164,12 +169,18 @@ export const useTerminal = (options?: { onProjectCat?: () => void, onOpenWindow?
         const lowerCmd = trimmedCmd.toLowerCase();
 
         // Echo command
-        addToHistory([trimmedCmd], 'command', 'visitor', 'maycon');
+        if (!customOutput) {
+            addToHistory([trimmedCmd], 'command', 'visitor', 'maycon');
+        } else {
+            // For clicking list items that run commands without typing
+            addToHistory([trimmedCmd], 'command', 'visitor', 'maycon');
+        }
+
 
         if (lowerCmd === '') {
             // do nothing
         } else {
-            setCommandHistory(prev => [...prev, cmd]);
+            addToCommandHistory(cmd);
             setHistoryIndex(-1);
         }
 
@@ -179,7 +190,7 @@ export const useTerminal = (options?: { onProjectCat?: () => void, onOpenWindow?
         }
 
         if (lowerCmd === 'clear') {
-            setHistory([]);
+            clearTerminalHistory();
         } else if (lowerCmd === 'sudo rm -rf /') {
             setIsShaking(true);
             addToHistory([terminalT('cmd_sudo_denied')], 'output');
@@ -211,12 +222,10 @@ export const useTerminal = (options?: { onProjectCat?: () => void, onOpenWindow?
             }
 
             if (inputName === 'text.txt' || inputName === 'text') {
-                // Use new text_opening key and call callback if exists
                 if (onViewText) {
                     addToHistory([terminalT('text_opening')], 'output');
                     onViewText();
                 } else {
-                    // Fallback if no window opener configured
                     addToHistory([terminalT('text_txt_content')], 'output');
                 }
                 return;
@@ -248,9 +257,9 @@ export const useTerminal = (options?: { onProjectCat?: () => void, onOpenWindow?
         }
     };
 
-    // Initial welcome message
+    // Initial welcome message (Check if empty to avoid repeating on re-mount if switched)
     useEffect(() => {
-        if (!initialized.current) {
+        if (!initialized.current && history.length === 0) {
             addToHistory([
                 terminalT('welcome'),
                 terminalT('help_hint'),
@@ -259,7 +268,7 @@ export const useTerminal = (options?: { onProjectCat?: () => void, onOpenWindow?
             initialized.current = true;
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, []); // Run once on mount, but check history length
 
 
     const navigateHistory = (direction: 'up' | 'down') => {

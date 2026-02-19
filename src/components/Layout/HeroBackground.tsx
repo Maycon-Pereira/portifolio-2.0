@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useI18n } from '../../hooks/useI18nHook';
 
-export const HeroBackground = () => {
+export const HeroBackground = ({ className }: { className?: string }) => {
     const { t } = useI18n();
     const [lineIndex, setLineIndex] = useState(0);
     const [charIndex, setCharIndex] = useState(0);
@@ -56,8 +56,10 @@ export const HeroBackground = () => {
     const isTypingDone = typingDone;
     const cursorLineIndex = isTypingDone ? lines.length - 1 : lineIndex;
 
+    const containerClass = className || "absolute top-1/2 -translate-y-1/2 left-[5%]";
+
     return (
-        <div className="absolute top-1/2 -translate-y-1/2 left-[5%] flex flex-col gap-3 select-none pointer-events-none z-[1]" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+        <div className={`${containerClass} flex flex-col gap-3 select-none pointer-events-none z-[1]`} style={{ fontFamily: "'JetBrains Mono', monospace" }}>
             <h1 className="text-[120px] font-[800] leading-[1] text-white tracking-[-4px] m-0 hero-glow hero-flicker min-h-[120px] opacity-100">
                 {displayedLines[0] || ''}
                 {cursorLineIndex === 0 && <span className="blink-cursor text-[#64ffda]">|</span>}

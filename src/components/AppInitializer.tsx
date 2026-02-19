@@ -9,6 +9,10 @@ export const AppInitializer = () => {
     useEffect(() => {
         if (!initialized.current) {
             initialized.current = true;
+
+            // Should not open terminal by default on mobile
+            if (window.innerWidth < 600) return;
+
             // Open Terminal by default with fixed dimensions (based on notebook standards)
             const width = 341;
             const height = 460;
