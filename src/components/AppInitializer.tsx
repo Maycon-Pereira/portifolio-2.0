@@ -1,9 +1,11 @@
 import { useEffect, useRef } from 'react';
 import { useWindowManager } from '../context/WindowContext';
 import { Terminal } from './Terminal/Terminal';
+import { useDeviceType } from '../hooks/useDeviceType';
 
 export const AppInitializer = () => {
     const { openWindow } = useWindowManager();
+    const { isMobile } = useDeviceType();
     const initialized = useRef(false);
 
     useEffect(() => {
@@ -11,7 +13,7 @@ export const AppInitializer = () => {
             initialized.current = true;
 
             // Should not open terminal by default on mobile
-            if (window.innerWidth < 600) return;
+            if (isMobile) return;
 
             // Open Terminal by default with fixed dimensions (based on notebook standards)
             const width = 341;
@@ -20,7 +22,7 @@ export const AppInitializer = () => {
             const y = (window.innerHeight - height) / 2; // Center vertically
             openWindow('terminal', 'Terminal', <Terminal />, 0, '💻', { width, height, x, y });
         }
-    }, [openWindow]);
+    }, [openWindow, isMobile]);
 
     return null;
 };
