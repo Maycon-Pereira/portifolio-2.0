@@ -5,6 +5,13 @@ import { MobileProjects } from './Apps/MobileProjects';
 import { MobileSkills } from './Apps/MobileSkills';
 import { MobileAbout } from './Apps/MobileAbout';
 
+// Import App Icons
+import archivesIcon from './img/archives.svg';
+import notesIcon from './img/notes.svg';
+import settingsIcon from './img/settingsmobile.svg';
+import githubIcon from './img/githubmobile.svg';
+import linkedinIcon from './img/linkedinmobile.svg';
+
 // Define App Type
 interface MobileApp {
     id: string;
@@ -23,21 +30,21 @@ const useMobileApps = () => {
         {
             id: 'projects',
             label: 'Projetos',
-            icon: <img src="/src/components/Mobile/img/archives.svg" alt="Projects" className="w-full h-full" />,
+            icon: <img src={archivesIcon} alt="Projects" className="w-full h-full" />,
             color: 'bg-[#4285F4]',
             component: <MobileProjects />
         },
         {
             id: 'skills',
             label: 'Skills',
-            icon: <img src="/src/components/Mobile/img/notes.svg" alt="Skills" className="w-full h-full" />,
+            icon: <img src={notesIcon} alt="Skills" className="w-full h-full" />,
             color: 'bg-[#EA4335]',
             component: <MobileSkills />
         },
         {
             id: 'about',
             label: 'Sobre',
-            icon: <img src="/src/components/Mobile/img/settingsmobile.svg" alt="Settings" className="w-full h-full" />,
+            icon: <img src={settingsIcon} alt="Settings" className="w-full h-full" />,
             color: 'bg-[#7f8c8d]',
             component: <MobileAbout />
         },
@@ -45,7 +52,7 @@ const useMobileApps = () => {
             id: 'github',
             label: 'GitHub',
             // Full width/height to fill container
-            icon: <img src="/src/components/Mobile/img/githubmobile.svg" alt="GitHub" className="w-full h-full" />,
+            icon: <img src={githubIcon} alt="GitHub" className="w-full h-full" />,
             color: 'bg-white', // White background as requested
             externalUrl: 'https://github.com/Maycon-Pereira'
         },
@@ -53,7 +60,7 @@ const useMobileApps = () => {
             id: 'linkedin',
             label: 'LinkedIn',
             // Full width/height to fill container
-            icon: <img src="/src/components/Mobile/img/linkedinmobile.svg" alt="LinkedIn" className="w-full h-full" />,
+            icon: <img src={linkedinIcon} alt="LinkedIn" className="w-full h-full" />,
             color: 'bg-white', // White background as requested
             externalUrl: 'https://www.linkedin.com/in/maycon-ps/'
         },

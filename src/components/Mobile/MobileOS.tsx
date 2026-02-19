@@ -11,6 +11,9 @@ import { MobileSearchBar } from './MobileSearchBar';
 import { Stars } from '../Layout/Stars';
 import { HeroBackground } from '../Layout/HeroBackground';
 
+// Import background image
+import spacemanJellyfish from '../../img/spacemanJellyfish.jpg';
+
 export const MobileOS = () => {
     const [isControlPanelOpen, setIsControlPanelOpen] = useState(false);
     const [isTaskSwitcherOpen, setIsTaskSwitcherOpen] = useState(false);
@@ -29,7 +32,7 @@ export const MobileOS = () => {
                 <div
                     className="absolute inset-0"
                     style={{
-                        backgroundImage: `linear-gradient(rgba(30,20,60,0.15), rgba(30,20,60,0.15)), url('/img/spacemanJellyfish.jpg')`,
+                        backgroundImage: `linear-gradient(rgba(30,20,60,0.15), rgba(30,20,60,0.15)), url(${spacemanJellyfish})`,
                         backgroundSize: "cover, 80%",
                         backgroundPosition: "center",
                         backgroundRepeat: "no-repeat"
