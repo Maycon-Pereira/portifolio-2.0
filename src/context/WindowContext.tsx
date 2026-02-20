@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode, useCallback } from 'react';
+import { createContext, useContext, useState, ReactNode, useCallback, useRef } from 'react';
 
 export interface WindowState {
     id: string;
@@ -28,6 +28,9 @@ interface WindowContextType {
     closeAllWindows: () => void;
     setWindowTitle: (id: string, title: ReactNode) => void;
     updateWindow: (id: string, updates: Partial<WindowState>) => void;
+    registerBackHandler: (id: string, handler: () => boolean) => void;
+    unregisterBackHandler: (id: string) => void;
+    handleWindowBack: (id: string) => boolean;
 }
 
 const WindowContext = createContext<WindowContextType | undefined>(undefined);
@@ -37,6 +40,7 @@ export const WindowProvider = ({ children }: { children: ReactNode }) => {
     const [topZIndex, setTopZIndex] = useState(100);
 
     const [cascadeOffset, setCascadeOffset] = useState(0);
+    const backHandlers = useRef<Record<string, () => boolean>>({});
 
     const focusWindow = useCallback((id: string) => {
         setWindows(prev => prev.map(w => {
@@ -182,8 +186,24 @@ export const WindowProvider = ({ children }: { children: ReactNode }) => {
         setWindows(prev => prev.map(w => w.id === id ? { ...w, ...updates } : w));
     }, []);
 
+    const registerBackHandler = useCallback((id: string, handler: () => boolean) => {
+        backHandlers.current[id] = handler;
+    }, []);
+
+    const unregisterBackHandler = useCallback((id: string) => {
+        delete backHandlers.current[id];
+    }, []);
+
+    const handleWindowBack = useCallback((id: string): boolean => {
+        const handler = backHandlers.current[id];
+        if (handler) {
+            return handler();
+        }
+        return false;
+    }, []);
+
     return (
-        <WindowContext.Provider value={{ windows, openWindow, closeWindow, minimizeWindow, maximizeWindow, focusWindow, toggleWindow, closeAllWindows, setWindowTitle, updateWindow }}>
+        <WindowContext.Provider value={{ windows, openWindow, closeWindow, minimizeWindow, maximizeWindow, focusWindow, toggleWindow, closeAllWindows, setWindowTitle, updateWindow, registerBackHandler, unregisterBackHandler, handleWindowBack }}>
             {children}
         </WindowContext.Provider>
     );

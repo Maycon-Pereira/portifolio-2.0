@@ -30,6 +30,8 @@ interface SystemContextType {
     setWifiEnabled: (enabled: boolean) => void;
     airplaneMode: boolean;
     setAirplaneMode: (enabled: boolean) => void;
+    isShaking: boolean;
+    setIsShaking: (shaking: boolean) => void;
 
     // Language (proxied or state?) - We use useI18n hook, but let's keep it here if we need global toggle
     // For now we rely on useI18nHook for language, maybe we can sync it later if needed.
@@ -67,6 +69,7 @@ export const SystemProvider = ({ children }: { children: ReactNode }) => {
     const [volume, setVolume] = useState(80);
     const [wifiEnabled, setWifiEnabled] = useState(true);
     const [airplaneMode, setAirplaneMode] = useState(false);
+    const [isShaking, setIsShaking] = useState(false);
 
     return (
         <SystemContext.Provider value={{
@@ -86,7 +89,9 @@ export const SystemProvider = ({ children }: { children: ReactNode }) => {
             wifiEnabled,
             setWifiEnabled,
             airplaneMode,
-            setAirplaneMode
+            setAirplaneMode,
+            isShaking,
+            setIsShaking
         }}>
             {children}
         </SystemContext.Provider>

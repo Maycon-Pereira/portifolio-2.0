@@ -1,10 +1,57 @@
 
-import React, { useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { useTerminal } from '../../../hooks/useTerminal';
-import { Send, Terminal as TerminalIcon } from 'lucide-react';
+import { Send, Terminal as TerminalIcon, ArrowLeft } from 'lucide-react';
+import { useWindowManager } from '../../../context/WindowContext';
+import { MobileProjects } from './MobileProjects';
+import { MobileSkills } from './MobileSkills';
+import { MobileAbout } from './MobileAbout';
+import { MobileIntelliJ } from './MobileIntelliJ';
 
 export const MobileTerminal = () => {
-    const { history, input, setInput, handleCommand } = useTerminal();
+    const { closeWindow, openWindow, focusWindow, windows } = useWindowManager();
+
+    // Helper to open defined apps
+    const openApp = (appId: string) => {
+        const existing = windows.find(w => w.id === appId);
+        if (existing) {
+            focusWindow(appId);
+            return;
+        }
+
+        let component: React.ReactNode = null;
+        let label = '';
+
+        switch (appId) {
+            case 'projects':
+                component = <MobileProjects />;
+                label = 'Projetos';
+                break;
+            case 'skills':
+                component = <MobileSkills />;
+                label = 'Skills';
+                break;
+            case 'about':
+                component = <MobileAbout />;
+                label = 'Sobre'; // Notes
+                break;
+            case 'intellij':
+                component = <MobileIntelliJ />;
+                label = 'IntelliJ';
+                break;
+            default:
+                return;
+        }
+
+        openWindow(appId, label, component, 0);
+    };
+
+    const { history, input, setInput, handleCommand } = useTerminal({
+        onOpenWindow: (id) => openApp(id),
+        onViewReadme: () => openApp('about'),
+        onViewText: () => openApp('about'),
+        onProjectCat: () => openApp('projects')
+    });
     const bottomRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -29,7 +76,13 @@ export const MobileTerminal = () => {
     return (
         <div className="flex flex-col h-full bg-[#1e1e1e] text-[#cccccc] font-mono text-sm">
             {/* Header */}
-            <div className="flex items-center gap-2 p-3 bg-[#2d2d2d] border-b border-[#333]">
+            <div className="flex items-center gap-3 p-3 bg-[#2d2d2d] border-b border-[#333]">
+                <button
+                    onClick={() => closeWindow('terminal')}
+                    className="p-1 -ml-1 text-[#cccccc] hover:bg-white/10 rounded-full transition-colors"
+                >
+                    <ArrowLeft size={20} />
+                </button>
                 <TerminalIcon size={16} className="text-green-500" />
                 <span className="font-bold text-white">Terminal (mobile)</span>
             </div>

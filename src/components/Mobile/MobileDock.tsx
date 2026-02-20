@@ -1,5 +1,4 @@
 import { Triangle, Circle, Square } from 'lucide-react';
-import { useWindowManager } from '../../context/WindowContext';
 
 interface MobileDockProps {
     onRecentsClick?: () => void;
@@ -8,19 +7,12 @@ interface MobileDockProps {
 }
 
 export const MobileDock = ({ onRecentsClick, onHomeClick, onBackClick }: MobileDockProps) => {
-    const { windows, minimizeWindow } = useWindowManager();
+    // const { windows, minimizeWindow } = useWindowManager(); // Not needed anymore as logic is lifted up
 
     const handleBack = () => {
         if (onBackClick) {
             onBackClick();
             return;
-        }
-        // Default back behavior: minimize top window?
-        // Or just navigate back in history?
-        // For now, let's say it minimizes the top app.
-        const active = windows.filter(w => w.isOpen && !w.isMinimized).sort((a, b) => b.zIndex - a.zIndex);
-        if (active.length > 0) {
-            minimizeWindow(active[0].id);
         }
     };
 
@@ -29,10 +21,13 @@ export const MobileDock = ({ onRecentsClick, onHomeClick, onBackClick }: MobileD
             onHomeClick();
             return;
         }
-        // Minimize all
-        windows.forEach(w => {
-            if (w.isOpen && !w.isMinimized) minimizeWindow(w.id);
-        });
+    };
+
+    const handleRecents = () => {
+        if (onRecentsClick) {
+            onRecentsClick();
+            return;
+        }
     };
 
     return (
@@ -54,7 +49,4 @@ export const MobileDock = ({ onRecentsClick, onHomeClick, onBackClick }: MobileD
         </div>
     );
 
-    function handleRecents() {
-        if (onRecentsClick) onRecentsClick();
-    }
 };

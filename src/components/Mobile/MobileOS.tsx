@@ -5,6 +5,7 @@ import { MobileHomeApps, MobileDockApps } from './AppGrid';
 import { ControlPanel } from './ControlPanel';
 import { TaskSwitcher } from './TaskSwitcher';
 import { useWindowManager } from '../../context/WindowContext';
+import { useSystem } from '../../context/SystemContext';
 import { AnimatePresence, motion } from 'framer-motion';
 import { MobileDateWidget } from './MobileDateWidget';
 import { MobileSearchBar } from './MobileSearchBar';
@@ -17,7 +18,8 @@ import spacemanJellyfish from '../../img/spacemanJellyfish.jpg';
 export const MobileOS = () => {
     const [isControlPanelOpen, setIsControlPanelOpen] = useState(false);
     const [isTaskSwitcherOpen, setIsTaskSwitcherOpen] = useState(false);
-    const { windows } = useWindowManager();
+    const { windows, minimizeWindow, handleWindowBack } = useWindowManager();
+    const { isShaking } = useSystem();
 
     // Filter active windows (not minimized)
     const activeWindows = windows.filter(w => w.isOpen && !w.isMinimized);
@@ -25,8 +27,79 @@ export const MobileOS = () => {
     // Sort by z-index to ensure correct layering
     const sortedWindows = [...activeWindows].sort((a, b) => a.zIndex - b.zIndex);
 
+    // Navigation Handlers
+    const handleBack = () => {
+        if (isControlPanelOpen) {
+            setIsControlPanelOpen(false);
+            return;
+        }
+        if (isTaskSwitcherOpen) {
+            setIsTaskSwitcherOpen(false);
+            return;
+        }
+        // Close/Minimize top window
+        if (sortedWindows.length > 0) {
+            const topWindow = sortedWindows[sortedWindows.length - 1];
+            if (handleWindowBack(topWindow.id)) return;
+            minimizeWindow(topWindow.id);
+        }
+    };
+
+    const handleHome = () => {
+        if (isControlPanelOpen) setIsControlPanelOpen(false);
+        if (isTaskSwitcherOpen) setIsTaskSwitcherOpen(false);
+
+        // Minimize all windows
+        activeWindows.forEach(w => minimizeWindow(w.id));
+    };
+
+    const handleRecents = () => {
+        if (isControlPanelOpen) setIsControlPanelOpen(false);
+        setIsTaskSwitcherOpen(!isTaskSwitcherOpen);
+    };
+
+    // Touch Handling
+    const [touchStart, setTouchStart] = useState<{ x: number, y: number } | null>(null);
+
+    const handleTouchStart = (e: React.TouchEvent) => {
+        setTouchStart({ x: e.touches[0].clientX, y: e.touches[0].clientY });
+    };
+
+    const handleTouchEnd = (e: React.TouchEvent) => {
+        if (!touchStart) return;
+
+        const touchEnd = { x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY };
+        const deltaY = touchEnd.y - touchStart.y;
+        const deltaX = touchEnd.x - touchStart.x;
+
+        // Ensure vertical swipe (Y diff > X diff)
+        if (Math.abs(deltaY) > Math.abs(deltaX)) {
+            // Swipe Down (Positive Delta)
+            // ONLY trigger if swipe started from the top area (Status Bar) to avoid conflict with app scrolling
+            if (deltaY > 50 && touchStart.y < 80) {
+                // Open if panel is closed
+                if (!isControlPanelOpen) {
+                    setIsControlPanelOpen(true);
+                }
+            }
+            // Swipe Up (Negative Delta)
+            else if (deltaY < -50) {
+                // Close if open
+                if (isControlPanelOpen) {
+                    setIsControlPanelOpen(false);
+                }
+            }
+        }
+
+        setTouchStart(null);
+    };
+
     return (
-        <div className="fixed inset-0 w-screen h-screen bg-black overflow-hidden select-none font-sans z-50">
+        <div
+            className={`fixed inset-0 w-screen h-screen bg-black overflow-hidden select-none font-sans z-50 ${isShaking ? 'animate-shake' : ''}`}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+        >
             {/* Wallpaper & Effects */}
             <div className="absolute inset-0 z-0 pointer-events-none">
                 <div
@@ -45,8 +118,8 @@ export const MobileOS = () => {
                 </div>
             </div>
 
-            {/* Status Bar */}
-            <div className="absolute top-0 left-0 right-0 z-[200]">
+            {/* Status Bar - High z-index to stay on top of windows */}
+            <div className="absolute top-0 left-0 right-0 z-[300]">
                 <MobileStatusBar onOpenControlPanel={() => setIsControlPanelOpen(true)} />
             </div>
 
@@ -75,7 +148,7 @@ export const MobileOS = () => {
 
             {/* Active Apps (Full Screen Modals) */}
             <AnimatePresence>
-                {!isTaskSwitcherOpen && sortedWindows.map(window => (
+                {sortedWindows.map(window => (
                     <motion.div
                         key={window.id}
                         initial={{ y: '100%' }}
@@ -96,14 +169,24 @@ export const MobileOS = () => {
                 <TaskSwitcher onClose={() => setIsTaskSwitcherOpen(false)} />
             )}
 
-            {/* Control Panel Overlay */}
-            {isControlPanelOpen && (
-                <ControlPanel onClose={() => setIsControlPanelOpen(false)} />
-            )}
+            {/* Control Panel Overlay - Higher than status bar */}
+            <AnimatePresence>
+                {isControlPanelOpen && (
+                    <div className="absolute inset-0 z-[400] pointer-events-none">
+                        <div className="pointer-events-auto h-full">
+                            <ControlPanel onClose={() => setIsControlPanelOpen(false)} />
+                        </div>
+                    </div>
+                )}
+            </AnimatePresence>
 
             {/* Bottom Navigation Control (Back, Home, Recents) */}
             <div className="absolute bottom-0 left-0 right-0 z-[200]">
-                <MobileDock onRecentsClick={() => setIsTaskSwitcherOpen(!isTaskSwitcherOpen)} />
+                <MobileDock
+                    onRecentsClick={handleRecents}
+                    onHomeClick={handleHome}
+                    onBackClick={handleBack}
+                />
             </div>
         </div>
     );

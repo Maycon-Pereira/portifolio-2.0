@@ -1,16 +1,18 @@
-import { Terminal, Mail } from 'lucide-react';
+import { Terminal } from 'lucide-react';
 import { useWindowManager } from '../../context/WindowContext';
 import { MobileTerminal } from './Apps/MobileTerminal';
 import { MobileProjects } from './Apps/MobileProjects';
 import { MobileSkills } from './Apps/MobileSkills';
 import { MobileAbout } from './Apps/MobileAbout';
+import { MobileIntelliJ } from './Apps/MobileIntelliJ';
 
 // Import App Icons
 import archivesIcon from './img/archives.svg';
 import notesIcon from './img/notes.svg';
-import settingsIcon from './img/settingsmobile.svg';
+import grafanaIcon from './img/Grafana.svg';
 import githubIcon from './img/githubmobile.svg';
 import linkedinIcon from './img/linkedinmobile.svg';
+import intellijIcon from './img/intellij.svg';
 
 // Define App Type
 interface MobileApp {
@@ -31,28 +33,41 @@ const useMobileApps = () => {
             id: 'projects',
             label: 'Projetos',
             icon: <img src={archivesIcon} alt="Projects" className="w-full h-full" />,
-            color: 'bg-[#4285F4]',
+            color: '',
             component: <MobileProjects />
         },
         {
             id: 'skills',
             label: 'Skills',
-            icon: <img src={notesIcon} alt="Skills" className="w-full h-full" />,
-            color: 'bg-[#EA4335]',
+            icon: <img src={grafanaIcon} alt="Skills" className="w-full h-full" />,
+            color: '',
             component: <MobileSkills />
+        },
+        {
+            id: '',
+            label: '',
+            icon: null,
+            color: '',
+            component: null
         },
         {
             id: 'about',
             label: 'Sobre',
-            icon: <img src={settingsIcon} alt="Settings" className="w-full h-full" />,
-            color: 'bg-[#7f8c8d]',
+            icon: <img src={notesIcon} alt="Notes" className="w-full h-full" />,
+            color: '',
             component: <MobileAbout />
         },
     ];
 
     const dockApps: MobileApp[] = [
         // Phone/Contact (mapped to About or specific contact modal potentially)
-        { id: 'contact', label: 'Contato', icon: <Mail size={24} />, color: 'bg-[#3DDC84]', component: <MobileAbout /> },
+        {
+            id: 'intellij',
+            label: 'IntelliJ',
+            icon: <img src={intellijIcon} alt="IDE" className="w-full h-full" />,
+            color: '',
+            component: <MobileIntelliJ />
+        },
 
         // Messages (mapped to Terminal for "chat" feel or just terminal)
         { id: 'terminal', label: 'Terminal', icon: <Terminal size={24} />, color: 'bg-[#333]', component: <MobileTerminal /> },

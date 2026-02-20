@@ -1,80 +1,229 @@
-import { useGitHubActivity } from '../../../hooks/useGitHubActivity';
-import { useI18n } from '../../../hooks/useI18nHook';
 
-const COLORS = {
-    bg: '#111217',
-    panel: '#181b1f',
-    green: '#73bf69',
-    yellow: '#e0b400',
-    blue: '#5794f2',
-    orange: '#ff9830',
-};
+import { useGitHubActivity } from '../../../hooks/useGitHubActivity';
+import { Activity, Server, Code, Terminal, Layers, Cpu, Globe, ArrowLeft } from 'lucide-react';
+import { useWindowManager } from '../../../context/WindowContext';
 
 export const MobileSkills = () => {
-    const { t } = useI18n();
-    const { totalCommits, loading } = useGitHubActivity('Maycon-Pereira');
+    // We can keep the hook if we want the real commit count in the header or somewhere else, 
+    // but for now we'll stick to the requested static layout.
+    const { totalCommits, dailyActivity, loading } = useGitHubActivity('Maycon-Pereira');
+    const { closeWindow } = useWindowManager();
 
-    // Simplified components for mobile
-    const SkillItem = ({ name, color, percent }: { name: string, color: string, percent: string }) => (
-        <div className="mb-3">
-            <div className="flex justify-between text-xs mb-1 text-[#ccc]">
-                <span>{name}</span>
-                <span style={{ color }}>{percent}</span>
+    // Color Palette based on Grafana/Dark theme
+    const COLORS = {
+        bg: '#111217',
+        panel: '#181b1f',
+        border: '#22252b',
+        text: '#ccccda',
+        textMuted: '#8e8e8e',
+        green: '#73bf69',
+        yellow: '#e0b400',
+        blue: '#5794f2',
+        orange: '#ff9830',
+        red: '#f2495c'
+    };
+
+    const StatusTag = ({ status }: { status: 'CORE' | 'STABLE' | 'BETA' }) => {
+        let color = COLORS.green;
+        if (status === 'CORE') color = COLORS.blue;
+        if (status === 'BETA') color = COLORS.yellow;
+
+        return (
+            <span className="text-[10px] px-1.5 py-0.5 rounded font-bold" style={{ backgroundColor: `${color}20`, color: color, border: `1px solid ${color}40` }}>
+                {status}
+            </span>
+        );
+    };
+
+    const StatCard = ({ title, value, subtext, color, icon: Icon }: { title: string, value: string, subtext?: string, color: string, icon?: any }) => (
+        <div className="flex flex-col p-3 rounded-lg border h-full justify-between" style={{ backgroundColor: COLORS.panel, borderColor: COLORS.border }}>
+            <div className="flex justify-between items-start mb-2">
+                <span className="text-[10px] uppercase tracking-wider font-semibold" style={{ color: COLORS.textMuted }}>{title}</span>
+                {Icon && <Icon size={14} style={{ color }} />}
             </div>
-            <div className="h-1 bg-[#333] rounded-full overflow-hidden">
-                <div className="h-full rounded-full" style={{ width: percent, backgroundColor: color }} />
+            <div>
+                <div className="text-lg font-bold" style={{ color }}>{value}</div>
+                {subtext && <div className="text-[10px]" style={{ color: COLORS.textMuted }}>{subtext}</div>}
             </div>
+        </div>
+    );
+
+    const ListItem = ({ label, status }: { label: string, status: 'CORE' | 'STABLE' | 'BETA' }) => (
+        <div className="flex items-center justify-between py-2 border-b last:border-0 border-[#22252b]">
+            <span className="text-sm font-medium" style={{ color: COLORS.text }}>{label}</span>
+            <StatusTag status={status} />
         </div>
     );
 
     return (
-        <div className="flex flex-col h-full bg-[#111217] text-[#ccccda] p-4 overflow-y-auto">
-            <div className="flex items-center justify-between mb-6">
-                <h1 className="text-xl font-bold text-white">Skills & Stats</h1>
-                <div className="px-2 py-1 rounded bg-[#22252b] border border-[#333] text-xs">
-                    {loading ? '...' : `${totalCommits} Commits`}
+        <div className="flex flex-col h-full overflow-y-auto" style={{ backgroundColor: COLORS.bg, color: COLORS.text }}>
+
+            {/* Header / Production Overview */}
+            <div className="p-4 border-b border-[#22252b] bg-[#141619]">
+                <div className="flex items-center justify-between mb-1">
+                    <div className="flex items-center gap-3">
+                        <button onClick={() => closeWindow('skills')} className="text-[#ccccda] hover:text-white transition-colors">
+                            <ArrowLeft size={20} />
+                        </button>
+                        <h1 className="text-lg font-bold text-white flex items-center gap-2">
+                            <Activity size={18} className="text-[#5794f2]" />
+                            Production Overview
+                        </h1>
+                    </div>
+                    <div className="flex items-center gap-1 text-[10px] px-2 py-1 rounded bg-[#22252b] text-[#73bf69]">
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#73bf69] animate-pulse" />
+                        Online
+                    </div>
+                </div>
+                <div className="flex gap-2 text-xs text-[#8e8e8e]">
+                    <span>Backend Engineer</span>
+                    <span>•</span>
+                    <span>System Architect</span>
+                    <span>•</span>
+                    <span>{totalCommits} Commits</span>
                 </div>
             </div>
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-2 gap-3 mb-6">
-                <div className="bg-[#181b1f] p-3 rounded border border-[#22252b]">
-                    <div className="text-xs text-[#8e8e8e] uppercase">Experience</div>
-                    <div className="text-xl font-bold text-blue-400">{t('skills.value.years')}</div>
+            <div className="p-4 space-y-4">
+                {/* Lifetime Range / Stats Grid */}
+                <div>
+                    <div className="text-xs font-bold mb-2 uppercase tracking-wider text-[#5794f2]">Lifetime Range</div>
+                    <div className="grid grid-cols-2 gap-3">
+                        <StatCard
+                            title="Experience"
+                            value="3+ Years"
+                            subtext="Software Engineer"
+                            color={COLORS.green}
+                            icon={Terminal}
+                        />
+                        <StatCard
+                            title="Core Stack"
+                            value="Java 8+"
+                            subtext="LTS Version"
+                            color={COLORS.blue}
+                            icon={Code}
+                        />
+                        <StatCard
+                            title="Framework"
+                            value="Spring 3.2+"
+                            subtext="Boot / Cloud"
+                            color={COLORS.orange}
+                            icon={Layers}
+                        />
+                        <StatCard
+                            title="Platform Status"
+                            value="99.9%"
+                            subtext="Uptime (+2.4%)"
+                            color={COLORS.green}
+                            icon={Server}
+                        />
+                    </div>
                 </div>
-                <div className="bg-[#181b1f] p-3 rounded border border-[#22252b]">
-                    <div className="text-xs text-[#8e8e8e] uppercase">Stack</div>
-                    <div className="text-xl font-bold text-orange-400">Java/Spring</div>
-                </div>
-            </div>
 
-            {/* Backend Skills */}
-            <div className="bg-[#181b1f] p-4 rounded border border-[#22252b] mb-4">
-                <h2 className="text-sm font-bold text-white mb-4 uppercase tracking-wider border-b border-[#333] pb-2">
-                    Backend Mastery
-                </h2>
-                <SkillItem name="Java Core" color={COLORS.orange} percent="95%" />
-                <SkillItem name="Spring Boot" color={COLORS.orange} percent="90%" />
-                <SkillItem name="Microservices" color={COLORS.green} percent="85%" />
-                <SkillItem name="SQL / PostgreSQL" color={COLORS.green} percent="85%" />
-                <SkillItem name="Kafka" color={COLORS.blue} percent="70%" />
-            </div>
-
-            {/* Frontend Skills */}
-            <div className="bg-[#181b1f] p-4 rounded border border-[#22252b] mb-4">
-                <h2 className="text-sm font-bold text-white mb-4 uppercase tracking-wider border-b border-[#333] pb-2">
-                    Frontend & Tools
-                </h2>
-                <SkillItem name="React / TS" color={COLORS.blue} percent="75%" />
-                <SkillItem name="Docker / CI/CD" color={COLORS.blue} percent="80%" />
-                <div className="flex flex-wrap gap-2 mt-4">
-                    {['Git', 'Linux', 'AWS', 'Redis'].map(tag => (
-                        <span key={tag} className="px-2 py-1 bg-[#2a2d35] text-xs rounded border border-[#333]">
-                            {tag}
-                        </span>
-                    ))}
+                {/* Backend Ecosystem */}
+                <div className="rounded-lg border overflow-hidden" style={{ backgroundColor: COLORS.panel, borderColor: COLORS.border }}>
+                    <div className="px-4 py-2 border-b flex justify-between items-center" style={{ borderColor: COLORS.border, backgroundColor: '#1e2126' }}>
+                        <span className="text-xs font-bold uppercase tracking-wider text-[#e0b400]">Backend Ecosystem</span>
+                        <Cpu size={14} className="text-[#e0b400]" />
+                    </div>
+                    <div className="px-4 py-1">
+                        <ListItem label="Java Core / JVM" status="CORE" />
+                        <ListItem label="Spring Boot" status="CORE" />
+                        <ListItem label="Microservices" status="STABLE" />
+                        <ListItem label="PostgreSQL / SQL" status="STABLE" />
+                        <ListItem label="REST APIs" status="STABLE" />
+                        <ListItem label="Kafka / Event Driven" status="BETA" />
+                        <ListItem label="Cloud Infrastructure" status="BETA" />
+                    </div>
                 </div>
+
+                {/* Frontend & Tools */}
+                <div className="rounded-lg border overflow-hidden" style={{ backgroundColor: COLORS.panel, borderColor: COLORS.border }}>
+                    <div className="px-4 py-2 border-b flex justify-between items-center" style={{ borderColor: COLORS.border, backgroundColor: '#1e2126' }}>
+                        <span className="text-xs font-bold uppercase tracking-wider text-[#f2495c]">Frontend & Tools</span>
+                        <Globe size={14} className="text-[#f2495c]" />
+                    </div>
+                    <div className="px-4 py-1">
+                        <ListItem label="React / Next.js" status="STABLE" />
+                        <ListItem label="TypeScript" status="STABLE" />
+                    </div>
+                    <div className="px-4 py-3 border-t border-[#22252b]">
+                        <span className="text-[10px] uppercase text-[#8e8e8e] mb-2 block">Toolkit</span>
+                        <div className="flex flex-wrap gap-2">
+                            {['Git', 'Linux', 'Docker', 'Redis', 'Maven', 'CI/CD'].map(tech => (
+                                <span key={tech} className="text-[10px] px-2 py-1 rounded bg-[#2a2d35] border border-[#333] text-[#ccc]">
+                                    {tech}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Lifetime Commit Activity */}
+                <div className="rounded-lg border overflow-hidden p-3 flex flex-col items-center justify-center text-center space-y-2 h-40" style={{ backgroundColor: COLORS.panel, borderColor: COLORS.border }}>
+                    <div className="w-full flex justify-between items-center px-1">
+                        <span className="text-xs font-bold uppercase tracking-wider text-[#8e8e8e]">Lifetime Commit Activity</span>
+                        <span className="text-[10px] text-[#e0b400]">{totalCommits} Commits</span>
+                    </div>
+
+                    <div className="w-full h-full relative">
+                        {loading ? (
+                            <div className="w-full h-full flex items-center justify-center">
+                                <Activity size={24} className="animate-spin text-[#5794f2]" />
+                            </div>
+                        ) : (
+                            <ActivityChart color={COLORS.yellow} data={dailyActivity} loading={loading} />
+                        )}
+                    </div>
+                </div>
+
+                <div className="h-4"></div> {/* Bottom Spacer */}
             </div>
         </div>
     );
 };
+
+// --- Sub-components ---
+
+const ActivityChart = ({ color, data, loading }: { color: string, data: any[], loading: boolean }) => {
+    if (loading || !data || data.length === 0) {
+        return null;
+    }
+
+    // Example data normalization for SVG (ViewBox 0 0 400 100)
+    // Mobile view might be smaller, but viewBox scales.
+    const maxVal = Math.max(...data.map(d => d.count), 5);
+    const points = data.map((d, i) => {
+        const x = (i / (data.length - 1)) * 400;
+        const y = 100 - (d.count / maxVal) * 80; // 80% height usage
+        return `${x},${y}`;
+    }).join(' ');
+
+    const fillPath = `M0,100 ${points} L400,100 Z`;
+    const strokePath = `M${points.replace(/ /g, ' L')}`;
+
+    return (
+        <svg className="w-full h-full" viewBox="0 0 400 100" preserveAspectRatio="none">
+            <defs>
+                <linearGradient id="mobileChartGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={color} stopOpacity="0.3" />
+                    <stop offset="100%" stopColor={color} stopOpacity="0" />
+                </linearGradient>
+            </defs>
+            <path
+                d={fillPath}
+                fill="url(#mobileChartGradient)"
+                className="transition-all duration-500 ease-in-out"
+            />
+            <path
+                d={strokePath}
+                fill="none"
+                stroke={color}
+                strokeWidth="2"
+                vectorEffect="non-scaling-stroke"
+                className="transition-all duration-500 ease-in-out"
+            />
+        </svg>
+    );
+};
+

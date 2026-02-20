@@ -15,10 +15,11 @@ export const useTerminal = (options?: { onProjectCat?: () => void, onOpenWindow?
         addToTerminalHistory,
         addToCommandHistory,
         setTerminalHistoryIndex: setHistoryIndex,
-        clearTerminalHistory
+        clearTerminalHistory,
+        isShaking,
+        setIsShaking
     } = useSystem();
 
-    const [isShaking, setIsShaking] = React.useState(false);
     const initialized = useRef(false);
 
     const onProjectCat = options?.onProjectCat;
@@ -200,7 +201,7 @@ export const useTerminal = (options?: { onProjectCat?: () => void, onOpenWindow?
                 window.open('https://github.com/Maycon-Pereira', '_blank');
                 addToHistory(['Opening GitHub...']);
             } else if (target === 'linkedin') {
-                window.open('https://linkedin.com/in/maycon-pereira', '_blank');
+                window.open('https://www.linkedin.com/in/maycon-ps/', '_blank');
                 addToHistory(['Opening LinkedIn...']);
             } else {
                 addToHistory([`cd: ${target}: No such file or directory`], 'output');

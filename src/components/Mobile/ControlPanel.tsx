@@ -1,5 +1,6 @@
 import { X, Sun, Volume2, Wifi, Plane } from 'lucide-react';
 import { useSystem } from '../../context/SystemContext';
+import { motion } from 'framer-motion';
 
 interface ControlPanelProps {
     onClose: () => void;
@@ -14,7 +15,13 @@ export const ControlPanel = ({ onClose }: ControlPanelProps) => {
     } = useSystem();
 
     return (
-        <div className="absolute inset-x-0 top-0 h-1/2 bg-black/90 backdrop-blur-xl rounded-b-3xl border-b border-white/10 p-6 z-40 transition-transform animate-in slide-in-from-top duration-300">
+        <motion.div
+            initial={{ y: '-100%' }}
+            animate={{ y: 0 }}
+            exit={{ y: '-100%' }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            className="absolute inset-x-0 top-0 h-1/2 bg-black/90 backdrop-blur-xl rounded-b-3xl border-b border-white/10 p-6 z-40"
+        >
             <div className="w-12 h-1 bg-white/20 rounded-full mx-auto mb-6" />
 
             <div className="flex justify-between items-center mb-6">
@@ -69,6 +76,6 @@ export const ControlPanel = ({ onClose }: ControlPanelProps) => {
                     />
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 };
