@@ -2,10 +2,12 @@
 import { useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { useWindowManager } from '../../../context/WindowContext';
+import { useI18n } from '../../../hooks/useI18nHook';
 
 export const MobileIntelliJ = () => {
     const [activeTab, setActiveTab] = useState<'profile' | 'experience'>('profile');
     const { closeWindow } = useWindowManager();
+    const { t } = useI18n();
 
     const handleBack = () => {
         closeWindow('intellij');
@@ -72,37 +74,37 @@ export const MobileIntelliJ = () => {
                             <Comment>{'/**'}</Comment>
                         </div>
                         <div className="pl-4">
-                            <Comment>&nbsp;* Backend engineer specialized in Java and Spring Boot.</Comment>
+                            <Comment>&nbsp;* {t('about.doc1') || "Backend engineer specialized in Java and Spring Boot."}</Comment>
                         </div>
                         <div className="pl-4">
-                            <Comment>&nbsp;* Focused on building scalable, secure and well-structured APIs.</Comment>
-                        </div>
-                        <div className="pl-4">
-                            <Comment>&nbsp;*</Comment>
-                        </div>
-                        <div className="pl-4">
-                            <Comment>&nbsp;* Strong mindset for clean architecture, testing and code quality.</Comment>
-                        </div>
-                        <div className="pl-4">
-                            <Comment>&nbsp;* Background in QA Automation, bringing reliability and</Comment>
-                        </div>
-                        <div className="pl-4">
-                            <Comment>&nbsp;* failure-prevention thinking into system design.</Comment>
+                            <Comment>&nbsp;* {t('about.doc2') || "Focused on building scalable, secure and well-structured APIs."}</Comment>
                         </div>
                         <div className="pl-4">
                             <Comment>&nbsp;*</Comment>
                         </div>
                         <div className="pl-4">
-                            <Comment>&nbsp;* Currently deepening knowledge in:</Comment>
+                            <Comment>&nbsp;* {t('about.doc3') || "Strong mindset for clean architecture, testing and code quality."}</Comment>
                         </div>
                         <div className="pl-4">
-                            <Comment>&nbsp;* - Microservices architecture</Comment>
+                            <Comment>&nbsp;* {t('about.doc4') || "Background in QA Automation, bringing reliability and"}</Comment>
                         </div>
                         <div className="pl-4">
-                            <Comment>&nbsp;* - Cloud and distributed systems</Comment>
+                            <Comment>&nbsp;* {t('about.doc5') || "failure-prevention thinking into system design."}</Comment>
                         </div>
                         <div className="pl-4">
-                            <Comment>&nbsp;* - Performance and observability</Comment>
+                            <Comment>&nbsp;*</Comment>
+                        </div>
+                        <div className="pl-4">
+                            <Comment>&nbsp;* {t('about.doc6') || "Currently deepening knowledge in:"}</Comment>
+                        </div>
+                        <div className="pl-4">
+                            <Comment>&nbsp;* {t('about.doc7') || "- Microservices architecture"}</Comment>
+                        </div>
+                        <div className="pl-4">
+                            <Comment>&nbsp;* {t('about.doc8') || "- Cloud and distributed systems"}</Comment>
+                        </div>
+                        <div className="pl-4">
+                            <Comment>&nbsp;* {t('about.doc9') || "- Performance and observability"}</Comment>
                         </div>
                         <div className="pl-4">
                             <Comment>&nbsp;*/</Comment>
@@ -111,7 +113,7 @@ export const MobileIntelliJ = () => {
                             <Keyword>public</Keyword> <Type>String</Type> <Method>about</Method>() {'{'}
                         </div>
                         <div className="pl-8">
-                            <Keyword>return</Keyword> <StringVal>"I build clean, scalable and reliable backend systems."</StringVal>;
+                            <Keyword>return</Keyword> <StringVal>"{t('about.about_return') || "I build clean, scalable and reliable backend systems."}"</StringVal>;
                         </div>
                         <div className="pl-4">{'}'}</div>
                         <div>{'}'}</div>
@@ -123,59 +125,59 @@ export const MobileIntelliJ = () => {
                         <div className="text-[#808080]">
                             <div>/**</div>
                             <div>&nbsp;* @author Maycon Pereira</div>
-                            <div>&nbsp;* @role Software Engineer | Backend / Java Specialist</div>
+                            <div>&nbsp;* @role {t('about.exp_author_role') || "Software Engineer | Backend / Java Specialist"}</div>
                             <div>&nbsp;*/</div>
                         </div>
                         <div><Keyword>public class</Keyword> <Type>CareerHistory</Type> {'{'}</div>
                         <br />
 
                         {/* Multiledgers */}
-                        <div className="pl-4 text-[#808080]">// --- CURRENTLY: SOFTWARE ENGINEER & QA ---</div>
-                        <div className="pl-4 text-[#808080]">// Multiledgers | Jun 2025 – Present</div>
+                        <div className="pl-4 text-[#808080]">// --- {t('about.exp_current_header') || "CURRENTLY: SOFTWARE ENGINEER & QA"} ---</div>
+                        <div className="pl-4 text-[#808080]">// {t('about.exp_current_company') || "Multiledgers | Jun 2025 – Present"}</div>
                         <div className="pl-4">
                             <Keyword>public</Keyword> <Type>void</Type> <Method>multiledgersExperience</Method>() {'{'}
                         </div>
                         <div className="pl-8">
                             <Type>String</Type>[] <Variable>stack</Variable> = {'{'}<StringVal>"Java"</StringVal>, <StringVal>"Spring Boot"</StringVal>, <StringVal>"Cypress"</StringVal>, <StringVal>"Azure DevOps"</StringVal>, <StringVal>"Git"</StringVal>{'};'}
                         </div>
-                        <div className="pl-8 text-[#808080]">// Active role in development and validation of REST APIs</div>
-                        <div className="pl-8 text-[#808080]">// Execution and maintenance of automated tests integrated with CI/CD</div>
-                        <div className="pl-8 text-[#808080]">// Focus on performance, security and application usability</div>
+                        <div className="pl-8 text-[#808080]">// {t('about.exp_current1') || "Active role in development and validation of REST APIs"}</div>
+                        <div className="pl-8 text-[#808080]">// {t('about.exp_current2') || "Execution and maintenance of automated tests integrated with CI/CD"}</div>
+                        <div className="pl-8 text-[#808080]">// {t('about.exp_current3') || "Focus on performance, security and application usability"}</div>
                         <div className="pl-4">{'}'}</div>
                         <br />
 
                         {/* Elegancy */}
-                        <div className="pl-4 text-[#808080]">// --- PREVIOUS: WEB DEVELOPER (FREELANCE) ---</div>
-                        <div className="pl-4 text-[#808080]">// Elegancy Móveis | Dec 2024 – Feb 2025</div>
+                        <div className="pl-4 text-[#808080]">// --- {t('about.exp_prev1_header') || "PREVIOUS: WEB DEVELOPER (FREELANCE)"} ---</div>
+                        <div className="pl-4 text-[#808080]">// {t('about.exp_prev1_company') || "Elegancy Móveis | Dec 2024 – Feb 2025"}</div>
                         <div className="pl-4">
                             <Keyword>public</Keyword> <Type>void</Type> <Method>freelancerProject</Method>() {'{'}
                         </div>
-                        <div className="pl-8 text-[#808080]">// Full e-commerce platform development (WordPress/WooCommerce)</div>
-                        <div className="pl-8 text-[#808080]">// UX and technical SEO optimization, resulting in 700% sales growth</div>
-                        <div className="pl-8 text-[#808080]">// Implementation of custom solutions with JavaScript and CSS</div>
+                        <div className="pl-8 text-[#808080]">// {t('about.exp_prev1_1') || "Full e-commerce platform development (WordPress/WooCommerce)"}</div>
+                        <div className="pl-8 text-[#808080]">// {t('about.exp_prev1_2') || "UX and technical SEO optimization, resulting in 700% sales growth"}</div>
+                        <div className="pl-8 text-[#808080]">// {t('about.exp_prev1_3') || "Implementation of custom solutions with JavaScript and CSS"}</div>
                         <div className="pl-4">{'}'}</div>
                         <br />
 
                         {/* FIEB */}
-                        <div className="pl-4 text-[#808080]">// --- PREVIOUS: SOFTWARE ENGINEER / FULLSTACK ---</div>
-                        <div className="pl-4 text-[#808080]">// FIEB (BlueWorks) | Feb 2021 – Dec 2023</div>
+                        <div className="pl-4 text-[#808080]">// --- {t('about.exp_prev2_header') || "PREVIOUS: SOFTWARE ENGINEER / FULLSTACK"} ---</div>
+                        <div className="pl-4 text-[#808080]">// {t('about.exp_prev2_company') || "FIEB (BlueWorks) | Feb 2021 – Dec 2023"}</div>
                         <div className="pl-4">
                             <Keyword>public</Keyword> <Type>void</Type> <Method>fiebBlueWorksProject</Method>() {'{'}
                         </div>
-                        <div className="pl-8 text-[#808080]">// Complete back-end development in Java + Spring Boot</div>
-                        <div className="pl-8 text-[#808080]">// Implementation of unit tests (JUnit), integration and REST APIs (Postman)</div>
-                        <div className="pl-8 text-[#808080]">// SQL Server and PostgreSQL database modeling</div>
-                        <div className="pl-8 text-[#808080]">// Working in agile teams using Scrum and Kanban</div>
+                        <div className="pl-8 text-[#808080]">// {t('about.exp_prev2_1') || "Complete back-end development in Java + Spring Boot"}</div>
+                        <div className="pl-8 text-[#808080]">// {t('about.exp_prev2_2') || "Implementation of unit tests (JUnit), integration and REST APIs (Postman)"}</div>
+                        <div className="pl-8 text-[#808080]">// {t('about.exp_prev2_3') || "SQL Server and PostgreSQL database modeling"}</div>
+                        <div className="pl-8 text-[#808080]">// {t('about.exp_prev2_4') || "Working in agile teams using Scrum and Kanban"}</div>
                         <div className="pl-4">{'}'}</div>
                         <br />
 
                         {/* Education */}
-                        <div className="pl-4 text-[#808080]">// --- ACADEMIC EDUCATION ---</div>
+                        <div className="pl-4 text-[#808080]">// --- {t('about.exp_edu_header') || "ACADEMIC EDUCATION"} ---</div>
                         <div className="pl-4">
                             <Keyword>public</Keyword> <Type>void</Type> <Method>education</Method>() {'{'}
                         </div>
-                        <div className="pl-8 text-[#808080]">// Systems Analysis and Development - São Judas (In Progress)</div>
-                        <div className="pl-8 text-[#808080]">// IT Technician - FIEB (Completed)</div>
+                        <div className="pl-8 text-[#808080]">// {t('about.exp_edu1') || "Systems Analysis and Development - São Judas (In Progress)"}</div>
+                        <div className="pl-8 text-[#808080]">// {t('about.exp_edu2') || "IT Technician - FIEB (Completed)"}</div>
                         <div className="pl-4">{'}'}</div>
                         <div>{'}'}</div>
                     </div>

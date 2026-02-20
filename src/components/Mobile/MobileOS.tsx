@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { MobileStatusBar } from './MobileStatusBar';
 import { MobileDock } from './MobileDock';
 import { MobileHomeApps, MobileDockApps } from './AppGrid';
@@ -12,20 +12,32 @@ import { MobileSearchBar } from './MobileSearchBar';
 import { Stars } from '../Layout/Stars';
 import { HeroBackground } from '../Layout/HeroBackground';
 
-// Import background image
 import spacemanJellyfish from '../../img/spacemanJellyfish.jpg';
+import spaceSound from '../../assets/spacesound.ogg';
 
 export const MobileOS = () => {
     const [isControlPanelOpen, setIsControlPanelOpen] = useState(false);
     const [isTaskSwitcherOpen, setIsTaskSwitcherOpen] = useState(false);
     const { windows, minimizeWindow, handleWindowBack } = useWindowManager();
-    const { isShaking } = useSystem();
+    const { isShaking, volume } = useSystem();
+    const audioRef = useRef<HTMLAudioElement | null>(null);
 
     // Filter active windows (not minimized)
     const activeWindows = windows.filter(w => w.isOpen && !w.isMinimized);
 
     // Sort by z-index to ensure correct layering
     const sortedWindows = [...activeWindows].sort((a, b) => a.zIndex - b.zIndex);
+
+    useEffect(() => {
+        if (audioRef.current) {
+            audioRef.current.volume = volume / 100;
+            if (volume > 0 && audioRef.current.paused) {
+                audioRef.current.play().catch(() => { });
+            } else if (volume === 0 && !audioRef.current.paused) {
+                audioRef.current.pause();
+            }
+        }
+    }, [volume]);
 
     // Navigation Handlers
     const handleBack = () => {
@@ -96,10 +108,12 @@ export const MobileOS = () => {
 
     return (
         <div
-            className={`fixed inset-0 w-screen h-screen bg-black overflow-hidden select-none font-sans z-50 ${isShaking ? 'animate-shake' : ''}`}
+            className={`fixed inset-0 w-screen h-full bg-black overflow-hidden select-none font-sans z-50 ${isShaking ? 'animate-shake' : ''}`}
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
         >
+            <audio ref={audioRef} src={spaceSound} loop />
+
             {/* Wallpaper & Effects */}
             <div className="absolute inset-0 z-0 pointer-events-none">
                 <div
@@ -124,24 +138,15 @@ export const MobileOS = () => {
             </div>
 
             {/* Main Home Screen Content */}
-            <div className="absolute inset-0 top-8 bottom-[80px] z-10 flex flex-col justify-end pb-4">
-                {/* Date Widget at top of remaining space or pushed up? User said "abaixe a barra de busca e os apps". 
-                    If we use justify-end inside this flex container, everything goes to bottom.
-                    Let's use a spacer or margin. 
-                */}
+            <div className="flex inset-0 top-12 bottom-[100px] z-10 w-full">
+                {/* Top Section: Date */}
 
-                <div className="mt-auto mb-8">
+
+                {/* Bottom Section: Search & Apps */}
+                <div className="absolute bottom-25 left-0 w-full flex flex-col gap-6">
                     <MobileDateWidget />
                     <MobileSearchBar />
-
-                    <div className="mt-6 mb-2">
-                        <MobileHomeApps />
-                    </div>
-                </div>
-
-                {/* Dock Area (Apps + Nav) */}
-                <div className="w-full pb-2 flex flex-col gap-4">
-                    {/* Dock Apps Row */}
+                    <MobileHomeApps />
                     <MobileDockApps />
                 </div>
             </div>
@@ -155,8 +160,8 @@ export const MobileOS = () => {
                         animate={{ y: 0 }}
                         exit={{ y: '100%' }}
                         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                        // Adjust bottom to show nav bar
-                        className="absolute inset-x-0 bottom-12 top-8 z-20 bg-[#1e1e1e] shadow-2xl overflow-hidden rounded-b-2xl"
+                        // Adjust bottom to show nav bar safely above device controls
+                        className="absolute inset-x-0 bottom-20 top-12 z-20 bg-[#1e1e1e] shadow-2xl overflow-hidden rounded-b-2xl"
                         style={{ zIndex: 20 + window.zIndex }}
                     >
                         {window.component}

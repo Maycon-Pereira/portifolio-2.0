@@ -24,21 +24,24 @@ interface MobileApp {
     externalUrl?: string;
 }
 
+import { useI18n } from '../../hooks/useI18nHook';
+
 // All Apps Definition
 const useMobileApps = () => {
     const { openWindow, windows, focusWindow } = useWindowManager();
+    const { t } = useI18n();
 
     const homeApps: MobileApp[] = [
         {
             id: 'projects',
-            label: 'Projetos',
+            label: t('nav.projects'),
             icon: <img src={archivesIcon} alt="Projects" className="w-full h-full" />,
             color: '',
             component: <MobileProjects />
         },
         {
             id: 'skills',
-            label: 'Skills',
+            label: t('nav.skills'),
             icon: <img src={grafanaIcon} alt="Skills" className="w-full h-full" />,
             color: '',
             component: <MobileSkills />
@@ -52,7 +55,7 @@ const useMobileApps = () => {
         },
         {
             id: 'about',
-            label: 'Sobre',
+            label: t('nav.about'),
             icon: <img src={notesIcon} alt="Notes" className="w-full h-full" />,
             color: '',
             component: <MobileAbout />
@@ -75,7 +78,7 @@ const useMobileApps = () => {
         // Browser -> GitHub
         {
             id: 'github',
-            label: 'GitHub',
+            label: t('dock.github'),
             icon: <img src={githubIcon} alt="GitHub" className="w-full h-full" />,
             color: 'bg-white',
             externalUrl: 'https://github.com/Maycon-Pereira'
@@ -84,7 +87,7 @@ const useMobileApps = () => {
         // Camera -> LinkedIn
         {
             id: 'linkedin',
-            label: 'LinkedIn',
+            label: t('dock.linkedin'),
             icon: <img src={linkedinIcon} alt="LinkedIn" className="w-full h-full" />,
             color: 'bg-white',
             externalUrl: 'https://www.linkedin.com/in/maycon-ps/'

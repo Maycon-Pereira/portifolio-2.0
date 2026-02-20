@@ -1,13 +1,14 @@
-
 import { useGitHubActivity } from '../../../hooks/useGitHubActivity';
 import { Activity, Server, Code, Terminal, Layers, Cpu, Globe, ArrowLeft } from 'lucide-react';
 import { useWindowManager } from '../../../context/WindowContext';
+import { useI18n } from '../../../hooks/useI18nHook';
 
 export const MobileSkills = () => {
     // We can keep the hook if we want the real commit count in the header or somewhere else, 
     // but for now we'll stick to the requested static layout.
     const { totalCommits, dailyActivity, loading } = useGitHubActivity('Maycon-Pereira');
     const { closeWindow } = useWindowManager();
+    const { t } = useI18n();
 
     // Color Palette based on Grafana/Dark theme
     const COLORS = {
@@ -67,7 +68,7 @@ export const MobileSkills = () => {
                         </button>
                         <h1 className="text-lg font-bold text-white flex items-center gap-2">
                             <Activity size={18} className="text-[#5794f2]" />
-                            Production Overview
+                            {t('skills.title') || 'Production Overview'}
                         </h1>
                     </div>
                     <div className="flex items-center gap-1 text-[10px] px-2 py-1 rounded bg-[#22252b] text-[#73bf69]">
@@ -76,44 +77,44 @@ export const MobileSkills = () => {
                     </div>
                 </div>
                 <div className="flex gap-2 text-xs text-[#8e8e8e]">
-                    <span>Backend Engineer</span>
+                    <span>{t('skills.badge_backend') || 'Backend Engineer'}</span>
                     <span>•</span>
-                    <span>System Architect</span>
+                    <span>{t('skills.badge_architect') || 'System Architect'}</span>
                     <span>•</span>
-                    <span>{totalCommits} Commits</span>
+                    <span>{totalCommits} {t('skills.commits') || 'commits'}</span>
                 </div>
             </div>
 
             <div className="p-4 space-y-4">
                 {/* Lifetime Range / Stats Grid */}
                 <div>
-                    <div className="text-xs font-bold mb-2 uppercase tracking-wider text-[#5794f2]">Lifetime Range</div>
+                    <div className="text-xs font-bold mb-2 uppercase tracking-wider text-[#5794f2]">{t('skills.time_range') || 'Lifetime Range'}</div>
                     <div className="grid grid-cols-2 gap-3">
                         <StatCard
-                            title="Experience"
-                            value="3+ Years"
-                            subtext="Software Engineer"
+                            title={t('skills.dashboard.experience') || "Experience"}
+                            value={t('skills.value.years') || "3+ Years"}
+                            subtext={t('skills.dashboard.experience_sub') || "Software Engineer"}
                             color={COLORS.green}
                             icon={Terminal}
                         />
                         <StatCard
-                            title="Core Stack"
+                            title={t('skills.dashboard.core_stack') || "Core Stack"}
                             value="Java 8+"
-                            subtext="LTS Version"
+                            subtext={t('skills.dashboard.core_stack_sub') || "LTS Version"}
                             color={COLORS.blue}
                             icon={Code}
                         />
                         <StatCard
-                            title="Framework"
+                            title={t('skills.dashboard.framework') || "Framework"}
                             value="Spring 3.2+"
-                            subtext="Boot / Cloud"
+                            subtext={t('skills.dashboard.framework_sub') || "Boot / Cloud"}
                             color={COLORS.orange}
                             icon={Layers}
                         />
                         <StatCard
-                            title="Platform Status"
+                            title={t('skills.dashboard.platform') || "Platform Status"}
                             value="99.9%"
-                            subtext="Uptime (+2.4%)"
+                            subtext={`${t('skills.dashboard.platform_sub') || "Uptime"} (+2.4%)`}
                             color={COLORS.green}
                             icon={Server}
                         />
@@ -123,7 +124,7 @@ export const MobileSkills = () => {
                 {/* Backend Ecosystem */}
                 <div className="rounded-lg border overflow-hidden" style={{ backgroundColor: COLORS.panel, borderColor: COLORS.border }}>
                     <div className="px-4 py-2 border-b flex justify-between items-center" style={{ borderColor: COLORS.border, backgroundColor: '#1e2126' }}>
-                        <span className="text-xs font-bold uppercase tracking-wider text-[#e0b400]">Backend Ecosystem</span>
+                        <span className="text-xs font-bold uppercase tracking-wider text-[#e0b400]">{t('skills.backend_panel') || 'Backend Ecosystem'}</span>
                         <Cpu size={14} className="text-[#e0b400]" />
                     </div>
                     <div className="px-4 py-1">
@@ -132,15 +133,15 @@ export const MobileSkills = () => {
                         <ListItem label="Microservices" status="STABLE" />
                         <ListItem label="PostgreSQL / SQL" status="STABLE" />
                         <ListItem label="REST APIs" status="STABLE" />
-                        <ListItem label="Kafka / Event Driven" status="BETA" />
-                        <ListItem label="Cloud Infrastructure" status="BETA" />
+                        <ListItem label={t('skills.stack.kafka_event') || "Kafka / Event Driven"} status="BETA" />
+                        <ListItem label={t('skills.stack.cloud_infra') || "Cloud Infrastructure"} status="BETA" />
                     </div>
                 </div>
 
                 {/* Frontend & Tools */}
                 <div className="rounded-lg border overflow-hidden" style={{ backgroundColor: COLORS.panel, borderColor: COLORS.border }}>
                     <div className="px-4 py-2 border-b flex justify-between items-center" style={{ borderColor: COLORS.border, backgroundColor: '#1e2126' }}>
-                        <span className="text-xs font-bold uppercase tracking-wider text-[#f2495c]">Frontend & Tools</span>
+                        <span className="text-xs font-bold uppercase tracking-wider text-[#f2495c]">{t('skills.frontend_panel') || 'Frontend & Tools'}</span>
                         <Globe size={14} className="text-[#f2495c]" />
                     </div>
                     <div className="px-4 py-1">
@@ -148,7 +149,7 @@ export const MobileSkills = () => {
                         <ListItem label="TypeScript" status="STABLE" />
                     </div>
                     <div className="px-4 py-3 border-t border-[#22252b]">
-                        <span className="text-[10px] uppercase text-[#8e8e8e] mb-2 block">Toolkit</span>
+                        <span className="text-[10px] uppercase text-[#8e8e8e] mb-2 block">{t('skills.toolkit') || 'Toolkit'}</span>
                         <div className="flex flex-wrap gap-2">
                             {['Git', 'Linux', 'Docker', 'Redis', 'Maven', 'CI/CD'].map(tech => (
                                 <span key={tech} className="text-[10px] px-2 py-1 rounded bg-[#2a2d35] border border-[#333] text-[#ccc]">
@@ -162,8 +163,8 @@ export const MobileSkills = () => {
                 {/* Lifetime Commit Activity */}
                 <div className="rounded-lg border overflow-hidden p-3 flex flex-col items-center justify-center text-center space-y-2 h-40" style={{ backgroundColor: COLORS.panel, borderColor: COLORS.border }}>
                     <div className="w-full flex justify-between items-center px-1">
-                        <span className="text-xs font-bold uppercase tracking-wider text-[#8e8e8e]">Lifetime Commit Activity</span>
-                        <span className="text-[10px] text-[#e0b400]">{totalCommits} Commits</span>
+                        <span className="text-xs font-bold uppercase tracking-wider text-[#8e8e8e]">{t('skills.activity_panel') || 'Lifetime Commit Activity'}</span>
+                        <span className="text-[10px] text-[#e0b400]">{totalCommits} {t('skills.commits') || 'commits'}</span>
                     </div>
 
                     <div className="w-full h-full relative">

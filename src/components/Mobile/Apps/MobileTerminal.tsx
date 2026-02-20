@@ -1,8 +1,8 @@
-
 import { useRef, useEffect } from 'react';
 import { useTerminal } from '../../../hooks/useTerminal';
 import { Send, Terminal as TerminalIcon, ArrowLeft } from 'lucide-react';
 import { useWindowManager } from '../../../context/WindowContext';
+import { useI18n } from '../../../hooks/useI18nHook';
 import { MobileProjects } from './MobileProjects';
 import { MobileSkills } from './MobileSkills';
 import { MobileAbout } from './MobileAbout';
@@ -10,6 +10,7 @@ import { MobileIntelliJ } from './MobileIntelliJ';
 
 export const MobileTerminal = () => {
     const { closeWindow, openWindow, focusWindow, windows } = useWindowManager();
+    const { t } = useI18n();
 
     // Helper to open defined apps
     const openApp = (appId: string) => {
@@ -84,7 +85,7 @@ export const MobileTerminal = () => {
                     <ArrowLeft size={20} />
                 </button>
                 <TerminalIcon size={16} className="text-green-500" />
-                <span className="font-bold text-white">Terminal (mobile)</span>
+                <span className="font-bold text-white">{t('terminal.title')} (mobile)</span>
             </div>
 
             {/* Output Area */}
@@ -129,7 +130,7 @@ export const MobileTerminal = () => {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     className="flex-1 bg-transparent border-none outline-none text-white placeholder-white/20"
-                    placeholder="Type a command..."
+                    placeholder={t('terminal.input_placeholder') || "Type a command..."}
                     autoCapitalize="none"
                     autoComplete="off"
                     autoCorrect="off"

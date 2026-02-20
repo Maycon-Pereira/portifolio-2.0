@@ -66,7 +66,7 @@ export const SystemProvider = ({ children }: { children: ReactNode }) => {
 
     // --- System State ---
     const [brightness, setBrightness] = useState(100);
-    const [volume, setVolume] = useState(80);
+    const [volume, setVolume] = useState(0);
     const [wifiEnabled, setWifiEnabled] = useState(true);
     const [airplaneMode, setAirplaneMode] = useState(false);
     const [isShaking, setIsShaking] = useState(false);

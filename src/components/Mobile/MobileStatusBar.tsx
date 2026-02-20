@@ -16,7 +16,7 @@ export const MobileStatusBar = ({ onOpenControlPanel }: MobileStatusBarProps) =>
 
     return (
         <div
-            className="h-8 w-full flex justify-between items-center px-4 text-white text-sm font-medium pt-2"
+            className="h-8 w-full flex justify-between items-end px-5 pb-2 pt-4 text-white text-sm font-medium cursor-pointer"
             onClick={onOpenControlPanel}
         >
             {/* Time (Left) */}

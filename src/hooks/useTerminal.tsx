@@ -111,7 +111,7 @@ export const useTerminal = (options?: { onProjectCat?: () => void, onOpenWindow?
             '',
             terminalT('projects_cat_hint'),
         ],
-        whoami: () => ['visitor'],
+        whoami: () => [terminalT('visitor')],
         date: () => {
             const now = new Date();
             const utcParts = now.toUTCString().split(' ');
@@ -144,18 +144,26 @@ export const useTerminal = (options?: { onProjectCat?: () => void, onOpenWindow?
             </div>
         ],
         neofetch: () => [
-            <span key="nf-header" className="text-[#81a1c1]">{`${''.padEnd(29)}Match: Maycon Pereira`}</span>,
-            <span key="nf-role" className="text-[#81a1c1]">{`${''.padEnd(29)}Role: Software Engineer`}</span>,
-            <span key="nf-stack" className="text-[#81a1c1]">{`${''.padEnd(29)}Stack: Backend / Java Specialist`}</span>,
-            `         ,MMM8&&&.           ───────────────────────────────────────`,
-            `    _...MMMMM88&&&&..._      OS: ${terminalT('neofetch_os')}`,
-            ` .::'''MMMMM88&&&&&&'''::.   Kernel: ${terminalT('neofetch_kernel')}`,
-            `::     MMMMM88&&&&&&     ::  Uptime: ${terminalT('neofetch_uptime')}`,
-            `'::....MMMMM88&&&&&&....::'  Packages: ${terminalT('neofetch_packages')}`,
-            `   \`''''MMMMM88&&&&''''\`     Shell: ${terminalT('neofetch_shell')}`,
-            `         'MMM8&&&'           Theme: ${terminalT('neofetch_theme')}`,
-            `${''.padEnd(29)}CPU: ${terminalT('neofetch_cpu')}`,
-            `${''.padEnd(29)}Memory: ${terminalT('neofetch_memory')}`,
+            <span key="nf-logo-1" className="text-[#81a1c1]">{`            ,MMM8&&&.           `}</span>,
+            <span key="nf-logo-2" className="text-[#81a1c1]">{`       _...MMMMM88&&&&..._      `}</span>,
+            <span key="nf-logo-3" className="text-[#81a1c1]">{`    .::'''MMMMM88&&&&&&'''::.   `}</span>,
+            <span key="nf-logo-4" className="text-[#81a1c1]">{`   ::     MMMMM88&&&&&&     ::  `}</span>,
+            <span key="nf-logo-5" className="text-[#81a1c1]">{`   '::....MMMMM88&&&&&&....::'  `}</span>,
+            <span key="nf-logo-6" className="text-[#81a1c1]">{`      \`''''MMMMM88&&&&''''\`     `}</span>,
+            <span key="nf-logo-7" className="text-[#81a1c1]">{`            'MMM8&&&'           `}</span>,
+            ``,
+            <span key="nf-header" className="text-[#81a1c1]">{terminalT('neofetch_match')}</span>,
+            <span key="nf-role" className="text-[#81a1c1]">{terminalT('neofetch_role')}</span>,
+            <span key="nf-stack" className="text-[#81a1c1]">{terminalT('neofetch_stack')}</span>,
+            `───────────────────────────────────────`,
+            `OS: ${terminalT('neofetch_os')}`,
+            `Kernel: ${terminalT('neofetch_kernel')}`,
+            `Uptime: ${terminalT('neofetch_uptime')}`,
+            `Packages: ${terminalT('neofetch_packages')}`,
+            `Shell: ${terminalT('neofetch_shell')}`,
+            `Theme: ${terminalT('neofetch_theme')}`,
+            `CPU: ${terminalT('neofetch_cpu')}`,
+            `Memory: ${terminalT('neofetch_memory')}`,
         ],
     };
 
@@ -196,15 +204,15 @@ export const useTerminal = (options?: { onProjectCat?: () => void, onOpenWindow?
                 // Do nothing or simulate moving up
             } else if (['projects', 'about', 'skills'].includes(target)) {
                 if (onOpenWindow) onOpenWindow(target);
-                addToHistory([`Navigating to ${target}...`]);
+                addToHistory([`${terminalT('navigating')}${target}...`]);
             } else if (target === 'github') {
                 window.open('https://github.com/Maycon-Pereira', '_blank');
-                addToHistory(['Opening GitHub...']);
+                addToHistory([terminalT('opening_github')]);
             } else if (target === 'linkedin') {
                 window.open('https://www.linkedin.com/in/maycon-ps/', '_blank');
-                addToHistory(['Opening LinkedIn...']);
+                addToHistory([terminalT('opening_linkedin')]);
             } else {
-                addToHistory([`cd: ${target}: No such file or directory`], 'output');
+                addToHistory([`${terminalT('cd_not_found')}${target}`], 'output');
             }
         }
         else if (lowerCmd.startsWith('cat ')) {
@@ -233,17 +241,17 @@ export const useTerminal = (options?: { onProjectCat?: () => void, onOpenWindow?
                 const repoData = t(`repo_descriptions.${actualKey}`);
                 const githubLink = `https://github.com/Maycon-Pereira/${actualKey}`;
                 addToHistory([
-                    `📄 File: ${actualKey}`,
+                    `${terminalT('file_label')}${actualKey}`,
                     '-----------------------',
                     repoData,
                     '',
                     <span key="repo-link">
-                        🔗 [GitHub] <a href={githubLink} target="_blank" rel="noopener noreferrer" className="text-[#88c0d0] hover:underline cursor-pointer">{githubLink}</a>
+                        {terminalT('github_link_label')}<a href={githubLink} target="_blank" rel="noopener noreferrer" className="text-[#88c0d0] hover:underline cursor-pointer">{githubLink}</a>
                     </span>
                 ]);
                 if (onProjectCat) onProjectCat();
             } else {
-                addToHistory([`cat: ${inputName}: No such file or directory`], 'output');
+                addToHistory([`${terminalT('cat_not_found')}${inputName}`], 'output');
             }
         } else if (commands[lowerCmd]) {
             addToHistory(commands[lowerCmd]());

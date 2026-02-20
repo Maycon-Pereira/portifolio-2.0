@@ -1,15 +1,20 @@
-export const MobileDateWidget = () => {
-    // Hardcoded for now to match image, or use real date?
-    // Image says: "sáb., 20 de jul. | 22°"
-    // Let's use real date but format it similarly.
-    const date = new Date();
-    // Simplified date formatting to avoid Intl issues
-    const day = date.getDate();
-    const month = date.toLocaleString('default', { month: 'short' });
-    const weekday = date.toLocaleString('default', { weekday: 'short' });
+import { useI18n } from '../../hooks/useI18nHook';
 
-    // Manual capitalization compatible with all environments where CSS capitalize might fail or if Intl is missing
-    const formattedDate = `${weekday}, ${day} de ${month}`;
+export const MobileDateWidget = () => {
+    const { currentLang } = useI18n();
+    const date = new Date();
+
+    // Format based on language
+    const langCode = currentLang === 'pt' ? 'pt-BR' : currentLang === 'es' ? 'es-ES' : 'en-US';
+
+    const day = date.getDate();
+    const month = date.toLocaleString(langCode, { month: 'short' });
+    const weekday = date.toLocaleString(langCode, { weekday: 'short' });
+
+    let formattedDate = `${weekday}, ${month} ${day}`;
+    if (currentLang === 'pt' || currentLang === 'es') {
+        formattedDate = `${weekday}, ${day} de ${month}`;
+    }
 
     // Mock weather
     const weather = "22°";

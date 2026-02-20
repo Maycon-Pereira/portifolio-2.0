@@ -49,21 +49,21 @@ export const MobileProjects = () => {
     const categories = [
         { id: 'github', label: "Github", icon: <Github size={24} />, color: "bg-white/10 text-white", count: "12", action: () => window.open('https://github.com/Maycon-Pereira', '_blank') },
         { id: 'linkedin', label: "LinkedIn", icon: <Linkedin size={24} />, color: "bg-blue-600/20 text-blue-600", count: "Connect", action: () => window.open('https://www.linkedin.com/in/maycon-ps/', '_blank') }, // Updated LinkedIn URL
-        { id: 'documents', label: "Documents", icon: <FileText size={24} />, color: "bg-blue-500/20 text-blue-500", count: documents.length.toString(), action: () => setView('documents') },
-        { id: 'images', label: "Images", icon: <ImageIcon size={24} />, color: "bg-orange-500/20 text-orange-500", count: "1,204", action: () => { } },
-        { id: 'downloads', label: "Downloads", icon: <Download size={24} />, color: "bg-green-500/20 text-green-500", count: "42", action: () => { } }, // Moved Downloads here
-        { id: 'audio', label: "Audio", icon: <Music size={24} />, color: "bg-yellow-500/20 text-yellow-500", count: "320", action: () => { } },
+        { id: 'documents', label: t('mobile_projects.documents') || "Documents", icon: <FileText size={24} />, color: "bg-blue-500/20 text-blue-500", count: documents.length.toString(), action: () => setView('documents') },
+        { id: 'images', label: t('mobile_projects.images') || "Images", icon: <ImageIcon size={24} />, color: "bg-orange-500/20 text-orange-500", count: "1,204", action: () => { } },
+        { id: 'downloads', label: t('mobile_projects.downloads') || "Downloads", icon: <Download size={24} />, color: "bg-green-500/20 text-green-500", count: "42", action: () => { } }, // Moved Downloads here
+        { id: 'audio', label: t('mobile_projects.audio') || "Audio", icon: <Music size={24} />, color: "bg-yellow-500/20 text-yellow-500", count: "320", action: () => { } },
     ];
 
     const storage = [
-        { label: "Internal storage", icon: <Smartphone size={24} />, used: "154.5 GB", total: "256 GB", percent: 60, color: "text-blue-400" },
-        { label: "SD card", icon: <MemoryStick size={24} />, used: "1.2 GB", total: "7.9 GB", percent: 15, color: "text-purple-400" },
+        { label: t('mobile_projects.internal_storage') || "Internal storage", icon: <Smartphone size={24} />, used: "154.5 GB", total: "256 GB", percent: 60, color: "text-blue-400" },
+        { label: t('mobile_projects.sd_card') || "SD card", icon: <MemoryStick size={24} />, used: "1.2 GB", total: "7.9 GB", percent: 15, color: "text-purple-400" },
     ];
 
     const cloud = [
-        { label: "OneDrive", icon: <Cloud size={24} />, status: "Not signed in", color: "text-blue-500" },
-        { label: "Google Drive", icon: <HardDrive size={24} />, status: "2.08 TB free", color: "text-green-500" },
-        { label: "Network storage", icon: <ServerIcon size={24} />, status: "", color: "text-gray-400" },
+        { label: "OneDrive", icon: <Cloud size={24} />, status: t('mobile_projects.not_signed_in') || "Not signed in", color: "text-blue-500" },
+        { label: "Google Drive", icon: <HardDrive size={24} />, status: `2.08 TB ${t('mobile_projects.free') || "free"}`, color: "text-green-500" },
+        { label: t('mobile_projects.network_storage') || "Network storage", icon: <ServerIcon size={24} />, status: "", color: "text-gray-400" },
     ];
 
     // --- Views ---
@@ -71,7 +71,7 @@ export const MobileProjects = () => {
     if (view === 'documents') {
         return (
             <DetailView
-                title="Documents"
+                title={t('mobile_projects.documents') || "Documents"}
                 items={documents}
                 onBack={() => setView('home')}
                 type="list"
@@ -82,7 +82,7 @@ export const MobileProjects = () => {
     if (view === 'view-all') {
         return (
             <DetailView
-                title="Recent files"
+                title={t('mobile_projects.recent_files') || "Recent files"}
                 items={allProjects}
                 onBack={() => setView('home')}
                 type="detailed" // Taller rows with description
@@ -100,7 +100,7 @@ export const MobileProjects = () => {
                     <button onClick={() => closeWindow('projects')} className="p-2 -ml-2 hover:bg-white/10 rounded-full transition-colors text-white/80">
                         <ArrowLeft size={24} />
                     </button>
-                    <h1 className="text-3xl font-medium tracking-tight">My Files</h1>
+                    <h1 className="text-3xl font-medium tracking-tight">{t('mobile_projects.my_files') || "My Files"}</h1>
                 </div>
                 <div className="flex items-center gap-4 text-white/80">
                     <button className="p-2 hover:bg-white/10 rounded-full transition-colors">
@@ -116,12 +116,12 @@ export const MobileProjects = () => {
                 {/* Recent Files */}
                 <div className="mt-2 mb-8">
                     <div className="px-6 mb-4 flex items-center justify-between">
-                        <h2 className="text-lg font-medium">Recent files</h2>
+                        <h2 className="text-lg font-medium">{t('mobile_projects.recent_files') || "Recent files"}</h2>
                         <button
                             className="text-sm text-blue-400 hover:text-blue-300"
                             onClick={() => setView('view-all')}
                         >
-                            View all
+                            {t('mobile_projects.view_all') || "View all"}
                         </button>
                     </div>
 
@@ -153,7 +153,7 @@ export const MobileProjects = () => {
 
                 {/* Categories */}
                 <div className="px-6 mb-8">
-                    <h2 className="text-lg font-medium mb-4">Categories</h2>
+                    <h2 className="text-lg font-medium mb-4">{t('mobile_projects.categories') || "Categories"}</h2>
                     <div className="grid grid-cols-3 gap-3">
                         {categories.map((cat, i) => (
                             <div
@@ -172,7 +172,7 @@ export const MobileProjects = () => {
 
                 {/* Storage */}
                 <div className="px-6 mb-8">
-                    <h2 className="text-lg font-medium mb-4">Storage</h2>
+                    <h2 className="text-lg font-medium mb-4">{t('mobile_projects.storage') || "Storage"}</h2>
                     <div className="flex flex-col gap-4">
                         {storage.map((item, i) => (
                             <div key={i} className="flex items-center gap-4">
@@ -188,7 +188,7 @@ export const MobileProjects = () => {
                                     </div>
                                     <div className="h-1.5 w-full bg-[#1e1e1e] rounded-full overflow-hidden">
                                         <div
-                                            className={`h-full rounded-full ${item.label === 'Internal storage' ? 'bg-blue-500' : 'bg-purple-500'}`}
+                                            className={`h-full rounded-full ${(item.label === 'Internal storage' || item.label === t('mobile_projects.internal_storage')) ? 'bg-blue-500' : 'bg-purple-500'}`}
                                             style={{ width: `${item.percent}%` }}
                                         />
                                     </div>
@@ -219,16 +219,16 @@ export const MobileProjects = () => {
 
                 {/* Utilities */}
                 <div className="px-6 mb-8">
-                    <h2 className="text-lg font-medium mb-4">Utilities</h2>
+                    <h2 className="text-lg font-medium mb-4">{t('mobile_projects.utilities') || "Utilities"}</h2>
                     <div className="flex flex-col gap-6">
                         <div className="flex items-center gap-4">
                             <div className="text-white/80"><Trash2 size={24} /></div>
-                            <span className="flex-1 text-sm font-medium">Trash</span>
+                            <span className="flex-1 text-sm font-medium">{t('mobile_projects.trash') || "Trash"}</span>
                             <ChevronRight size={20} className="text-gray-600" />
                         </div>
                         <div className="flex items-center gap-4">
                             <div className="text-white/80"><Settings size={24} /></div>
-                            <span className="flex-1 text-sm font-medium">Manage storage</span>
+                            <span className="flex-1 text-sm font-medium">{t('mobile_projects.manage_storage') || "Manage storage"}</span>
                             <ChevronRight size={20} className="text-gray-600" />
                         </div>
                     </div>

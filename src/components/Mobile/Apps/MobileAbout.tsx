@@ -1,7 +1,7 @@
-
 import { useState, useEffect } from 'react';
 import { ArrowLeft, FileText, Search, MoreVertical, Pen, ArrowDownUp, ChevronLeft, Share2, Star } from 'lucide-react';
 import { useWindowManager } from '../../../context/WindowContext';
+import { useI18n } from '../../../hooks/useI18nHook';
 
 interface Note {
     id: string;
@@ -13,6 +13,7 @@ interface Note {
 
 export const MobileAbout = () => {
     const { closeWindow, registerBackHandler, unregisterBackHandler } = useWindowManager();
+    const { t, terminalT } = useI18n();
     const [view, setView] = useState<'list' | 'editor'>('list');
     const [notes, setNotes] = useState<Note[]>([]);
     const [currentNote, setCurrentNote] = useState<Note | null>(null);
@@ -50,43 +51,14 @@ export const MobileAbout = () => {
             },
             {
                 id: 'user-manual',
-                title: 'User Manual',
-                content: `# 🚀 Portfolio System v2.0 - User Manual
-
-Navigate intuitively by clicking on the icons or, if you prefer a technical experience, use the integrated terminal.
-
-## 🌟 Quick Start
-1.  **Explore via UI**: Click on the Dock icons (left side).
-2.  **Explore via Terminal**: Type commands to navigate and interact.
-
-## 📟 Terminal Commands
-The terminal is fully functional! Try these:
-- \`help\` : List all available commands.
-- \`ls\` : List directories and files.
-- \`cd <dir>\` : Change directory (e.g., \`cd projects\`).
-- \`cat <file>\` : Read a file (e.g., \`cat readme.md\`).
-- \`whoami\` : Check current user.
-- \`date\` : Show system date/time.
-- \`neofetch\` : Display system specs.
-- \`clear\` : Clear the screen.
-
-## 📂 Applications
-- **About Me (Atom Editor)**: My bio, experience, and education code.
-- **Skills (Grafana)**: Real-time dashboard of my technical stack.
-- **Projects (File Explorer)**: Browse my work. Use \`cat <project>\` in terminal for details!
-
-## 💡 Pro Tips
-- Try dragging windows around!
-- Maximize/Minimize windows using the traffic lights.
-- Type \`sudo rm -rf /\` for a surprise (at your own risk!).
-
-*Built with React, TypeScript, and Love.*`,
+                title: t('mobile_about.user_manual') || 'User Manual',
+                content: terminalT('readme_content'),
                 date: 'Feb 19',
                 timestamp: Date.now()
             },
             {
                 id: 'crazy-ideas',
-                title: 'Crazy Ideas',
+                title: t('mobile_about.crazy_ideas') || 'Crazy Ideas',
                 content: `- Telepathic UI: Scroll using EEG brainwaves.\n- Retro OS Mode: Full Windows 95 skin.\n- Dream Catcher: Record sleep audio -> AI generated dream visuals.\n- Quantum Todo: Tasks exist in superposition until observed.`,
                 date: 'Jan 15',
                 timestamp: Date.now() - 1000000
@@ -191,7 +163,7 @@ The terminal is fully functional! Try these:
                 <div className="h-14 flex items-center justify-between px-2 border-b border-[#222]">
                     <button onClick={handleSaveNote} className="p-2 text-white hover:bg-[#222] rounded-full transition-colors flex items-center gap-2">
                         <ChevronLeft size={24} />
-                        <span className="text-sm">Back</span>
+                        <span className="text-sm">{t('menu.back')}</span>
                     </button>
                     <div className="flex items-center gap-2">
                         <button className="p-2 text-white hover:bg-[#222] rounded-full"><Share2 size={20} /></button>
@@ -204,13 +176,13 @@ The terminal is fully functional! Try these:
                 <div className="flex-1 flex flex-col px-6 py-4 overflow-y-auto">
                     <input
                         type="text"
-                        placeholder="Title"
+                        placeholder={t('mobile_about.title_placeholder') || "Title"}
                         value={currentNote.title}
                         onChange={(e) => handleUpdateCurrentNote('title', e.target.value)}
                         className="bg-transparent text-2xl font-bold placeholder-[#555] outline-none mb-4 w-full"
                     />
                     <textarea
-                        placeholder="Start typing..."
+                        placeholder={t('mobile_about.start_typing') || "Start typing..."}
                         value={currentNote.content}
                         onChange={(e) => handleUpdateCurrentNote('content', e.target.value)}
                         className="bg-transparent flex-1 text-sm text-[#ddd] leading-relaxed outline-none resize-none placeholder-[#333]"
@@ -238,13 +210,13 @@ The terminal is fully functional! Try these:
                     </div>
                 </div>
 
-                <h1 className="text-4xl font-normal mb-1">All notes</h1>
-                <p className="text-[#777] text-sm">{notes.length} notes</p>
+                <h1 className="text-4xl font-normal mb-1">{t('nav.about')}</h1>
+                <p className="text-[#777] text-sm">{notes.length} {t('projects_tab.status_items')}</p>
             </div>
 
             {/* Sort Bar */}
             <div className="px-5 py-2 flex justify-end items-center gap-1 text-[#777] text-xs mb-2">
-                <span>Date modified</span>
+                <span>{t('mobile_about.date_modified') || "Date modified"}</span>
                 <ArrowDownUp size={12} />
             </div>
 
