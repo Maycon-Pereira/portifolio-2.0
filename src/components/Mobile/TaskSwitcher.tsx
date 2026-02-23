@@ -43,7 +43,7 @@ export const TaskSwitcher = ({ onClose }: TaskSwitcherProps) => {
                             }
                         }}
                         className="relative w-[85vw] h-[75vh] bg-[#1e1e1e] rounded-[32px] border border-[#333] shadow-2xl flex-shrink-0 flex flex-col overflow-hidden group snap-center"
-                        onClick={(e) => {
+                        onClick={() => {
                             focusWindow(window.id);
                             onClose();
                         }}
