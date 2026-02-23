@@ -195,8 +195,8 @@ export const MobileAbout = () => {
     return (
         <div className="w-full h-full bg-black text-white flex flex-col relative overflow-hidden font-sans">
             {/* Header Area */}
-            <div className="px-4 py-4 pb-2">
-                <div className="flex justify-between items-start mb-6">
+            <div className="px-4 py-5 pb-2">
+                <div className="flex justify-between items-start mb-2">
                     {/* Back / Menu */}
                     <button onClick={() => closeWindow('about')} className="p-2 -ml-2 text-white/80 hover:text-white transition-colors">
                         <ArrowLeft size={24} />

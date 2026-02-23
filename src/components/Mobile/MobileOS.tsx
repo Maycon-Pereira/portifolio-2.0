@@ -127,7 +127,7 @@ export const MobileOS = () => {
                 />
                 <Stars />
                 {/* HeroBackground scaled and centered for mobile */}
-                <div className="scale-[0.6] origin-top absolute top-[15%] left-0 right-0 z-0">
+                <div className="scale-[0.6] origin-top absolute top-[10%] left-0 right-0 z-0">
                     <HeroBackground className="flex items-center text-center w-full" />
                 </div>
             </div>

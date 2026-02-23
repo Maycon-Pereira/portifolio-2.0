@@ -20,7 +20,7 @@ export const MobileDateWidget = () => {
     const weather = "22°";
 
     return (
-        <div className="flex flex-col items-center justify-center mt-12 mb-8 text-white/90 drop-shadow-md">
+        <div className="flex flex-col items-center justify-center mt-12 text-white/90 drop-shadow-md">
             <div className="text-xl font-medium tracking-wide flex items-center gap-2">
                 <span className="capitalize">{formattedDate}</span>
                 <span className="opacity-60">|</span>

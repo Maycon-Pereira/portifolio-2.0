@@ -95,7 +95,7 @@ export const MobileProjects = () => {
     return (
         <div className="flex flex-col h-full bg-black text-white font-sans overflow-hidden animate-in fade-in duration-300">
             {/* Header */}
-            <div className="pt-12 pb-4 px-6 flex items-center justify-between bg-black sticky top-0 z-10">
+            <div className="pt-5 pb-4 px-6 flex items-center justify-between bg-black sticky top-0 z-10">
                 <div className="flex items-center gap-3">
                     <button onClick={() => closeWindow('projects')} className="p-2 -ml-2 hover:bg-white/10 rounded-full transition-colors text-white/80">
                         <ArrowLeft size={24} />
