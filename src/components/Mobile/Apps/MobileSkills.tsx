@@ -204,27 +204,29 @@ const ActivityChart = ({ color, data, loading }: { color: string, data: any[], l
     const strokePath = `M${points.replace(/ /g, ' L')}`;
 
     return (
-        <svg className="w-full h-full" viewBox="0 0 400 100" preserveAspectRatio="none">
-            <defs>
-                <linearGradient id="mobileChartGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor={color} stopOpacity="0.3" />
-                    <stop offset="100%" stopColor={color} stopOpacity="0" />
-                </linearGradient>
-            </defs>
-            <path
-                d={fillPath}
-                fill="url(#mobileChartGradient)"
-                className="transition-all duration-500 ease-in-out"
-            />
-            <path
-                d={strokePath}
-                fill="none"
-                stroke={color}
-                strokeWidth="2"
-                vectorEffect="non-scaling-stroke"
-                className="transition-all duration-500 ease-in-out"
-            />
-        </svg>
+        <a href='https://github.com/Maycon-Pereira' target='_blank' rel='noopener noreferrer'>
+            <svg className="w-full h-full" viewBox="0 0 400 100" preserveAspectRatio="none">
+                <defs>
+                    <linearGradient id="mobileChartGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor={color} stopOpacity="0.3" />
+                        <stop offset="100%" stopColor={color} stopOpacity="0" />
+                    </linearGradient>
+                </defs>
+                <path
+                    d={fillPath}
+                    fill="url(#mobileChartGradient)"
+                    className="transition-all duration-500 ease-in-out"
+                />
+                <path
+                    d={strokePath}
+                    fill="none"
+                    stroke={color}
+                    strokeWidth="2"
+                    vectorEffect="non-scaling-stroke"
+                    className="transition-all duration-500 ease-in-out"
+                />
+            </svg>
+        </a>
     );
 };
 

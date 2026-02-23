@@ -161,7 +161,7 @@ export const MobileOS = () => {
                         exit={{ y: '100%' }}
                         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
                         // Adjust bottom to show nav bar safely above device controls
-                        className="absolute inset-x-0 bottom-12 top-6 z-20 bg-[#1e1e1e] shadow-2xl overflow-hidden rounded-b-2xl"
+                        className="absolute inset-x-0 bottom-12 top-8 z-20 bg-[#1e1e1e] shadow-2xl overflow-hidden rounded-b-2xl"
                         style={{ zIndex: 20 + window.zIndex }}
                     >
                         {window.component}
