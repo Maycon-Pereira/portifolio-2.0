@@ -310,13 +310,22 @@ export const ProjectsFileExplorer = ({ windowId }: { windowId?: string }) => {
         if (file.isEditable) {
             const editorWindowId = `editor-${file.id}`;
             const existing = windows.find(w => w.id === editorWindowId);
+
+            // Get content based on file id
+            let fileContent = '';
+            if (file.id === 'readme') {
+                fileContent = t('terminal.readme_content');
+            } else if (file.id === 'text') {
+                fileContent = t('terminal.text_txt_content');
+            }
+
             if (existing) {
                 toggleWindow(editorWindowId, existing.workspaceId);
             } else {
                 openWindow(
                     editorWindowId,
                     file.name,
-                    <SublimeEditor fileId={file.id} fileName={file.name} />,
+                    <SublimeEditor fileId={file.id} fileName={file.name} initialContent={fileContent} />,
                     0,
                     sublimeIcon
                 );
