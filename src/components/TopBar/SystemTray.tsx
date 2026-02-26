@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useI18n } from '../../hooks/useI18nHook';
 import spaceSound from '../../assets/spacesound.ogg';
+import { useHacker } from '../../context/HackerContext';
+import { Skull } from 'lucide-react';
 
 // Import SVGs (assuming Vite handles SVGs as URLs by default, or we use standard img tags)
 import wifiIcon from '../../img/svg/popover/wifi.svg';
@@ -16,6 +18,7 @@ import powerOffIcon from '../../img/svg/popover/poweroff.svg';
 
 export const SystemTray = () => {
     const { t, currentLang, setCurrentLang } = useI18n();
+    const { phase } = useHacker();
     const [volume, setVolume] = useState(0); // Start muted
     const [brightness, setBrightness] = useState(100);
     const [settingsOpen, setSettingsOpen] = useState(false);
@@ -112,9 +115,18 @@ export const SystemTray = () => {
 
             {/* Icons Row */}
             <div className={`flex gap-2.5 items-center cursor-pointer transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-80'}`}>
-                <img src={wifiIcon} className="w-3.5 h-3.5 filter invert-[82%] sepia-[12%] saturate-[1478%] hue-rotate-[203deg] brightness-[101%] contrast-[106%]" alt="Wifi" />
-                <img src={currentSoundIcon} className="w-3.5 h-3.5 filter invert-[82%] sepia-[12%] saturate-[1478%] hue-rotate-[203deg] brightness-[101%] contrast-[106%]" alt="Sound" />
-                <img src={batteryIcon} className="w-3.5 h-3.5 filter invert-[82%] sepia-[12%] saturate-[1478%] hue-rotate-[203deg] brightness-[101%] contrast-[106%]" alt="Battery" />
+                {phase === 'connected' || phase === 'hacker_ide' || phase === 'rebooting' || phase === 'glitch' ? (
+                    <>
+                        <span className="text-[10px] text-red-500 font-bold animate-pulse">UNSECURED</span>
+                        <Skull size={14} className="text-red-500" />
+                    </>
+                ) : (
+                    <>
+                        <img src={wifiIcon} className="w-3.5 h-3.5 filter invert-[82%] sepia-[12%] saturate-[1478%] hue-rotate-[203deg] brightness-[101%] contrast-[106%]" alt="Wifi" />
+                        <img src={currentSoundIcon} className="w-3.5 h-3.5 filter invert-[82%] sepia-[12%] saturate-[1478%] hue-rotate-[203deg] brightness-[101%] contrast-[106%]" alt="Sound" />
+                        <img src={batteryIcon} className="w-3.5 h-3.5 filter invert-[82%] sepia-[12%] saturate-[1478%] hue-rotate-[203deg] brightness-[101%] contrast-[106%]" alt="Battery" />
+                    </>
+                )}
             </div>
 
             {/* Popover via Portal */}

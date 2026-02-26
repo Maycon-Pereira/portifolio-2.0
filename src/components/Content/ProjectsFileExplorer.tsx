@@ -75,7 +75,14 @@ const fileSystem: FileNode[] = [
                         id: 'easter-egg',
                         name: 'Easter Egg',
                         type: 'folder',
-                        children: []
+                        children: [
+                            {
+                                id: 'bootloader_fix',
+                                name: 'bootloader_fix',
+                                type: 'folder',
+                                children: []
+                            }
+                        ]
                     },
                     {
                         id: 'readme',
@@ -182,15 +189,28 @@ import githubIcon from '../../img/svg/github.svg';
 import linkedinIcon from '../../img/svg/linkedin.svg';
 import sublimeIcon from '../../img/svg/sublime.svg';
 
+import { useHacker } from '../../context/HackerContext';
+import { HackerIDE } from '../Hacker/HackerIDE';
+
 export const ProjectsFileExplorer = ({ windowId }: { windowId?: string }) => {
     const { t } = useI18n();
-    const { setWindowTitle, openWindow, windows, toggleWindow } = useWindowManager();
+    const { setWindowTitle, openWindow, windows, toggleWindow, closeWindow } = useWindowManager();
+    const { phase, startSequence } = useHacker();
     const [fileNodes, setFileNodes] = useState<FileNode[]>(fileSystem);
     const [currentPath, setCurrentPath] = useState<string[]>(['root', 'github-projects']);
     const [selectedId, setSelectedId] = useState<string | null>(null);
     const [modalFile, setModalFile] = useState<FileNode | null>(null);
     const [tooltip, setTooltip] = useState<{ x: number; y: number; content: string } | null>(null);
     const [rawRepos, setRawRepos] = useState<any[]>([]);
+
+    const isHacked = phase === 'hacker_ide' || phase === 'connecting' || phase === 'glitch' || phase === 'connected' || phase === 'rebooting';
+
+    const getDisplayName = (child: FileNode) => {
+        if (!isHacked || child.type === 'folder' || child.id === 'bootloader_fix') return child.name;
+        const names = ['BRUTE_FORCE_PAYMENTS.sh', 'AUTH_BYPASS_API.log', 'PROJECT_KRONOS', 'EXPLOIT_PAYLOAD.bin', 'ROOT_ACCESS_LOGS.txt'];
+        const index = [...child.id].reduce((acc, char) => acc + char.charCodeAt(0), 0) % names.length;
+        return names[index];
+    };
 
     // Fetch GitHub Repos once
     useEffect(() => {
@@ -288,6 +308,42 @@ export const ProjectsFileExplorer = ({ windowId }: { windowId?: string }) => {
     };
 
     const handleFileDoubleClick = (file: FileNode) => {
+        if (file.id === 'bootloader_fix') {
+            // Close all existing windows
+            windows.forEach(w => {
+                if (w.id !== 'terminal') {
+                    closeWindow(w.id);
+                }
+            });
+
+            // Open or focus the Terminal window
+            const width = window.innerWidth * 0.25;
+            const height = window.innerHeight * 0.85;
+            const x = window.innerWidth * 0.75;
+            const y = (window.innerHeight - height) / 2;
+            openWindow('terminal', 'Terminal', <Terminal />, 0, '💻', { width, height, x, y });
+
+            startSequence();
+            return;
+        }
+
+        if (isHacked && file.type === 'file') {
+            const editorWindowId = `hacker-ide-${file.id}`;
+            const existing = windows.find(w => w.id === editorWindowId);
+            if (existing) {
+                toggleWindow(editorWindowId, existing.workspaceId);
+            } else {
+                openWindow(
+                    editorWindowId,
+                    getDisplayName(file) || file.name,
+                    <div className="w-full h-full"><HackerIDE /></div>,
+                    0,
+                    sublimeIcon
+                );
+            }
+            return;
+        }
+
         // Desktop app shortcut
         if (file.desktopAction) {
             const appMap: Record<string, { label: string; component: React.ReactNode; icon?: string }> = {
@@ -491,13 +547,13 @@ export const ProjectsFileExplorer = ({ windowId }: { windowId?: string }) => {
                                         </div>
                                     </div>
                                     <span className="flex-1 text-sm font-medium truncate group-hover:text-white transition-colors">
-                                        {child.id === 'desktop' ? t('projects_tab.sidebar_desktop') :
+                                        {isHacked && child.type === 'file' ? getDisplayName(child) : (child.id === 'desktop' ? t('projects_tab.sidebar_desktop') :
                                             child.id === 'documents' ? t('projects_tab.sidebar_docs') :
                                                 child.id === 'downloads' ? t('projects_tab.sidebar_downloads') :
                                                     child.id === 'app-about' ? t('projects_tab.about_me') :
                                                         child.id === 'app-skills' ? t('projects_tab.skills') :
                                                             child.id === 'app-terminal' ? t('projects_tab.terminal') :
-                                                                child.name}
+                                                                child.name)}
                                     </span>
                                     <span className="w-24 text-right text-xs text-[#ffffff50]">
                                         {child.size || '—'}
@@ -539,13 +595,13 @@ export const ProjectsFileExplorer = ({ windowId }: { windowId?: string }) => {
                                     </div>
                                     <div className="flex flex-col items-center text-center w-full">
                                         <span className="text-sm font-medium leading-tight line-clamp-2 w-full break-words">
-                                            {child.id === 'desktop' ? t('projects_tab.sidebar_desktop') :
+                                            {isHacked && child.type === 'file' ? getDisplayName(child) : (child.id === 'desktop' ? t('projects_tab.sidebar_desktop') :
                                                 child.id === 'documents' ? t('projects_tab.sidebar_docs') :
                                                     child.id === 'downloads' ? t('projects_tab.sidebar_downloads') :
                                                         child.id === 'app-about' ? t('projects_tab.about_me') :
                                                             child.id === 'app-skills' ? t('projects_tab.skills') :
                                                                 child.id === 'app-terminal' ? t('projects_tab.terminal') :
-                                                                    child.name}
+                                                                    child.name)}
                                         </span>
                                         <span className="text-[10px] text-[#ffffff60] mt-1">
                                             {child.size}

@@ -3,6 +3,7 @@ import { useTerminal } from '../../hooks/useTerminal';
 
 import { useI18n } from '../../hooks/useI18nHook';
 import { useWindowManager } from '../../context/WindowContext';
+import { useHacker } from '../../context/HackerContext';
 import { AboutContent } from '../Content/AboutContent';
 import { SkillsContent } from '../Content/SkillsContent';
 import { ProjectsContent } from '../Content/ProjectsContent';
@@ -14,6 +15,7 @@ import { Typewriter } from './Typewriter';
 export const Terminal = () => {
     const { windows, openWindow, closeWindow, toggleWindow, updateWindow } = useWindowManager();
     const { terminalT } = useI18n();
+    const { phase } = useHacker();
 
     const windowCommands: Record<string, { id: string, component: React.ReactNode, title: string, icon: string }> = {
         'about': { id: 'about', title: terminalT('window_title.about'), icon: '👤', component: <AboutContent /> },
@@ -92,6 +94,41 @@ export const Terminal = () => {
         window.addEventListener('terminal-command', handleTerminalCommand);
         return () => window.removeEventListener('terminal-command', handleTerminalCommand);
     }, [handleCommand]);
+
+    // Glitch phase logic
+    useEffect(() => {
+        if (phase === 'glitch') {
+            try {
+                const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const bufferSize = audioCtx.sampleRate * 0.2;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = Math.random() * 2 - 1;
+                }
+                const noise = audioCtx.createBufferSource();
+                noise.buffer = buffer;
+
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.value = 8000;
+
+                const gainNode = audioCtx.createGain();
+                gainNode.gain.value = 0.015; // Extremely low volume static
+
+                noise.connect(filter);
+                filter.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                noise.start();
+            } catch (e) { }
+
+            handleCommand('', [
+                'Segmentation Fault (core dumped)',
+                'Critical Error: Unrecognized User Privilege.'
+            ]);
+        }
+    }, [phase, handleCommand]);
 
     // Dynamic width expansion when command is sent (Enter)
     const expandTerminal = useCallback(() => {

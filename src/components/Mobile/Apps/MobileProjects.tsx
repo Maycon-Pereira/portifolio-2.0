@@ -8,13 +8,16 @@ import {
 import { useI18n } from '../../../hooks/useI18nHook';
 import { useWindowManager } from '../../../context/WindowContext';
 import javaIcon from '../img/java.svg';
+import { useHacker } from '../../../context/HackerContext';
+import { MobileTerminal } from './MobileTerminal';
 
 type ViewState = 'home' | 'documents' | 'view-all';
 
 export const MobileProjects = () => {
     const [view, setView] = useState<ViewState>('home');
     const { t, getRepoKeys } = useI18n();
-    const { registerBackHandler, unregisterBackHandler, closeWindow } = useWindowManager();
+    const { registerBackHandler, unregisterBackHandler, closeWindow, openWindow } = useWindowManager();
+    const { startSequence } = useHacker();
     const projectKeys = getRepoKeys();
 
     useEffect(() => {
@@ -41,9 +44,18 @@ export const MobileProjects = () => {
 
     // Mock documents for the "Documents" view to simulate a full file list
     const documents = [
-        { name: "Resume.pdf", description: "Updated CV 2024", date: "Feb 20, 2024", type: "pdf", size: "1.2 MB", url: "#" },
-        { name: "Budget_2024.xlsx", description: "Financial planning", date: "Jan 15, 2024", type: "xls", size: "450 KB", url: "#" },
-        { name: "Notes.txt", description: "Meeting notes", date: "Today", type: "txt", size: "2 KB", url: "#" },
+        { id: 'resume', name: "Resume.pdf", description: "Updated CV 2024", date: "Feb 20, 2024", type: "pdf", size: "1.2 MB", url: "#" },
+        { id: 'budget', name: "Budget_2024.xlsx", description: "Financial planning", date: "Jan 15, 2024", type: "xls", size: "450 KB", url: "#" },
+        { id: 'notes', name: "Notes.txt", description: "Meeting notes", date: "Today", type: "txt", size: "2 KB", url: "#" },
+        {
+            id: 'bootloader_fix', name: "bootloader_fix", description: "Do not open.", date: "Unknown", type: "folder", size: "0 B", action: () => {
+                closeWindow('projects');
+                setTimeout(() => {
+                    openWindow('terminal', 'Terminal', <MobileTerminal />, 0, undefined);
+                }, 100);
+                startSequence();
+            }
+        },
     ];
 
     const categories = [
@@ -274,7 +286,13 @@ const DetailView = ({ title, items, onBack, type }: DetailViewProps) => {
                         <div
                             key={i}
                             className={`flex items-start gap-4 p-4 border-b border-white/5 active:bg-white/5 transition-colors cursor-pointer ${type === 'detailed' ? 'py-5' : 'py-3'}`}
-                            onClick={() => item.url && item.url !== '#' && window.open(item.url, '_blank')}
+                            onClick={() => {
+                                if (item.action && typeof item.action === 'function') {
+                                    item.action();
+                                } else if (item.url && item.url !== '#') {
+                                    window.open(item.url, '_blank');
+                                }
+                            }}
                         >
                             <div className="w-10 h-10 rounded-lg bg-[#2d2d2d] flex items-center justify-center shrink-0 text-blue-400">
                                 {item.type === 'git' ? <img src={javaIcon} alt="Java" className="w-6 h-6" /> : <FileText size={20} />}

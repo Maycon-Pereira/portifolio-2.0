@@ -12,10 +12,11 @@ import { AppInitializer } from './components/AppInitializer'
 import bgImage from './img/spacemanJellyfish.jpg'
 
 import { WindowProvider } from './context/WindowContext'
+import { HackerProvider, useHacker } from './context/HackerContext'
+import { HackerOverlay } from './components/Hacker/HackerOverlay'
 
-function App() {
-    useI18n();
-
+const AppContent = () => {
+    const { phase } = useHacker();
     const [currentWorkspace, setCurrentWorkspace] = useState(0);
     const { isMobile } = useDeviceType();
 
@@ -27,11 +28,12 @@ function App() {
         <WindowProvider>
             <SystemProvider>
                 <AppInitializer />
+                <HackerOverlay />
 
                 {isMobile ? (
                     <MobileOS />
                 ) : (
-                    <div className="font-sans text-white h-screen overflow-hidden relative selection:bg-[#9664ff4d] bg-black">
+                    <div className={`font-sans text-white h-screen overflow-hidden relative selection:bg-[#9664ff4d] bg-black ${phase === 'glitch' ? 'animate-shake' : ''}`}>
 
                         {/* Background for Desktop is now managed here or inside DesktopEnvironment if we refactored, but sticking to existing structure inside App.tsx for Desktop for now to avoid large refactors */}
                         <div className="fixed inset-0 z-0 pointer-events-none">
@@ -49,7 +51,7 @@ function App() {
                         </div>
 
                         {/* Conteúdo Desktop */}
-                        <div className="relative z-10 h-full">
+                        <div className={`relative z-10 h-full ${phase === 'glitch' ? 'translate-x-2 -translate-y-1' : ''}`}>
 
                             <TopBar
                                 onNavigate={handleNavigate}
@@ -76,6 +78,15 @@ function App() {
             </SystemProvider>
         </WindowProvider>
     )
+}
+
+function App() {
+    useI18n();
+    return (
+        <HackerProvider>
+            <AppContent />
+        </HackerProvider>
+    );
 }
 
 export default App;
