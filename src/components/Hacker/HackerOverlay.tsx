@@ -45,11 +45,19 @@ export const HackerOverlay = () => {
                     className="absolute inset-0 bg-black/80 flex items-center justify-center backdrop-blur-sm"
                     style={{ transition: 'opacity 0.2s' }}
                 >
-                    <img
-                        src={`/img/hackerConnectedImages/hackerConnectedVideo_${imageIndex.toString().padStart(3, '0')}.jpg`}
-                        alt="connecting..."
-                        className="w-full h-full object-cover mix-blend-screen opacity-90 filter contrast-150"
-                    />
+                    {Array.from({ length: totalImages }).map((_, idx) => (
+                        <img
+                            key={idx}
+                            src={`/img/hackerConnectedImages/hackerConnectedVideo_${idx.toString().padStart(3, '0')}.jpg`}
+                            alt={`connecting frame ${idx}`}
+                            className="absolute inset-0 w-full h-full object-cover mix-blend-screen filter contrast-150"
+                            style={{
+                                opacity: idx === imageIndex ? 0.9 : 0,
+                                visibility: idx === imageIndex ? 'visible' : 'hidden',
+                                pointerEvents: 'none'
+                            }}
+                        />
+                    ))}
                 </div>
             )}
 
